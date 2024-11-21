@@ -4,9 +4,10 @@ import { Button, Input, InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "../icons/SearchIcon";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
+import { Link } from "react-router-dom";
 function Header() {
     return (
-        <header className="h-24 px-5 shadow-md">
+        <header className="h-24 px-5 bg-white shadow-md">
             <div className="container flex items-center justify-between h-full mx-auto">
                 <div className="">
                     <Logo></Logo>
@@ -38,9 +39,14 @@ function Header() {
                         </div>
                     </div>
                     <div>
-                        <Button variant="contained" className="!h-[40px] w-24">
-                            Login
-                        </Button>
+                        <Link to={"/login"}>
+                            <Button
+                                variant="contained"
+                                className="!h-[40px] w-24"
+                            >
+                                Login
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </div>
