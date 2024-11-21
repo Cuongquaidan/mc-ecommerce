@@ -2,7 +2,7 @@ import React from "react";
 
 function Footer() {
     return (
-        <footer class="bg-gray-800 text-white py-10">
+        <footer class="bg-gray-800 text-white py-10 mt-5">
             <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
                 <div>
                     <h4 class="text-lg font-bold mb-4">Liên hệ</h4>

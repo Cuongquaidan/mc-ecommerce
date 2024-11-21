@@ -23,8 +23,8 @@ function Login() {
     };
     return (
         <section id="login" className="mt-5 ">
-            <div className="container px-4 mx-auto">
-                <div className="flex flex-col items-center w-full max-w-md gap-5 p-4 mx-auto bg-white rounded-md">
+            <div className="container px-4 mx-auto ">
+                <div className="flex flex-col items-center w-full max-w-md gap-5 p-4 mx-auto bg-white rounded-md shadow-sm shadow-slate-500">
                     <div className="flex items-center gap-4 p-4">
                         <Logo></Logo>
                         <p className="text-2xl font-bold">Welcome back!!!</p>
