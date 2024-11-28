@@ -85,10 +85,14 @@ async function login(req, res) {
 
 async function getInfo(req, res) {
     try {
+        const user = await UserModel.findById(req.user._id);
+
+        const { password, ...userNoPass } = user._doc;
+
         return res.status(200).json({
             message: "User information",
             success: true,
-            data: req.user,
+            data: userNoPass,
             error: false,
         });
     } catch (error) {
@@ -101,4 +105,22 @@ async function getInfo(req, res) {
     }
 }
 
-module.exports = { register, login, getInfo };
+async function logout(req, res) {
+    try {
+        res.clearCookie("token");
+        return res.status(200).json({
+            message: "User logged out successfully",
+            success: true,
+            error: false,
+            data: [],
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Server error",
+            success: false,
+            error: true,
+        });
+    }
+}
+
+module.exports = { register, login, getInfo, logout };

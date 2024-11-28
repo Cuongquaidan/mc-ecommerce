@@ -1,11 +1,47 @@
 import React from "react";
 import Logo from "./Logo";
-import { Button, Input, InputAdornment, TextField } from "@mui/material";
+import {
+    Avatar,
+    Button,
+    Input,
+    InputAdornment,
+    TextField,
+} from "@mui/material";
 import SearchIcon from "../icons/SearchIcon";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import SUMMARY_API from "../common";
+import { toast } from "react-toastify";
+import { useContextGlobal } from "../context";
+import { setUserInfo } from "../store/userSlice";
 function Header() {
+    const user = useSelector((state) => state?.user?.user);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { getUserInfo } = useContextGlobal();
+
+    const handleLogout = async () => {
+        try {
+            const response = await fetch(SUMMARY_API.logout.url, {
+                method: SUMMARY_API.logout.method,
+                credentials: "include",
+            });
+            const result = await response.json();
+            if (result.success) {
+                toast.success(result.message);
+                navigate("/login");
+                dispatch(setUserInfo(null));
+            }
+            if (result.error) {
+                toast.error(result.message);
+            }
+        } catch (error) {
+            toast.error("Something went wrong");
+        }
+    };
+
     return (
         <header className="h-24 px-5 bg-white shadow-md">
             <div className="container flex items-center justify-between h-full mx-auto">
@@ -30,7 +66,11 @@ function Header() {
                 </div>
                 <div className="flex items-center gap-5">
                     <div className="text-2xl cursor-pointer lg:text-3xl">
-                        <FaRegUserCircle />
+                        {user ? (
+                            <Avatar src={user.avatar} alt={user.name}></Avatar>
+                        ) : (
+                            <FaRegUserCircle />
+                        )}
                     </div>
                     <div className="relative text-2xl cursor-pointer lg:text-3xl">
                         <FaShoppingCart />
@@ -39,14 +79,24 @@ function Header() {
                         </div>
                     </div>
                     <div>
-                        <Link to={"/login"}>
+                        {user ? (
                             <Button
                                 variant="contained"
-                                className="!h-[40px] w-24"
+                                className="!h-[40px] w-32 !bg-red-600"
+                                onClick={handleLogout}
                             >
-                                Login
+                                Log out
                             </Button>
-                        </Link>
+                        ) : (
+                            <Link to={"/login"}>
+                                <Button
+                                    variant="contained"
+                                    className="!h-[40px] w-24"
+                                >
+                                    Login
+                                </Button>
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>

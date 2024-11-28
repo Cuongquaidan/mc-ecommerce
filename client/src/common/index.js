@@ -9,6 +9,10 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/users/login`,
         method: "POST",
     },
+    logout: {
+        url: `${API_PREFIX}/users/logout`,
+        method: "GET",
+    },
     getInfo: {
         url: `${API_PREFIX}/users/get-info`,
         method: "GET",

@@ -1,10 +1,13 @@
 import { createContext, useContext, useEffect } from "react";
 import SUMMARY_API from "../common";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setUserInfo } from "../store/userSlice";
 
 const Context = createContext();
 
 const ContextProvider = ({ children }) => {
+    const dispatch = useDispatch();
     const getUserInfo = async () => {
         try {
             const response = await fetch(SUMMARY_API.getInfo.url, {
@@ -14,6 +17,7 @@ const ContextProvider = ({ children }) => {
             const result = await response.json();
             if (result.success) {
                 toast.success(result.message);
+                dispatch(setUserInfo(result.data));
             }
             if (result.error) {
                 toast.error(result.message);
