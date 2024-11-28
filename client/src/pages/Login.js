@@ -3,8 +3,12 @@ import { IoIosEye } from "react-icons/io";
 import { IoIosEyeOff } from "react-icons/io";
 import { Button, TextField } from "@mui/material";
 import Logo from "../components/Logo";
+import { toast } from "react-toastify";
+import SUMMARY_API from "../common";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+    const navigate = useNavigate();
     const [isShowPassword, setIsShowPassword] = useState(false);
     const [data, setData] = useState({
         email: "",
@@ -17,9 +21,36 @@ function Login() {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(data);
+
+        if (!data.email || !data.password) {
+            toast.error("All fields are required");
+            return;
+        }
+        try {
+            const response = await fetch(SUMMARY_API.login.url, {
+                method: SUMMARY_API.login.method,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+            if (!response.ok) {
+                toast.error("Something went wrong");
+            }
+            const result = await response.json();
+
+            if (result.success) {
+                toast.success(result.message);
+                navigate("/");
+            } else {
+                toast.error(result.error);
+            }
+        } catch (error) {
+            toast.error("Something went wrong");
+        }
     };
     return (
         <section id="login" className="mt-5 ">

@@ -5,8 +5,11 @@ import { Button, TextField } from "@mui/material";
 import Logo from "../components/Logo";
 import { FaRegUserCircle } from "react-icons/fa";
 import convertToBase64 from "../helpers/convertToBase64";
-
+import SUMMARY_API from "../common";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 function Register() {
+    const navigate = useNavigate();
     const [isShowPassword, setIsShowPassword] = useState(false);
     const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
     const [data, setData] = useState({
@@ -30,9 +33,40 @@ function Register() {
             avatar: imaBase64,
         });
     };
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(data);
+        if (data.password !== data.confirmPassword) {
+            toast.error("Password and Confirm Password must be same");
+            return;
+        }
+        if (!data.avatar || !data.email || !data.password || !data.name) {
+            toast.error("All fields are required");
+            return;
+        }
+
+        try {
+            const response = await fetch(SUMMARY_API.register.url, {
+                method: SUMMARY_API.register.method,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+            if (!response.ok) {
+                toast.error("Something went wrong");
+            }
+            const result = await response.json();
+            console.log(result);
+            if (result.success) {
+                toast.success(result.message);
+                navigate("/login");
+            } else {
+                toast.error(result.error);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
     return (
         <section id="register" className="mt-5 ">

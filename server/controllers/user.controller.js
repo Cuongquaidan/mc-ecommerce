@@ -1,6 +1,7 @@
 const UserModel = require("../models/user.model");
 const bcrypt = require("bcryptjs");
-export async function register(req, res) {
+const jwt = require("jsonwebtoken");
+async function register(req, res) {
     try {
         const { email, password, avatar } = req.body;
 
@@ -11,7 +12,12 @@ export async function register(req, res) {
         }
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password, salt);
-        const newUser = new UserModel({ email, hashPassword, avatar });
+        const newUser = new UserModel({
+            email,
+            password: hashPassword,
+            avatar,
+            role: "user",
+        });
         const data = await newUser.save();
         return res.status(201).json({
             data,
@@ -26,7 +32,7 @@ export async function register(req, res) {
     }
 }
 
-export async function login(req, res) {
+async function login(req, res) {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
@@ -46,9 +52,26 @@ export async function login(req, res) {
                 .status(400)
                 .json({ error: "Invalid credentials", success: false });
         }
-        return res
-            .status(200)
-            .json({ message: "User logged in successfully", success: true });
+        const token = jwt.sign(
+            {
+                _id: user._id,
+                email: user.email,
+            },
+            process.env.TOKEN_SECRET_KEY,
+            {
+                expiresIn: "8h",
+            }
+        );
+        const tokenOptions = {
+            httpOnly: true,
+            secure: true,
+        };
+        return res.cookie("token", token, tokenOptions).json({
+            message: "User logged in successfully",
+            success: true,
+            error: false,
+            token,
+        });
     } catch (error) {
         return res.status(500).json({
             error: error.message,
@@ -58,3 +81,5 @@ export async function login(req, res) {
         });
     }
 }
+
+module.exports = { register, login };
