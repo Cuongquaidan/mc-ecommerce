@@ -10,7 +10,13 @@ const router = require("./routes/index");
 const app = express();
 app.use(CookieParser());
 app.use(express.json({ limit: "10mb" }));
-app.use(cors());
+app.use(
+    cors({
+        origin: process.env.CLIENT_URL,
+        credentials: true,
+    })
+);
+
 app.use("/api/v1", router);
 connect().then(() => {
     app.listen(port, () => {

@@ -9,6 +9,10 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/users/login`,
         method: "POST",
     },
+    getInfo: {
+        url: `${API_PREFIX}/users/get-info`,
+        method: "GET",
+    },
 };
 
 export default SUMMARY_API;

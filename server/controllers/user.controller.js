@@ -50,7 +50,7 @@ async function login(req, res) {
         if (!validPassword) {
             return res
                 .status(400)
-                .json({ error: "Invalid credentials", success: false });
+                .json({ error: "Please check password", success: false });
         }
         const token = jwt.sign(
             {
@@ -64,9 +64,10 @@ async function login(req, res) {
         );
         const tokenOptions = {
             httpOnly: true,
+            credentials: "include",
             secure: true,
         };
-        return res.cookie("token", token, tokenOptions).json({
+        return res.status(200).cookie("token", token, tokenOptions).json({
             message: "User logged in successfully",
             success: true,
             error: false,
@@ -82,4 +83,22 @@ async function login(req, res) {
     }
 }
 
-module.exports = { register, login };
+async function getInfo(req, res) {
+    try {
+        return res.status(200).json({
+            message: "User information",
+            success: true,
+            data: req.user,
+            error: false,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            error: error.message,
+            message: "Server error",
+            success: false,
+            error: true,
+        });
+    }
+}
+
+module.exports = { register, login, getInfo };

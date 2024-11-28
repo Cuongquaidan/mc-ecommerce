@@ -6,6 +6,7 @@ import Logo from "../components/Logo";
 import { toast } from "react-toastify";
 import SUMMARY_API from "../common";
 import { useNavigate } from "react-router-dom";
+import { useContextGlobal } from "../context";
 
 function Login() {
     const navigate = useNavigate();
@@ -14,6 +15,7 @@ function Login() {
         email: "",
         password: "",
     });
+    const { getUserInfo } = useContextGlobal();
     const handleChange = (e) => {
         setData({
             ...data,
@@ -32,19 +34,18 @@ function Login() {
         try {
             const response = await fetch(SUMMARY_API.login.url, {
                 method: SUMMARY_API.login.method,
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(data),
             });
-            if (!response.ok) {
-                toast.error("Something went wrong");
-            }
             const result = await response.json();
 
             if (result.success) {
                 toast.success(result.message);
                 navigate("/");
+                getUserInfo();
             } else {
                 toast.error(result.error);
             }
