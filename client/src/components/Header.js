@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import Logo from "./Logo";
 import {
     Avatar,
     Button,
     Input,
     InputAdornment,
+    Popover,
     TextField,
+    Typography,
 } from "@mui/material";
 import SearchIcon from "../icons/SearchIcon";
 import { FaRegUserCircle } from "react-icons/fa";
@@ -17,10 +19,21 @@ import { toast } from "react-toastify";
 import { useContextGlobal } from "../context";
 import { setUserInfo } from "../store/userSlice";
 function Header() {
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+    const id = open ? "simple-popover" : undefined;
     const user = useSelector((state) => state?.user?.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { getUserInfo } = useContextGlobal();
 
     const handleLogout = async () => {
         try {
@@ -67,7 +80,30 @@ function Header() {
                 <div className="flex items-center gap-5">
                     <div className="text-2xl cursor-pointer lg:text-3xl">
                         {user ? (
-                            <Avatar src={user.avatar} alt={user.name}></Avatar>
+                            <>
+                                <Avatar
+                                    src={user.avatar}
+                                    alt={user.name}
+                                    aria-describedby={id}
+                                    onClick={handleClick}
+                                ></Avatar>
+                                <Popover
+                                    id={id}
+                                    open={open}
+                                    anchorEl={anchorEl}
+                                    onClose={handleClose}
+                                    anchorOrigin={{
+                                        vertical: "bottom",
+                                        horizontal: "center",
+                                    }}
+                                >
+                                    <Typography sx={{ p: 2 }}>
+                                        <Link to="admin-panel">
+                                            Admin panel
+                                        </Link>
+                                    </Typography>
+                                </Popover>
+                            </>
                         ) : (
                             <FaRegUserCircle />
                         )}
