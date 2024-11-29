@@ -17,6 +17,14 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/users/get-info`,
         method: "GET",
     },
+    getAllUsers: {
+        url: `${API_PREFIX}/users/get-all`,
+        method: "GET",
+    },
+    updateUserRole: {
+        url: `${API_PREFIX}/users/update`,
+        method: "PATCH",
+    },
 };
 
 export default SUMMARY_API;

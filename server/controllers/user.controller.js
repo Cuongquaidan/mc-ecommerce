@@ -57,6 +57,7 @@ async function login(req, res) {
             {
                 _id: user._id,
                 email: user.email,
+                role: user.role,
             },
             process.env.TOKEN_SECRET_KEY,
             {
@@ -124,4 +125,54 @@ async function logout(req, res) {
     }
 }
 
-module.exports = { register, login, getInfo, logout };
+async function getAll(req, res) {
+    try {
+        const users = await UserModel.find();
+        return res.status(200).json({
+            message: "All users",
+            success: true,
+            data: users,
+            error: false,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Server error",
+            success: false,
+            error: true,
+        });
+    }
+}
+
+async function updateUser(req, res) {
+    try {
+        const user = req.user;
+
+        if (user.role !== "admin") {
+            return res.status(403).json({
+                message: "You are not authorized to perform this action",
+                success: false,
+                error: true,
+                data: user,
+            });
+        }
+
+        const { userId } = req.params;
+        const { role } = req.body;
+        const updatedUser = await UserModel.findByIdAndUpdate(userId, { role });
+        console.log(req.body);
+        return res.status(200).json({
+            message: "User updated successfully",
+            success: true,
+            data: updatedUser,
+            error: false,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Server error",
+            success: false,
+            error: true,
+        });
+    }
+}
+
+module.exports = { register, login, getInfo, logout, getAll, updateUser };

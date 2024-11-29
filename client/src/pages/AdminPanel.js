@@ -43,6 +43,7 @@ function AdminPanel() {
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
     };
+
     return (
         <div className="min-h-[calc(100vh-180px)] md:grid grid-cols-[350px,1fr] ">
             <div className="p-2 shadow bg-slate-50 md:hidden">
@@ -73,6 +74,7 @@ function AdminPanel() {
                                     <Divider />
                                 </>
                             ))}
+
                             <ListItem className="flex items-center gap-5 mt-auto border">
                                 <Avatar src={user?.avatar}></Avatar>
                                 <div>
@@ -107,7 +109,7 @@ function AdminPanel() {
                             <Divider />
                         </>
                     ))}
-                    <ListItem className="flex items-center gap-5 mt-auto">
+                    <ListItem className="flex items-center gap-5 mt-auto border-t bg-slate-100">
                         <Avatar src={user?.avatar}></Avatar>
                         <div>
                             <Typography
@@ -117,7 +119,10 @@ function AdminPanel() {
                             >
                                 {user?.name}
                             </Typography>
-                            <Typography variant="subtitle2">
+                            <Typography
+                                variant="subtitle2"
+                                className="text-slate-700"
+                            >
                                 {user?.role}
                             </Typography>
                         </div>
