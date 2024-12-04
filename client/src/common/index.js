@@ -25,6 +25,18 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/users/update`,
         method: "PATCH",
     },
+    addProduct: {
+        url: `${API_PREFIX}/products/add-product`,
+        method: "POST",
+    },
+    getAllProducts: {
+        url: `${API_PREFIX}/products/get-all`,
+        method: "GET",
+    },
+    updateProduct: {
+        url: `${API_PREFIX}/products/update`,
+        method: "PATCH",
+    },
 };
 
 export default SUMMARY_API;
