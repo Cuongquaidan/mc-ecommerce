@@ -405,7 +405,9 @@ const AllProducts = () => {
                                     }
                                 >
                                     <TableCell>{index + 1}</TableCell>
-                                    <TableCell>{product.productName}</TableCell>
+                                    <TableCell className="text-ellipsis line-clamp-2 max-w-[300px]">
+                                        {product.productName}
+                                    </TableCell>
                                     <TableCell>{product.brandName}</TableCell>
                                     <TableCell>{product.category}</TableCell>
                                     <TableCell>{product.price}</TableCell>

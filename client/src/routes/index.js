@@ -4,10 +4,10 @@ import AllUsers from "../pages/AllUsers";
 import ForgotPassword from "../pages/ForgotPassword";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
-
+import App from "../App";
+import Home from "../pages/Home";
+import CategoryProduct from "../pages/CategoryProduct";
 const { createBrowserRouter } = require("react-router-dom");
-const { default: App } = require("../App");
-const { default: Home } = require("../pages/Home");
 
 const router = createBrowserRouter([
     {
@@ -29,6 +29,10 @@ const router = createBrowserRouter([
             {
                 path: "register",
                 element: <Register />,
+            },
+            {
+                path: "product-category/:category",
+                element: <CategoryProduct />,
             },
             {
                 path: "admin-panel",

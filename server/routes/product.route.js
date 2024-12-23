@@ -6,5 +6,6 @@ const { authToken } = require("../middlewares/authToken");
 router.route("/add-product").post(authToken, productController.addProduct);
 router.route("/get-all").get(productController.getAllProducts);
 router.route("/update").patch(authToken, productController.updateProduct);
+router.route("/getProductCategory").get(productController.getProductCategory);
 
 module.exports = router;

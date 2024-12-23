@@ -37,6 +37,10 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/products/update`,
         method: "PATCH",
     },
+    productCategory: {
+        url: `${API_PREFIX}/products/getProductCategory`,
+        method: "GET",
+    },
 };
 
 export default SUMMARY_API;

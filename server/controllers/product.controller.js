@@ -87,8 +87,35 @@ async function updateProduct(req, res) {
     }
 }
 
+async function getProductCategory(req, res) {
+    try {
+        const productCategory = await productModel.distinct("category");
+
+        const productByCategory = [];
+
+        for (category of productCategory) {
+            const product = await productModel.findOne({ category: category });
+            productByCategory.push(product);
+        }
+
+        return res.status(200).json({
+            message: "All products by all categories",
+            error: false,
+            success: true,
+            data: productByCategory,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error || error.message,
+            error: true,
+            success: false,
+        });
+    }
+}
+
 module.exports = {
     addProduct,
     getAllProducts,
     updateProduct,
+    getProductCategory,
 };
