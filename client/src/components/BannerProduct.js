@@ -52,13 +52,13 @@ function BannerProduct() {
                     <div className="flex justify-between w-full text-2xl">
                         <button
                             onClick={prevImage}
-                            className="p-4 bg-gray-100 rounded-full shadow-md ml-[-24px]"
+                            className="p-4 bg-gray-100 rounded-full shadow-md ml-[-24px] border border-gray-300"
                         >
                             <FaAngleLeft />
                         </button>
                         <button
                             onClick={nextImage}
-                            className="p-4 bg-gray-100 rounded-full shadow-md mr-[-24px]"
+                            className="p-4 bg-gray-100 rounded-full shadow-md mr-[-24px] border border-gray-300"
                         >
                             <FaAngleRight />
                         </button>
@@ -77,7 +77,11 @@ function BannerProduct() {
                                 }%)`,
                             }}
                         >
-                            <img src={imageURL} className="w-full h-full" />
+                            <img
+                                src={imageURL}
+                                className="w-full h-full"
+                                alt="MCSHOP"
+                            />
                         </div>
                     ))}
                 </div>
