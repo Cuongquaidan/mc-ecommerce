@@ -112,10 +112,28 @@ async function getProductCategory(req, res) {
         });
     }
 }
-
+async function getCategoryWiseProduct(req, res) {
+    try {
+        const { category } = req.body;
+        const productCategory = await productModel.find({ category: category });
+        return res.status(200).json({
+            message: "All products by category",
+            error: false,
+            success: true,
+            data: productCategory,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error || error.message,
+            error: true,
+            success: false,
+        });
+    }
+}
 module.exports = {
     addProduct,
     getAllProducts,
     updateProduct,
     getProductCategory,
+    getCategoryWiseProduct,
 };

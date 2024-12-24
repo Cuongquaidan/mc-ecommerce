@@ -41,6 +41,10 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/products/getProductCategory`,
         method: "GET",
     },
+    categoryWiseProduct: {
+        url: `${API_PREFIX}/products/getCategoryWiseProduct`,
+        method: "POST",
+    },
 };
 
 export default SUMMARY_API;
