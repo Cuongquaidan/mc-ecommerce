@@ -149,6 +149,45 @@ async function getProductDetails(req, res) {
         });
     }
 }
+
+async function searchProduct(req, res) {
+    try {
+        const query = req.query.q;
+
+        const regex = new RegExp(query, "i", "g");
+
+        const products = await productModel.find({
+            $or: [
+                {
+                    productName: regex,
+                },
+                {
+                    category: regex,
+                },
+                {
+                    brandName: regex,
+                },
+                {
+                    description: regex,
+                },
+            ],
+        });
+
+        return res.status(200).json({
+            message: "All products by search",
+            error: false,
+            success: true,
+            data: products,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error || error.message,
+            error: true,
+            success: false,
+        });
+    }
+}
+
 module.exports = {
     addProduct,
     getAllProducts,
@@ -156,4 +195,5 @@ module.exports = {
     getProductCategory,
     getCategoryWiseProduct,
     getProductDetails,
+    searchProduct,
 };

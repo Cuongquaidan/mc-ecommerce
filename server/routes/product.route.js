@@ -12,4 +12,5 @@ router
     .post(productController.getCategoryWiseProduct);
 
 router.route("/getProductDetails").post(productController.getProductDetails);
+router.route("/search").get(productController.searchProduct);
 module.exports = router;

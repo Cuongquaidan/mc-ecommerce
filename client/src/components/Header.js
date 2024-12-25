@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
-import {
-    Avatar,
-    Button,
-    Input,
-    InputAdornment,
-    Popover,
-    TextField,
-    Typography,
-} from "@mui/material";
+import { Avatar, Button, Popover, TextField, Typography } from "@mui/material";
 import SearchIcon from "../icons/SearchIcon";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
@@ -16,11 +8,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import SUMMARY_API from "../common";
 import { toast } from "react-toastify";
-import { useContextGlobal } from "../context";
 import { setUserInfo } from "../store/userSlice";
 function Header() {
     const [anchorEl, setAnchorEl] = useState(null);
-
+    const [search, setSearch] = useState("");
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -57,6 +48,14 @@ function Header() {
         }
     };
 
+    const handleSearch = () => {
+        if (search) {
+            navigate(`/search?q=${search}`);
+        } else {
+            navigate(`/`);
+        }
+    };
+
     return (
         <header className="h-24 px-5 bg-white shadow-md">
             <div className="container flex items-center justify-between h-full mx-auto">
@@ -74,8 +73,14 @@ function Header() {
                                 padding: "10px",
                             },
                         }}
+                        onChange={(e) => setSearch(e.target.value)}
+                        value={search}
                     ></TextField>
-                    <Button variant="contained" className="!h-[40px] w-24">
+                    <Button
+                        variant="contained"
+                        className="!h-[40px] w-24"
+                        onClick={handleSearch}
+                    >
                         <SearchIcon></SearchIcon>
                     </Button>
                 </div>

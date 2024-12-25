@@ -65,6 +65,10 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/cart/remove-product`,
         method: "PATCH",
     },
+    searchProduct: {
+        url: `${API_PREFIX}/products/search`,
+        method: "GET",
+    },
 };
 
 export default SUMMARY_API;
