@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
 import {
     Avatar,
@@ -28,6 +28,8 @@ function Header() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const cartNum = useSelector((state) => state?.cart?.numOfProducts);
 
     const open = Boolean(anchorEl);
     const id = open ? "simple-popover" : undefined;
@@ -108,12 +110,15 @@ function Header() {
                             <FaRegUserCircle />
                         )}
                     </div>
-                    <div className="relative text-2xl cursor-pointer lg:text-3xl">
+                    <Link
+                        to={"/cart"}
+                        className="relative text-2xl cursor-pointer lg:text-3xl"
+                    >
                         <FaShoppingCart />
                         <div className="absolute top-[-10px] right-[-10px] flex items-center justify-center w-5 h-5 p-1 text-white bg-red-500 rounded-full">
-                            <p className="text-sm">0</p>
+                            <p className="text-sm">{cartNum}</p>
                         </div>
-                    </div>
+                    </Link>
                     <div>
                         {user ? (
                             <Button

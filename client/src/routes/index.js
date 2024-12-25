@@ -7,6 +7,8 @@ import Register from "../pages/Register";
 import App from "../App";
 import Home from "../pages/Home";
 import CategoryProduct from "../pages/CategoryProduct";
+import ProductDetails from "../pages/ProductDetails";
+import Cart from "../pages/Cart";
 const { createBrowserRouter } = require("react-router-dom");
 
 const router = createBrowserRouter([
@@ -33,6 +35,14 @@ const router = createBrowserRouter([
             {
                 path: "product-category/:category",
                 element: <CategoryProduct />,
+            },
+            {
+                path: "product/:id",
+                element: <ProductDetails></ProductDetails>,
+            },
+            {
+                path: "cart",
+                element: <Cart />,
             },
             {
                 path: "admin-panel",

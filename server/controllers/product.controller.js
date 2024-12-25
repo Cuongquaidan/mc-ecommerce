@@ -130,10 +130,30 @@ async function getCategoryWiseProduct(req, res) {
         });
     }
 }
+
+async function getProductDetails(req, res) {
+    try {
+        const { productId } = req.body;
+        const productDetails = await productModel.findById(productId);
+        return res.status(200).json({
+            message: "Product details",
+            error: false,
+            success: true,
+            data: productDetails,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error || error.message,
+            error: true,
+            success: false,
+        });
+    }
+}
 module.exports = {
     addProduct,
     getAllProducts,
     updateProduct,
     getProductCategory,
     getCategoryWiseProduct,
+    getProductDetails,
 };

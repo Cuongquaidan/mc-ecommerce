@@ -3,6 +3,7 @@ import SUMMARY_API from "../common";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setUserInfo } from "../store/userSlice";
+import { setCart } from "../store/cartSlice";
 
 const Context = createContext();
 
@@ -26,11 +27,32 @@ const ContextProvider = ({ children }) => {
             toast.error("Something went wrong");
         }
     };
+    const fetchGetCart = async () => {
+        try {
+            const response = await fetch(SUMMARY_API.getCart.url, {
+                method: SUMMARY_API.getCart.method,
+                credentials: "include",
+            });
+            const result = await response.json();
+            if (result.success) {
+                dispatch(setCart(result.data));
+            }
+            if (result.error) {
+                toast.error(result.message);
+            }
+        } catch (error) {
+            toast.error("Something went wrong");
+        }
+    };
+
     useEffect(() => {
         getUserInfo();
+        fetchGetCart();
     }, []);
     return (
-        <Context.Provider value={{ getUserInfo }}>{children}</Context.Provider>
+        <Context.Provider value={{ getUserInfo, fetchGetCart }}>
+            {children}
+        </Context.Provider>
     );
 };
 

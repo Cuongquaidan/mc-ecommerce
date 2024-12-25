@@ -45,6 +45,26 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/products/getCategoryWiseProduct`,
         method: "POST",
     },
+    productDetails: {
+        url: `${API_PREFIX}/products/getProductDetails`,
+        method: "POST",
+    },
+    addToCart: {
+        url: `${API_PREFIX}/cart/add-to-cart`,
+        method: "POST",
+    },
+    getCart: {
+        url: `${API_PREFIX}/cart/get-cart`,
+        method: "GET",
+    },
+    updateQuantity: {
+        url: `${API_PREFIX}/cart/update-quantity`,
+        method: "PATCH",
+    },
+    removeProduct: {
+        url: `${API_PREFIX}/cart/remove-product`,
+        method: "PATCH",
+    },
 };
 
 export default SUMMARY_API;

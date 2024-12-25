@@ -10,4 +10,6 @@ router.route("/getProductCategory").get(productController.getProductCategory);
 router
     .route("/getCategoryWiseProduct")
     .post(productController.getCategoryWiseProduct);
+
+router.route("/getProductDetails").post(productController.getProductDetails);
 module.exports = router;
