@@ -65,7 +65,11 @@ async function getPromotion(req, res) {
     try {
         const promotionType = req.query.type;
         console.log(promotionType);
-        const promotions = await PromotionModel.find({ promotionType });
+        const promotions = await PromotionModel.find({ promotionType })
+            .populate("brands") // Populate thông tin từ bảng `BrandModel`
+            .populate("categories") // Populate thông tin từ bảng `CategoryModel`
+            .populate("products"); // Populate thông tin từ bảng `ProductModel`
+
         console.log(promotions);
         return res.status(200).json({
             message: "All promotions",

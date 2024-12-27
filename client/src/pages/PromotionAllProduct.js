@@ -37,27 +37,25 @@ function PromotionAllProduct() {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+    const fetchPromotion = async () => {
+        console.log("Starting fetch...");
+        try {
+            const response = await fetch(
+                SUMMARY_API.getPromotion.url +
+                    `?type=${encodeURI(promotionType)}`
+            );
+            console.log("fetchinggggggg", response);
 
+            if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+            const data = await response.json();
+            console.log("Data fetched:", data);
+            setPromotions(data.data);
+        } catch (error) {
+            console.error("Error during fetch:", error);
+        }
+    };
     useEffect(() => {
-        const fetchPromotion = async () => {
-            console.log("Starting fetch...");
-            try {
-                const response = await fetch(
-                    SUMMARY_API.getPromotion.url +
-                        `?type=${encodeURI(promotionType)}`
-                );
-                console.log("fetchinggggggg", response);
-
-                if (!response.ok)
-                    throw new Error(`API Error: ${response.status}`);
-
-                const data = await response.json();
-                console.log("Data fetched:", data);
-                setPromotions(data.data);
-            } catch (error) {
-                console.error("Error during fetch:", error);
-            }
-        };
         fetchPromotion();
     }, []);
 
@@ -160,6 +158,7 @@ function PromotionAllProduct() {
                 isOpen={isOpen}
                 onClose={handleOnClose}
                 type={promotionType}
+                onRefesh={fetchPromotion}
             ></ModalAddPromotion>
         </div>
     );

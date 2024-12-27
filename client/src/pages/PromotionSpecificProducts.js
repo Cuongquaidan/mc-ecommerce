@@ -2,18 +2,22 @@ import {
     Button,
     Paper,
     Table,
+    TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TablePagination,
     TableRow,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModalAddPromotion from "../components/ModalAddPromotion";
 import { useLocation } from "react-router-dom";
+import SUMMARY_API from "../common";
 
 function PromotionSpecificProducts() {
     const [isOpen, setIsOpen] = useState(false);
+
+    const [promotions, setPromotions] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const handleOnClose = () => {
@@ -34,10 +38,33 @@ function PromotionSpecificProducts() {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+    const fetchPromotion = async () => {
+        console.log("Starting fetch...");
+        try {
+            const response = await fetch(
+                SUMMARY_API.getPromotion.url +
+                    `?type=${encodeURI(promotionType)}`
+            );
+            console.log("fetchinggggggg", response);
+
+            if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+            const data = await response.json();
+            console.log("Data fetched:", data);
+            setPromotions(data.data);
+        } catch (error) {
+            console.error("Error during fetch:", error);
+        }
+    };
+    useEffect(() => {
+        fetchPromotion();
+    }, []);
     return (
         <div className="flex flex-col gap-10 p-4">
             <div className="flex justify-between w-full">
-                <h3>Promotion Management</h3>
+                <h2 className="mb-6 text-2xl font-bold text-gray-800">
+                    Promotion Specific Products
+                </h2>
                 <Button variant="contained" onClick={() => setIsOpen(true)}>
                     Add new
                 </Button>
@@ -64,68 +91,99 @@ function PromotionSpecificProducts() {
                             <TableCell className="!font-bold !bg-blue-300">
                                 Discount Value
                             </TableCell>
+                            <TableCell className="!font-bold !bg-blue-300">
+                                Products
+                            </TableCell>
 
                             <TableCell className="!font-bold !bg-blue-300">
                                 Disabled
                             </TableCell>
                         </TableRow>
                     </TableHead>
-                    {/* <TableBody>
-                {products
-                    .slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                    )
-                    .map((product, index) => (
-                        <TableRow
-                            key={index}
-                            className={
-                                index % 2 === 0
-                                    ? "bg-white"
-                                    : "bg-gray-200"
-                            }
-                        >
-                            <TableCell>{index + 1}</TableCell>
-                            <TableCell className="text-ellipsis line-clamp-2 max-w-[300px]">
-                                {product.productName}
-                            </TableCell>
-                            <TableCell>{product.brandName}</TableCell>
-                            <TableCell>{product.category}</TableCell>
-                            <TableCell>{product.price}</TableCell>
-                            <TableCell>{product.selling}</TableCell>
-                            
-                            <TableCell>
-                                <div className="flex items-center justify-center w-10 h-10 bg-green-100 rounded-full cursor-pointer hover:bg-green-500">
-                                    <MdModeEditOutline
-                                        size={24}
-                                        onClick={() => {
-                                            // setIsEditing(true);
-                                            // setProductEditing(product);
-                                            // console.log(productEditing);
-                                        }}
-                                    />
-                                </div>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-            </TableBody> */}
+                    <TableBody>
+                        {promotions
+                            .slice(
+                                page * rowsPerPage,
+                                page * rowsPerPage + rowsPerPage
+                            )
+                            .map((promotion, index) => (
+                                <TableRow
+                                    key={index}
+                                    className={
+                                        index % 2 === 0
+                                            ? "bg-white"
+                                            : "bg-gray-200"
+                                    }
+                                >
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell className="text-ellipsis line-clamp-2 max-w-[300px]">
+                                        {promotion.name}
+                                    </TableCell>
+                                    <TableCell>{promotion.startDate}</TableCell>
+                                    <TableCell>{promotion.endDate}</TableCell>
+                                    <TableCell>
+                                        {promotion.discountType}
+                                    </TableCell>
+                                    <TableCell>
+                                        {promotion.discountValue}
+                                    </TableCell>
+                                    <TableCell>
+                                        {promotion.products.map(
+                                            (product, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="flex gap-2"
+                                                >
+                                                    <img
+                                                        src={
+                                                            product
+                                                                .productImages[0]
+                                                        }
+                                                        alt="MCSHOP"
+                                                        className="object-contain w-10 h-10"
+                                                    ></img>
+                                                    <div className="text-ellipsis line-clamp-2 max-w-[300px]">
+                                                        {product.productName}
+                                                    </div>
+                                                </div>
+                                            )
+                                        )}
+                                    </TableCell>
+
+                                    <TableCell>
+                                        <div className="flex items-center justify-center cursor-pointer ">
+                                            {promotion.status === "active" ? (
+                                                <button className="p-2 text-white bg-red-700 rounded-md">
+                                                    Disabled
+                                                </button>
+                                            ) : (
+                                                <button className="p-2 text-white bg-green-700 rounded-md">
+                                                    Active
+                                                </button>
+                                            )}
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                    </TableBody>
                 </Table>
             </TableContainer>
 
             <TablePagination
                 rowsPerPageOptions={[10, 25, 50]}
                 component="div"
-                // count={products.length}
-                // rowsPerPage={rowsPerPage}
-                // page={page}
-                // onPageChange={handleChangePage}
-                // onRowsPerPageChange={handleChangeRowsPerPage}
+                count={promotions.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
             />
 
             <ModalAddPromotion
                 isOpen={isOpen}
                 onClose={handleOnClose}
                 type={promotionType}
+                onRefesh={fetchPromotion}
             ></ModalAddPromotion>
         </div>
     );
