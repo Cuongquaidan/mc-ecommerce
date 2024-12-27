@@ -188,6 +188,31 @@ async function searchProduct(req, res) {
     }
 }
 
+async function filterProduct(req, res) {
+    try {
+        const categoryList = req?.body?.category || [];
+
+        const product = await productModel.find({
+            category: {
+                $in: categoryList,
+            },
+        });
+
+        return res.json({
+            data: product,
+            message: "product",
+            error: false,
+            success: true,
+        });
+    } catch (err) {
+        return res.json({
+            message: err.message || err,
+            error: true,
+            success: false,
+        });
+    }
+}
+
 module.exports = {
     addProduct,
     getAllProducts,
@@ -196,4 +221,5 @@ module.exports = {
     getCategoryWiseProduct,
     getProductDetails,
     searchProduct,
+    filterProduct,
 };

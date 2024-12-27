@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import productCategory from "../helpers/productCategory";
 import { MdModeEditOutline } from "react-icons/md";
 import {
     Box,
@@ -27,6 +26,7 @@ import SUMMARY_API from "../common";
 import ModalEditProduct from "../components/ModalEditProduct";
 
 const AllProducts = () => {
+    const [productCategory, setProductCategory] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [openModal, setOpenModal] = useState(false);
@@ -168,6 +168,17 @@ const AllProducts = () => {
 
     useEffect(() => {
         handleGetAllProducts();
+    }, []);
+    useEffect(() => {
+        const fetchCategory = async () => {
+            const response = await fetch(`${SUMMARY_API.getAllCategories.url}`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch category");
+            }
+            const data = await response.json();
+            setProductCategory(data.data);
+        };
+        fetchCategory();
     }, []);
 
     return (

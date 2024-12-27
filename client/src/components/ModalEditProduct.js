@@ -7,8 +7,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import productCategory from "../helpers/productCategory";
+import React, { useEffect, useState } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import ImageModalFullScreen from "../helpers/ImageModalFullScreen";
@@ -19,6 +18,7 @@ import SUMMARY_API from "../common";
 function ModalEditProduct({ data, isEditing, onClose, fetchData }) {
     const [openImageModal, setOpenImageModal] = useState(false); // State for image modal
     const [selectedImage, setSelectedImage] = useState("");
+    const [productCategory, setProductCategory] = useState([]);
     const [productEditing, setProductEditing] = useState(data);
     const handleUpdateProduct = async (e) => {
         e.preventDefault();
@@ -100,6 +100,18 @@ function ModalEditProduct({ data, isEditing, onClose, fetchData }) {
             productImages: prev.productImages.filter((_, i) => i !== index),
         }));
     };
+
+    useEffect(() => {
+        const fetchCategory = async () => {
+            const response = await fetch(`${SUMMARY_API.getAllCategories.url}`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch category");
+            }
+            const data = await response.json();
+            setProductCategory(data.data);
+        };
+        fetchCategory();
+    }, []);
 
     return (
         <div>

@@ -10,6 +10,9 @@ import CategoryProduct from "../pages/CategoryProduct";
 import ProductDetails from "../pages/ProductDetails";
 import Cart from "../pages/Cart";
 import Search from "../pages/Search";
+import AllPromotions from "../pages/AllPromotions";
+import PromotionAllProduct from "../pages/PromotionAllProduct";
+import PromotionSpecificProducts from "../pages/PromotionSpecificProducts";
 const { createBrowserRouter } = require("react-router-dom");
 
 const router = createBrowserRouter([
@@ -34,7 +37,7 @@ const router = createBrowserRouter([
                 element: <Register />,
             },
             {
-                path: "product-category/:category",
+                path: "product-category",
                 element: <CategoryProduct />,
             },
             {
@@ -60,6 +63,18 @@ const router = createBrowserRouter([
                     {
                         path: "all-products",
                         element: <AllProducts />,
+                    },
+                    {
+                        path: "all-promotions",
+                        element: <AllPromotions />,
+                    },
+                    {
+                        path: "all-promotions/all-products",
+                        element: <PromotionAllProduct />,
+                    },
+                    {
+                        path: "all-promotions/specific-products",
+                        element: <PromotionSpecificProducts />,
                     },
                 ],
             },

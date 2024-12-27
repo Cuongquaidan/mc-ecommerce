@@ -128,7 +128,7 @@ function Header() {
                         {user ? (
                             <Button
                                 variant="contained"
-                                className="!h-[40px] w-32 !bg-red-600"
+                                className="!h-[40px] lg:w-32 w-28 !bg-red-600"
                                 onClick={handleLogout}
                             >
                                 Log out

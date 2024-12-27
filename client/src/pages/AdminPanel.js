@@ -18,6 +18,7 @@ import { FaUserFriends } from "react-icons/fa";
 import { IoMdHome } from "react-icons/io";
 import { useSelector } from "react-redux";
 import { FaBars } from "react-icons/fa";
+import { BiSolidDiscount } from "react-icons/bi";
 function AdminPanel() {
     const user = useSelector((state) => state?.user?.user);
     const dataAside = [
@@ -35,6 +36,11 @@ function AdminPanel() {
             title: "All Products",
             icon: <AiFillProduct size={30} />,
             link: "/admin-panel/all-products",
+        },
+        {
+            title: "All Promotions",
+            icon: <BiSolidDiscount size={30} />,
+            link: "/admin-panel/all-promotions",
         },
     ];
 
@@ -94,7 +100,7 @@ function AdminPanel() {
                     </Box>
                 </Drawer>
             </div>
-            <aside className="hidden w-full h-full bg-white shadow-inner md:block">
+            <aside className="hidden w-full h-full bg-white border shadow-inner md:block">
                 <List className="flex flex-col h-full">
                     {dataAside.map((item, index) => (
                         <>

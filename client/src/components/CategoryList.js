@@ -34,7 +34,10 @@ function CategoryList() {
                       ))
                     : categoryProduct?.map((product) => (
                           <Link
-                              to={`/product-category/` + product.category}
+                              to={
+                                  "/product-category?category=" +
+                                  product?.category
+                              }
                               key={product._id}
                               className="flex flex-col items-center gap-2 cursor-pointer"
                           >

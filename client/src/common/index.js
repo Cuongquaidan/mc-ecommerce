@@ -69,6 +69,30 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/products/search`,
         method: "GET",
     },
+    filterProduct: {
+        url: `${API_PREFIX}/products/filter`,
+        method: "POST",
+    },
+    addCategory: {
+        url: `${API_PREFIX}/categories/add-category`,
+        method: "POST",
+    },
+    getAllCategories: {
+        url: `${API_PREFIX}/categories/get-categories`,
+        method: "GET",
+    },
+    addPromotion: {
+        url: `${API_PREFIX}/promotions/add-promotion`,
+        method: "POST",
+    },
+    getAllPromotions: {
+        url: `${API_PREFIX}/promotions/get-all`,
+        method: "GET",
+    },
+    getPromotion: {
+        url: `${API_PREFIX}/promotions/get-promotion`,
+        method: "GET",
+    },
 };
 
 export default SUMMARY_API;
