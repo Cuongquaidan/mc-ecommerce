@@ -4,6 +4,8 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import addToCart from "../helpers/addToCart";
 import { useContextGlobal } from "../context";
+import { useSelector } from "react-redux";
+import checkPromotion from "../helpers/checkPromotion";
 
 function HorizontalCardProduct({ category, heading }) {
     const { fetchGetCart } = useContextGlobal();
@@ -11,6 +13,11 @@ function HorizontalCardProduct({ category, heading }) {
     const [loading, setLoading] = useState(false);
     const scrollElement = useRef();
     const loadingList = new Array(13).fill(null);
+
+    const promotionDetails = useSelector((state) => state?.promotionDetails);
+
+    console.log(promotionDetails);
+
     useEffect(() => {
         const fetchCategoryWise = async () => {
             setLoading(true);
@@ -54,13 +61,13 @@ function HorizontalCardProduct({ category, heading }) {
                 ref={scrollElement}
             >
                 <button
-                    className="absolute hidden p-4 text-lg bg-white border border-gray-300 rounded-full shadow-md -left-2 md:block "
+                    className="absolute z-50 hidden p-4 text-lg bg-white border border-gray-300 rounded-full shadow-md -left-2 md:block "
                     onClick={scrollLeft}
                 >
                     <FaAngleLeft />
                 </button>
                 <button
-                    className="absolute hidden p-4 text-lg bg-white border border-gray-300 rounded-full shadow-md -right-2 md:block"
+                    className="absolute z-50 hidden p-4 text-lg bg-white border border-gray-300 rounded-full shadow-md -right-2 md:block"
                     onClick={scrollRight}
                 >
                     <FaAngleRight />
@@ -96,24 +103,61 @@ function HorizontalCardProduct({ category, heading }) {
                                           alt={product.description}
                                       />
                                   </div>
-                                  <div className="grid p-4">
+                                  <div className="relative z-10 grid p-4 overflow-hidden">
+                                      {checkPromotion(
+                                          promotionDetails,
+                                          product
+                                      ) && (
+                                          <div className="absolute flex items-center justify-center w-full h-6 text-white rotate-45 bg-red-500 top-4 -right-12">
+                                              <p className="text-center">
+                                                  Sale
+                                              </p>
+                                          </div>
+                                      )}
+
                                       <h2 className="text-base font-medium text-black md:text-lg text-ellipsis line-clamp-1">
                                           {product?.productName}
                                       </h2>
                                       <p className="capitalize text-slate-500">
                                           {product?.category}
                                       </p>
-                                      <div className="flex gap-3">
-                                          <p className="font-medium text-green-600">
-                                              {product.selling.toLocaleString()}
-                                              $
-                                          </p>
-                                          <p className="line-through text-slate-500">
-                                              {(product.selling * 1.1)
-                                                  .toFixed(2)
-                                                  .toLocaleString()}
-                                          </p>
-                                      </div>
+
+                                      {(() => {
+                                          const promotion = checkPromotion(
+                                              promotionDetails,
+                                              product
+                                          );
+
+                                          if (promotion) {
+                                              const discountedPrice = (
+                                                  product.selling -
+                                                  promotion.discount
+                                              ).toFixed(2);
+
+                                              return (
+                                                  <div className="flex gap-3">
+                                                      <p className="font-medium text-green-600">
+                                                          {discountedPrice.toLocaleString()}
+                                                          $
+                                                      </p>
+                                                      <p className="line-through text-slate-500">
+                                                          {product.selling
+                                                              .toFixed(2)
+                                                              .toLocaleString()}
+                                                          $
+                                                      </p>
+                                                  </div>
+                                              );
+                                          } else {
+                                              return (
+                                                  <p className="font-medium text-green-600">
+                                                      {product.selling.toLocaleString()}
+                                                      $
+                                                  </p>
+                                              );
+                                          }
+                                      })()}
+
                                       <button
                                           onClick={(e) =>
                                               addToCart(

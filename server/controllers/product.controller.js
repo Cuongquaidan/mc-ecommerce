@@ -213,6 +213,24 @@ async function filterProduct(req, res) {
     }
 }
 
+async function getBrands(req, res) {
+    try {
+        const brands = await productModel.distinct("brandName");
+        return res.status(200).json({
+            message: "All brands",
+            error: false,
+            success: true,
+            data: brands,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error || error.message,
+            error: true,
+            success: false,
+        });
+    }
+}
+
 module.exports = {
     addProduct,
     getAllProducts,
@@ -222,4 +240,5 @@ module.exports = {
     getProductDetails,
     searchProduct,
     filterProduct,
+    getBrands,
 };

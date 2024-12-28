@@ -93,6 +93,14 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/promotions/get-promotion`,
         method: "GET",
     },
+    getBrands: {
+        url: `${API_PREFIX}/products/getBrands`,
+        method: "GET",
+    },
+    getPromotionDetails: {
+        url: `${API_PREFIX}/promotion-details/get-promotion-details`,
+        method: "GET",
+    },
 };
 
 export default SUMMARY_API;

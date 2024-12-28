@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setUserInfo } from "../store/userSlice";
 import { setCart } from "../store/cartSlice";
-
+import { setPromotionDetails } from "../store/promotionDetailsSlice";
 const Context = createContext();
 
 const ContextProvider = ({ children }) => {
@@ -45,12 +45,30 @@ const ContextProvider = ({ children }) => {
         }
     };
 
+    const fetchPromotionDetails = async () => {
+        try {
+            const response = await fetch(SUMMARY_API.getPromotionDetails.url);
+            const result = await response.json();
+            if (result.success) {
+                dispatch(setPromotionDetails(result.data));
+            }
+            if (result.error) {
+                toast.error(result.message);
+            }
+        } catch (error) {
+            toast.error("Something went wrong");
+        }
+    };
+
     useEffect(() => {
         getUserInfo();
         fetchGetCart();
+        fetchPromotionDetails();
     }, []);
     return (
-        <Context.Provider value={{ getUserInfo, fetchGetCart }}>
+        <Context.Provider
+            value={{ getUserInfo, fetchGetCart, fetchPromotionDetails }}
+        >
             {children}
         </Context.Provider>
     );

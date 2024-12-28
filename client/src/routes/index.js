@@ -13,6 +13,8 @@ import Search from "../pages/Search";
 import AllPromotions from "../pages/AllPromotions";
 import PromotionAllProduct from "../pages/PromotionAllProduct";
 import PromotionSpecificProducts from "../pages/PromotionSpecificProducts";
+import PromotionSpecificCategories from "../pages/PromotionSpecificCategories";
+import PromotionSpecificBrands from "../pages/PromotionSpecificBrands";
 const { createBrowserRouter } = require("react-router-dom");
 
 const router = createBrowserRouter([
@@ -75,6 +77,14 @@ const router = createBrowserRouter([
                     {
                         path: "all-promotions/specific-products",
                         element: <PromotionSpecificProducts />,
+                    },
+                    {
+                        path: "all-promotions/specific-categories",
+                        element: <PromotionSpecificCategories />,
+                    },
+                    {
+                        path: "all-promotions/specific-brands",
+                        element: <PromotionSpecificBrands />,
                     },
                 ],
             },

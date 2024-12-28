@@ -5,6 +5,8 @@ import { FaStar } from "react-icons/fa";
 import { FaStarHalf } from "react-icons/fa";
 import addToCart from "../helpers/addToCart";
 import VerticalCardProduct from "../components/VerticalCardProduct";
+import checkPromotion from "../helpers/checkPromotion";
+import { useSelector } from "react-redux";
 // logic zoom ảnh
 //  Lay toa do theo phan tram
 // Dat lai vi tri scale  (điểm gốc biến đổi (transform origin))
@@ -58,6 +60,7 @@ const ProductDetails = () => {
         setZoomPosition({ x, y });
     }, []);
 
+    const promotionDetails = useSelector((state) => state?.promotionDetails);
     const handleMouseEnter = () => setZoom(true);
 
     const handleMouseLeave = () => setZoom(false);
@@ -127,9 +130,16 @@ const ProductDetails = () => {
 
                 {/*** Product Details Section ***/}
                 <div className="flex flex-col gap-1">
-                    <p className="inline-block px-2 text-blue-600 bg-blue-200 rounded-full w-fit">
-                        {data?.brandName}
-                    </p>
+                    <div className="flex gap-2">
+                        <p className="inline-block px-2 text-blue-600 bg-blue-200 rounded-full w-fit">
+                            {data?.brandName}
+                        </p>
+                        {checkPromotion(promotionDetails, data) && (
+                            <p className="inline-block px-2 text-red-600 bg-red-200 rounded-full w-fit">
+                                Sale
+                            </p>
+                        )}
+                    </div>
                     <h2 className="text-2xl font-medium lg:text-4xl">
                         {data?.productName}
                     </h2>
@@ -143,12 +153,40 @@ const ProductDetails = () => {
                         <FaStar />
                         <FaStarHalf />
                     </div>
-                    <div className="flex items-center gap-2 my-1 text-2xl font-medium lg:text-3xl">
-                        <p className="text-green-700">{data.selling}$</p>
-                        <p className="line-through text-slate-400">
-                            {(data.selling * 1.1).toFixed(2)}
-                        </p>
-                    </div>
+
+                    {(() => {
+                        const promotion = checkPromotion(
+                            promotionDetails,
+                            data
+                        );
+
+                        if (promotion) {
+                            const discountedPrice = (
+                                data.selling - promotion.discount
+                            ).toFixed(2);
+
+                            return (
+                                <div className="flex items-center gap-2 my-1 text-2xl font-medium lg:text-3xl">
+                                    <p className="font-medium text-green-600 ">
+                                        {discountedPrice.toLocaleString()}$
+                                    </p>
+                                    <p className="line-through text-slate-500">
+                                        {data.selling
+                                            .toFixed(2)
+                                            .toLocaleString()}
+                                        $
+                                    </p>
+                                </div>
+                            );
+                        } else {
+                            return (
+                                <p className="font-medium text-green-600">
+                                    {data.selling.toLocaleString()}$
+                                </p>
+                            );
+                        }
+                    })()}
+
                     <div className="flex items-center gap-3 my-2">
                         <button
                             className="border-2 border-blue-600 rounded px-3 py-1 min-w-[120px] text-blue-600 font-medium hover:bg-blue-600 hover:text-white"

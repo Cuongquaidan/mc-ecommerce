@@ -9,7 +9,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { debounce } from "lodash";
 import SUMMARY_API from "../common";
@@ -29,6 +29,9 @@ function ModalAddPromotion({ isOpen, onClose, type, onRefesh }) {
     const [loading, setLoading] = useState(false);
     const [text, setText] = useState("");
     const [isSearch, setIsSearch] = useState(false);
+
+    const [categories, setCategories] = useState([]);
+    const [brands, setBrands] = useState([]);
 
     // Xử lý thay đổi input
     const handleInputChange = (e) => {
@@ -65,7 +68,7 @@ function ModalAddPromotion({ isOpen, onClose, type, onRefesh }) {
 
         // Thêm loại khuyến mãi
         promotion.promotionType = type;
-
+        console.log(promotion);
         try {
             const response = await fetch(SUMMARY_API.addPromotion.url, {
                 method: SUMMARY_API.addPromotion.method,
@@ -119,6 +122,29 @@ function ModalAddPromotion({ isOpen, onClose, type, onRefesh }) {
         setText(value);
         handleSearch(value);
     };
+    const fetchCategory = async () => {
+        const response = await fetch(`${SUMMARY_API.getAllCategories.url}`);
+        if (!response.ok) {
+            throw new Error("Failed to fetch category");
+        }
+        const data = await response.json();
+
+        setCategories(data.data);
+    };
+    const fetchBrands = async () => {
+        const response = await fetch(`${SUMMARY_API.getBrands.url}`);
+        if (!response.ok) {
+            throw new Error("Failed to fetch brands");
+        }
+        const data = await response.json();
+
+        setBrands(data.data);
+    };
+
+    useEffect(() => {
+        fetchCategory();
+        fetchBrands();
+    }, []);
 
     return (
         <div>
@@ -198,7 +224,7 @@ function ModalAddPromotion({ isOpen, onClose, type, onRefesh }) {
                             onChange={handleInputChange}
                         />
                         {type === "SPECIFIC PRODUCTS" && (
-                            <div className="flex flex-wrap h-32 gap-4 p-4 overflow-y-scroll ">
+                            <div className="flex flex-wrap gap-4 p-4 overflow-y-scroll min-h-32 ">
                                 {productsTemp.length > 0 &&
                                     productsTemp.map((product) => (
                                         <div
@@ -318,6 +344,97 @@ function ModalAddPromotion({ isOpen, onClose, type, onRefesh }) {
                                         )}
                                     </div>
                                 )}
+                            </div>
+                        )}
+
+                        {type === "SPECIFIC CATEGORIES" &&
+                            categories.length > 0 && (
+                                <div className="flex flex-wrap gap-8">
+                                    {categories.map((category) => (
+                                        <div
+                                            key={category._id}
+                                            className="flex gap-2 cursor-pointer"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                name="categories"
+                                                id={category.value}
+                                                value={category._id}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        setPromotion({
+                                                            ...promotion,
+                                                            categories: [
+                                                                ...promotion.categories,
+                                                                e.target.value,
+                                                            ],
+                                                        });
+                                                    } else {
+                                                        setPromotion({
+                                                            ...promotion,
+                                                            categories:
+                                                                promotion.categories.filter(
+                                                                    (id) =>
+                                                                        id !==
+                                                                        e.target
+                                                                            .value
+                                                                ),
+                                                        });
+                                                    }
+                                                }}
+                                            />
+                                            <label htmlFor={category.value}>
+                                                {category.label}
+                                            </label>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                        {type === "SPECIFIC BRANDS" && brands.length > 0 && (
+                            <div className="mt-5">
+                                <h2 className="mb-2 text-xl font-bold">
+                                    Select brand
+                                </h2>
+                                <div className="flex flex-wrap h-32 gap-4 overflow-y-scroll">
+                                    {brands.map((brand) => (
+                                        <div
+                                            key={brand}
+                                            className="flex gap-2 cursor-pointer"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                name="brands"
+                                                id={brand}
+                                                value={brand}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        setPromotion({
+                                                            ...promotion,
+                                                            brands: [
+                                                                ...promotion.brands,
+                                                                e.target.value,
+                                                            ],
+                                                        });
+                                                    } else {
+                                                        setPromotion({
+                                                            ...promotion,
+                                                            brands: promotion.brands.filter(
+                                                                (b) =>
+                                                                    b !==
+                                                                    e.target
+                                                                        .value
+                                                            ),
+                                                        });
+                                                    }
+                                                }}
+                                            />
+                                            <label htmlFor={brand}>
+                                                {brand}
+                                            </label>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
                         <div

@@ -2,11 +2,13 @@ import React, { useContext } from "react";
 import addToCart from "../helpers/addToCart";
 import { Link } from "react-router-dom";
 import { useContextGlobal } from "../context";
+import checkPromotion from "../helpers/checkPromotion";
+import { useSelector } from "react-redux";
 
 const VerticalCard = ({ loading, data = [] }) => {
     const loadingList = new Array(13).fill(null);
     const { fetchGetCart } = useContextGlobal();
-
+    const promotionDetails = useSelector((state) => state?.promotionDetails);
     const handleAddToCart = async (e, id) => {
         await addToCart(e, id, 1, fetchGetCart);
     };
@@ -50,14 +52,41 @@ const VerticalCard = ({ loading, data = [] }) => {
                                   <p className="capitalize text-slate-500">
                                       {product?.category}
                                   </p>
-                                  <div className="flex items-center gap-3">
-                                      <p className="text-lg font-medium text-green-600">
-                                          {product?.selling}$
-                                      </p>
-                                      <p className="line-through text-slate-500">
-                                          {(product?.selling * 1.1).toFixed(2)}$
-                                      </p>
-                                  </div>
+                                  {(() => {
+                                      const promotion = checkPromotion(
+                                          promotionDetails,
+                                          product
+                                      );
+
+                                      if (promotion) {
+                                          const discountedPrice = (
+                                              product.selling -
+                                              promotion.discount
+                                          ).toFixed(2);
+
+                                          return (
+                                              <div className="flex gap-3">
+                                                  <p className="text-lg font-medium text-green-600">
+                                                      {discountedPrice.toLocaleString()}
+                                                      $
+                                                  </p>
+                                                  <p className="text-lg line-through text-slate-500">
+                                                      {product.selling
+                                                          .toFixed(2)
+                                                          .toLocaleString()}
+                                                      $
+                                                  </p>
+                                              </div>
+                                          );
+                                      } else {
+                                          return (
+                                              <p className="font-medium text-green-600">
+                                                  {product.selling.toLocaleString()}
+                                                  $
+                                              </p>
+                                          );
+                                      }
+                                  })()}
                                   <button
                                       className="px-3 py-2 text-lg text-white bg-blue-600 rounded-full hover:bg-blue-700"
                                       onClick={(e) =>

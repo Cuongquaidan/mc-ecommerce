@@ -14,4 +14,5 @@ router
 router.route("/getProductDetails").post(productController.getProductDetails);
 router.route("/search").get(productController.searchProduct);
 router.route("/filter").post(productController.filterProduct);
+router.route("/getBrands").get(productController.getBrands);
 module.exports = router;

@@ -16,7 +16,8 @@ function Login() {
         email: "",
         password: "",
     });
-    const { getUserInfo } = useContextGlobal();
+    const { getUserInfo, fetchGetCart, fetchPromotionDetails } =
+        useContextGlobal();
     const handleChange = (e) => {
         setData({
             ...data,
@@ -47,6 +48,8 @@ function Login() {
                 toast.success(result.message);
                 navigate("/");
                 getUserInfo();
+                fetchGetCart();
+                fetchPromotionDetails();
             } else {
                 toast.error(result.error);
             }

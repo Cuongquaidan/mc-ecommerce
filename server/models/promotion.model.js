@@ -53,32 +53,6 @@ const promotionSchema = new mongoose.Schema({
 });
 
 const PromotionModel =
-    mongoose.models.Promotion || mongoose.model("promotion", promotionSchema);
-
-promotionSchema.pre("find", async function (next) {
-    await this.updateMany(
-        {
-            endDate: { $lt: new Date() },
-            isExp: false,
-        },
-        {
-            $set: { isExp: true },
-        }
-    );
-    next();
-});
-
-promotionSchema.pre("findOne", async function (next) {
-    await this.updateOne(
-        {
-            endDate: { $lt: new Date() },
-            isExp: false,
-        },
-        {
-            $set: { isExp: true },
-        }
-    );
-    next();
-});
+    mongoose.models.promotion || mongoose.model("promotion", promotionSchema);
 
 module.exports = PromotionModel;
