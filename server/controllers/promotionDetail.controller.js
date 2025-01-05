@@ -23,7 +23,7 @@ async function removeDetailsExp() {
 
 async function getAllTop1PromotionDetailOfAllProduct(req, res) {
     try {
-        await removeDetailsExp();
+        // await removeDetailsExp();
         const promotionDetails = await PromotionDetailModel.aggregate([
             {
                 $lookup: {
@@ -77,4 +77,5 @@ async function getAllTop1PromotionDetailOfAllProduct(req, res) {
 
 module.exports = {
     getAllTop1PromotionDetailOfAllProduct,
+    removeDetailsExp,
 };

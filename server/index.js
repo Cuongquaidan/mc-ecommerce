@@ -6,6 +6,10 @@ const connect = require("./database/config");
 dotenv.config();
 const port = process.env.PORT || 8080;
 const router = require("./routes/index");
+const promotionController = require("./controllers/promotion.controller");
+const promotionDetailController = require("./controllers/promotionDetail.controller");
+
+const { CronJob } = require("cron");
 
 const app = express();
 app.use(CookieParser());
@@ -16,6 +20,16 @@ app.use(
         credentials: true,
     })
 );
+const job = CronJob.from({
+    cronTime: "0 0 0 * * *",
+    onTick: function () {
+        promotionController.checkExpiredPromotion();
+        promotionDetailController.removeDetailsExp();
+    },
+    start: true,
+    timeZone: "Asia/Ho_Chi_Minh",
+});
+job.start();
 
 app.use("/api/v1", router);
 connect().then(() => {

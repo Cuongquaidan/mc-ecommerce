@@ -224,7 +224,7 @@ function ModalAddPromotion({ isOpen, onClose, type, onRefesh }) {
                             onChange={handleInputChange}
                         />
                         {type === "SPECIFIC PRODUCTS" && (
-                            <div className="flex flex-wrap gap-4 p-4 overflow-y-scroll min-h-32 ">
+                            <div className="flex flex-wrap h-32 gap-4 p-4 overflow-y-scroll ">
                                 {productsTemp.length > 0 &&
                                     productsTemp.map((product) => (
                                         <div

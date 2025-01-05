@@ -143,7 +143,7 @@ async function disabledPromotion(req, res) {
 
 async function getPromotion(req, res) {
     try {
-        checkExpiredPromotion();
+        // checkExpiredPromotion();
 
         const promotionType = req.query.type;
         console.log(promotionType);
@@ -186,4 +186,5 @@ module.exports = {
     getAllPromotions,
     disabledPromotion,
     getPromotion,
+    checkExpiredPromotion,
 };
