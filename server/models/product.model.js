@@ -9,6 +9,22 @@ const productSchema = mongoose.Schema(
         description: String,
         price: Number,
         selling: Number,
+        stock: {
+            type: Number,
+            default: 0,
+        },
+        rating: {
+            type: Number,
+            default: 0,
+        },
+        numReviews: {
+            type: Number,
+            default: 0,
+        },
+        numSold: {
+            type: Number,
+            default: 0,
+        },
     },
     {
         timestamps: true,

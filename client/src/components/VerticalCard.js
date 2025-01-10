@@ -38,12 +38,20 @@ const VerticalCard = ({ loading, data = [] }) => {
                               to={"/product/" + product?._id}
                               className="w-full min-w-[280px]  md:min-w-[300px] max-w-[280px] md:max-w-[300px]  bg-white rounded-sm shadow "
                           >
-                              <div className="bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[145px] flex justify-center items-center">
+                              <div className="bg-slate-200 relative overflow-hidden h-48 p-4 min-w-[280px] md:min-w-[145px] flex justify-center items-center">
                                   <img
                                       src={product?.productImages[0]}
                                       className="object-scale-down h-full transition-all hover:scale-110 mix-blend-multiply"
                                       alt="MCSHOP"
                                   />
+                                  {checkPromotion(
+                                      promotionDetails,
+                                      product
+                                  ) && (
+                                      <div className="absolute flex items-center justify-center w-full h-8 text-white rotate-45 bg-red-500 top-2 -right-32">
+                                          <p className="text-center">Sale</p>
+                                      </div>
+                                  )}
                               </div>
                               <div className="grid gap-3 p-4">
                                   <h2 className="text-base font-medium text-black md:text-lg text-ellipsis line-clamp-1">

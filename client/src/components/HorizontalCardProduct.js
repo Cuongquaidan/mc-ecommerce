@@ -16,8 +16,6 @@ function HorizontalCardProduct({ category, heading }) {
 
     const promotionDetails = useSelector((state) => state?.promotionDetails);
 
-    console.log(promotionDetails);
-
     useEffect(() => {
         const fetchCategoryWise = async () => {
             setLoading(true);

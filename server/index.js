@@ -8,6 +8,7 @@ const port = process.env.PORT || 8080;
 const router = require("./routes/index");
 const promotionController = require("./controllers/promotion.controller");
 const promotionDetailController = require("./controllers/promotionDetail.controller");
+var path = require("path");
 
 const { CronJob } = require("cron");
 
@@ -20,16 +21,19 @@ app.use(
         credentials: true,
     })
 );
-const job = CronJob.from({
-    cronTime: "0 0 0 * * *",
-    onTick: function () {
-        promotionController.checkExpiredPromotion();
-        promotionDetailController.removeDetailsExp();
-    },
-    start: true,
-    timeZone: "Asia/Ho_Chi_Minh",
-});
-job.start();
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "jade");
+app.use(express.static(path.join(__dirname, "public")));
+// const job = CronJob.from({
+//     cronTime: "* * * * * *",
+//     onTick: function () {
+//         promotionController.checkExpiredPromotion();
+//         promotionDetailController.removeDetailsExp();
+//     },
+//     start: true,
+//     timeZone: "Asia/Ho_Chi_Minh",
+// });
+// job.start();
 
 app.use("/api/v1", router);
 connect().then(() => {

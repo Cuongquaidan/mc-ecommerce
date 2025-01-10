@@ -101,6 +101,14 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/promotion-details/get-promotion-details`,
         method: "GET",
     },
+    createVNPAYUrl: {
+        url: `${API_PREFIX}/payment/create_payment_VNPAYUrl`,
+        method: "POST",
+    },
+    vnpay_ipn: {
+        url: `${API_PREFIX}/payment/vnpay_ipn`,
+        method: "GET",
+    },
 };
 
 export default SUMMARY_API;

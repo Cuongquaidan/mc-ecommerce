@@ -4,10 +4,13 @@ import { useContextGlobal } from "../context";
 import SUMMARY_API from "../common";
 import { Modal, Button, Typography, Box } from "@mui/material";
 import { FaTrash } from "react-icons/fa";
+import checkPromotion from "../helpers/checkPromotion";
 const Cart = () => {
     const cart = useSelector((state) => state.cart); // Lấy giỏ hàng từ Redux
+    console.log(cart);
     const { fetchGetCart } = useContextGlobal(); // Lấy hàm fetchGetCart từ Context
-    const [promo, setPromo] = useState(0); // Khuyến mãi mặc định là 0
+
+    const promotionDetails = useSelector((state) => state?.promotionDetails);
     const taxRate = 0.05; // Thuế 5%
     const [openModal, setOpenModal] = useState(false);
     const [modalContent, setModalContent] = useState({});
@@ -90,7 +93,30 @@ const Cart = () => {
             0
         );
         const tax = subtotal * taxRate;
-        return subtotal + tax - promo;
+        return parseInt(subtotal + tax) * 25000; // Tổng cộng bao gồm thuế
+    };
+
+    const handleCheckoutWithVNPay = async () => {
+        try {
+            const response = await fetch(`${SUMMARY_API.createVNPAYUrl.url}`, {
+                method: SUMMARY_API.createVNPAYUrl.method,
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    amount: calculateTotal(),
+                    orderDescription: "Payment for products",
+                    orderType: "other",
+                }),
+            });
+            const result = await response.json();
+            if (result.success) {
+                window.location.href = result.data;
+            }
+        } catch (error) {
+            console.error("Failed to create VNPAY URL:", error);
+        }
     };
 
     return (
@@ -102,7 +128,7 @@ const Cart = () => {
                         cart.products.map((item) => (
                             <div
                                 key={item._id}
-                                className="flex items-center justify-between p-4 border-b"
+                                className="relative flex items-center justify-between p-4 overflow-hidden border-b"
                             >
                                 <div className="flex items-center">
                                     <img
@@ -111,15 +137,57 @@ const Cart = () => {
                                         className="object-cover w-16 h-16 rounded"
                                     />
                                     <div className="ml-4">
-                                        <p className="font-bold">
+                                        <p className="flex gap-4 font-bold">
                                             {item.product.productName}
+                                            {checkPromotion(
+                                                promotionDetails,
+                                                item.product
+                                            ) && (
+                                                <div className="left-0 flex items-center justify-center w-10 h-6 text-white bg-red-500 top-4">
+                                                    <p className="text-center">
+                                                        Sale
+                                                    </p>
+                                                </div>
+                                            )}
                                         </p>
                                         <p className="text-sm text-gray-500">
                                             {item.product.description}
                                         </p>
-                                        <p className="font-bold text-green-500">
-                                            {item.product.selling}$
-                                        </p>
+                                        {(() => {
+                                            const promotion = checkPromotion(
+                                                promotionDetails,
+                                                item.product
+                                            );
+
+                                            if (promotion) {
+                                                const discountedPrice = (
+                                                    item.product.selling -
+                                                    promotion.discount
+                                                ).toFixed(2);
+
+                                                return (
+                                                    <div className="flex gap-3">
+                                                        <p className="font-medium text-green-600">
+                                                            {discountedPrice.toLocaleString()}
+                                                            $
+                                                        </p>
+                                                        <p className="line-through text-slate-500">
+                                                            {item.product.selling
+                                                                .toFixed(2)
+                                                                .toLocaleString()}
+                                                            $
+                                                        </p>
+                                                    </div>
+                                                );
+                                            } else {
+                                                return (
+                                                    <p className="font-medium text-green-600">
+                                                        {item.product.selling.toLocaleString()}
+                                                        $
+                                                    </p>
+                                                );
+                                            }
+                                        })()}
                                     </div>
                                 </div>
                                 <div className="flex items-center">
@@ -178,10 +246,32 @@ const Cart = () => {
                                     $
                                     {cart.products
                                         .reduce(
-                                            (sum, item) =>
-                                                sum +
-                                                item.product.selling *
-                                                    item.quantity,
+                                            (sum, item) => {
+                                                const promotion =
+                                                    checkPromotion(
+                                                        promotionDetails,
+                                                        item.product
+                                                    );
+
+                                                if (promotion) {
+                                                    const discountedPrice = (
+                                                        item.product.selling -
+                                                        promotion.discount
+                                                    ).toFixed(2);
+                                                    return (
+                                                        sum +
+                                                        discountedPrice *
+                                                            item.quantity
+                                                    );
+                                                } else {
+                                                    return (
+                                                        sum +
+                                                        item.product.selling *
+                                                            item.quantity
+                                                    );
+                                                }
+                                            },
+
                                             0
                                         )
                                         .toFixed(2)}
@@ -202,15 +292,15 @@ const Cart = () => {
                                     ).toFixed(2)}
                                 </span>
                             </div>
-                            <div className="flex justify-between mb-2">
-                                <span>Promo:</span>
-                                <span>${promo.toFixed(2)}</span>
-                            </div>
+
                             <div className="flex justify-between mb-4 font-bold">
                                 <span>Total:</span>
-                                <span>${calculateTotal().toFixed(2)}</span>
+                                <span>{calculateTotal().toFixed(2)}VND</span>
                             </div>
-                            <button className="w-full py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+                            <button
+                                className="w-full py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+                                onClick={handleCheckoutWithVNPay}
+                            >
                                 Checkout
                             </button>
                         </>
