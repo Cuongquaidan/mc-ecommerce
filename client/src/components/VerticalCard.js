@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useContextGlobal } from "../context";
 import checkPromotion from "../helpers/checkPromotion";
 import { useSelector } from "react-redux";
+import { IoMdStar } from "react-icons/io";
 
 const VerticalCard = ({ loading, data = [] }) => {
     const loadingList = new Array(13).fill(null);
@@ -95,6 +96,19 @@ const VerticalCard = ({ loading, data = [] }) => {
                                           );
                                       }
                                   })()}
+                                  <div className="flex justify-between">
+                                      <div className="text-sm text-slate-500">
+                                          Stock: {product.stock}
+                                      </div>
+                                      <div className="flex items-center gap-1 text-sm text-slate-500">
+                                          {product.rating}{" "}
+                                          <IoMdStar
+                                              size={20}
+                                              className="text-yellow-500 "
+                                          />
+                                      </div>
+                                  </div>
+
                                   <button
                                       className="px-3 py-2 text-lg text-white bg-blue-600 rounded-full hover:bg-blue-700"
                                       onClick={(e) =>

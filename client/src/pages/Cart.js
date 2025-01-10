@@ -5,15 +5,26 @@ import SUMMARY_API from "../common";
 import { Modal, Button, Typography, Box } from "@mui/material";
 import { FaTrash } from "react-icons/fa";
 import checkPromotion from "../helpers/checkPromotion";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import paymentMethods from "../common/paymentMethods";
+import groupProductByBrand from "../helpers/groupProductByBrand";
+
+import { FaRegSquareCheck } from "react-icons/fa6";
+import ungroupProductBrand from "../helpers/ungroupProductBrand";
 const Cart = () => {
+    const [groups, setGroups] = useState([]);
+    const [groupsSelected, setGroupsSelected] = useState([]);
     const cart = useSelector((state) => state.cart); // Lấy giỏ hàng từ Redux
-    console.log(cart);
+    const user = useSelector((state) => state?.user?.user);
+    const navigate = useNavigate();
     const { fetchGetCart } = useContextGlobal(); // Lấy hàm fetchGetCart từ Context
 
     const promotionDetails = useSelector((state) => state?.promotionDetails);
     const taxRate = 0.05; // Thuế 5%
     const [openModal, setOpenModal] = useState(false);
     const [modalContent, setModalContent] = useState({});
+    const [paymentMethod, setPaymentMethod] = useState(paymentMethods.COD);
 
     const handleUpdateQuantity = async (productId, quantity) => {
         if (quantity === 0) {
@@ -27,6 +38,7 @@ const Cart = () => {
         }
 
         try {
+            console.log(quantity);
             const response = await fetch(`${SUMMARY_API.updateQuantity.url}`, {
                 method: SUMMARY_API.updateQuantity.method,
                 credentials: "include",
@@ -38,6 +50,9 @@ const Cart = () => {
             const result = await response.json();
             if (result.success) {
                 fetchGetCart();
+            }
+            if (result.error) {
+                toast.error(result.message);
             }
         } catch (error) {
             console.error("Failed to update quantity:", error);
@@ -76,6 +91,8 @@ const Cart = () => {
             } catch (error) {
                 console.error("Failed to remove product:", error);
             }
+        } else if (type === "checkout") {
+            navigate("/my-profile");
         }
 
         setOpenModal(false); // Đóng modal
@@ -86,148 +103,305 @@ const Cart = () => {
     };
 
     const calculateTotal = () => {
-        if (!cart || !cart.products) return 0;
+        if (!groupsSelected || !groupsSelected.products?.length === 0) return 0;
 
-        const subtotal = cart.products.reduce(
-            (sum, item) => sum + item.product.selling * item.quantity,
-            0
-        );
+        const ungrouped = ungroupProductBrand(groupsSelected);
+
+        const subtotal = ungrouped.reduce((sum, item) => {
+            const promotion = checkPromotion(promotionDetails, item.product);
+
+            if (promotion) {
+                const discountedPrice = (
+                    item.product.selling - promotion.discount
+                ).toFixed(2);
+                return sum + discountedPrice * item.quantity;
+            } else {
+                return sum + item.product.selling * item.quantity;
+            }
+        }, 0);
         const tax = subtotal * taxRate;
         return parseInt(subtotal + tax) * 25000; // Tổng cộng bao gồm thuế
     };
 
-    const handleCheckoutWithVNPay = async () => {
+    const handleCheckout = async () => {
         try {
-            const response = await fetch(`${SUMMARY_API.createVNPAYUrl.url}`, {
-                method: SUMMARY_API.createVNPAYUrl.method,
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    amount: calculateTotal(),
-                    orderDescription: "Payment for products",
-                    orderType: "other",
-                }),
-            });
-            const result = await response.json();
-            if (result.success) {
-                window.location.href = result.data;
+            if (!user.address || !user.phone) {
+                setModalContent({
+                    type: "checkout",
+                    message:
+                        "Please update your address and phone number before checkout.",
+                });
+                setOpenModal(true);
+                return;
+            }
+            if (paymentMethod === paymentMethods.COD) {
+            } else if (paymentMethod === paymentMethods.VNPAY) {
+                const response = await fetch(
+                    `${SUMMARY_API.createVNPAYUrl.url}`,
+                    {
+                        method: SUMMARY_API.createVNPAYUrl.method,
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            amount: calculateTotal(),
+                            orderDescription: "Payment for products",
+                            orderType: "other",
+                        }),
+                    }
+                );
+                const result = await response.json();
+                if (result.success) {
+                    window.location.href = result.data;
+                }
             }
         } catch (error) {
             console.error("Failed to create VNPAY URL:", error);
         }
     };
 
+    const handleCheckBrand = (brand) => {
+        if (groupsSelected.some((item) => item.brand === brand)) {
+            const groupSelectedWithNoBrand = groupsSelected.filter(
+                (item) => item.brand !== brand
+            );
+            if (!checkAllProductOfBrand(brand)) {
+                setGroupsSelected([
+                    ...groupSelectedWithNoBrand,
+                    groups.find((group) => group.brand === brand),
+                ]);
+            } else {
+                setGroupsSelected(
+                    groupsSelected.map((item) =>
+                        item.brand === brand ? { ...item, products: [] } : item
+                    )
+                );
+            }
+        } else {
+            setGroupsSelected([
+                ...groupsSelected,
+                groups.find((item) => item.brand === brand),
+            ]);
+        }
+        console.log(groupsSelected);
+    };
+    const handleCheckItem = (productId, brand) => {
+        const groupSelectedCheck = groupsSelected.find(
+            (item) => item.brand === brand
+        );
+        let groupSelectedProducts = groupSelectedCheck.products;
+        if (groupSelectedProducts.some((item) => item._id === productId)) {
+            groupSelectedProducts = groupSelectedProducts.filter(
+                (item) => item._id !== productId
+            );
+        } else {
+            groupSelectedProducts = [
+                ...groupSelectedProducts,
+                cart.products.find((item) => item._id === productId),
+            ];
+        }
+        const newGroupsSelected = groupsSelected.map((item) =>
+            item.brand === brand
+                ? { ...item, products: groupSelectedProducts }
+                : item
+        );
+        setGroupsSelected(newGroupsSelected);
+    };
+
+    const checkAllProductOfBrand = (brand) => {
+        const groupBrand = groups.find((item) => item.brand === brand);
+        const groupSelected = groupsSelected.find(
+            (item) => item.brand === brand
+        );
+
+        if (!groupBrand || !groupSelected) {
+            return false; // Hoặc giá trị mặc định bạn mong muốn
+        }
+
+        if (groupBrand.products?.length === groupSelected.products?.length) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    useEffect(() => {
+        if (cart && cart.products) {
+            setGroups(groupProductByBrand(cart.products));
+            setGroupsSelected(groupProductByBrand(cart.products));
+        }
+        console.log(groups);
+    }, [cart]);
     return (
         <div className="container p-4 mx-auto">
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                 {/* Danh sách sản phẩm */}
                 <div className="col-span-2">
-                    {cart && cart.products.length > 0 ? (
-                        cart.products.map((item) => (
+                    {groups && groups.length > 0 ? (
+                        groups.map((group) => (
                             <div
-                                key={item._id}
-                                className="relative flex items-center justify-between p-4 overflow-hidden border-b"
+                                className="border-b-2 border-gray-300"
+                                key={group.brand}
                             >
-                                <div className="flex items-center">
-                                    <img
-                                        src={item.product.productImages[0]}
-                                        alt={item.product.productName}
-                                        className="object-cover w-16 h-16 rounded"
-                                    />
-                                    <div className="ml-4">
-                                        <p className="flex gap-4 font-bold">
-                                            {item.product.productName}
-                                            {checkPromotion(
-                                                promotionDetails,
-                                                item.product
-                                            ) && (
-                                                <div className="left-0 flex items-center justify-center w-10 h-6 text-white bg-red-500 top-4">
-                                                    <p className="text-center">
-                                                        Sale
-                                                    </p>
-                                                </div>
-                                            )}
-                                        </p>
-                                        <p className="text-sm text-gray-500">
-                                            {item.product.description}
-                                        </p>
-                                        {(() => {
-                                            const promotion = checkPromotion(
-                                                promotionDetails,
-                                                item.product
-                                            );
-
-                                            if (promotion) {
-                                                const discountedPrice = (
-                                                    item.product.selling -
-                                                    promotion.discount
-                                                ).toFixed(2);
-
-                                                return (
-                                                    <div className="flex gap-3">
-                                                        <p className="font-medium text-green-600">
-                                                            {discountedPrice.toLocaleString()}
-                                                            $
-                                                        </p>
-                                                        <p className="line-through text-slate-500">
-                                                            {item.product.selling
-                                                                .toFixed(2)
-                                                                .toLocaleString()}
-                                                            $
-                                                        </p>
-                                                    </div>
-                                                );
-                                            } else {
-                                                return (
-                                                    <p className="font-medium text-green-600">
-                                                        {item.product.selling.toLocaleString()}
-                                                        $
-                                                    </p>
-                                                );
-                                            }
-                                        })()}
+                                <div className="flex items-center gap-4 p-2">
+                                    <h2 className="text-2xl italic font-bold">
+                                        {group.brand}
+                                    </h2>
+                                    <div
+                                        className="relative cursor-pointer"
+                                        onClick={() =>
+                                            handleCheckBrand(group.brand)
+                                        }
+                                    >
+                                        {checkAllProductOfBrand(group.brand) ? (
+                                            <FaRegSquareCheck
+                                                size={32}
+                                                className="text-green-600"
+                                            />
+                                        ) : (
+                                            <div className="w-[28px] h-[28px] mr-2 rounded-sm border-4 border-black"></div>
+                                        )}
                                     </div>
                                 </div>
-                                <div className="flex items-center">
-                                    <button
-                                        className="px-2 py-1 border rounded hover:bg-gray-200"
-                                        onClick={() =>
-                                            handleUpdateQuantity(
-                                                item.product._id,
-                                                item.quantity - 1
-                                            )
-                                        }
-                                        disabled={item.quantity <= 1}
+                                {group.products.map((item) => (
+                                    <div
+                                        key={item._id}
+                                        className="relative flex items-center justify-between p-4 overflow-hidden border-b"
                                     >
-                                        -
-                                    </button>
-                                    <span className="mx-2">
-                                        {item.quantity}
-                                    </span>
-                                    <button
-                                        className="px-2 py-1 border rounded hover:bg-gray-200"
-                                        onClick={() =>
-                                            handleUpdateQuantity(
-                                                item.product._id,
-                                                item.quantity + 1
-                                            )
-                                        }
-                                    >
-                                        +
-                                    </button>
-                                    <button
-                                        className="p-2 ml-4 text-red-600 bg-red-100 rounded-full"
-                                        onClick={() =>
-                                            handleRemoveProduct(
-                                                item.product._id
-                                            )
-                                        }
-                                    >
-                                        <FaTrash />
-                                    </button>
-                                </div>
+                                        <div className="flex items-center">
+                                            <div
+                                                className="relative w-8 h-4 cursor-pointer"
+                                                onClick={() =>
+                                                    handleCheckItem(
+                                                        item._id,
+                                                        group.brand
+                                                    )
+                                                }
+                                            >
+                                                {groupsSelected.some(
+                                                    (groupSelected) =>
+                                                        groupSelected.products.some(
+                                                            (product) =>
+                                                                product._id ===
+                                                                item._id
+                                                        )
+                                                ) ? (
+                                                    <FaRegSquareCheck
+                                                        size={26}
+                                                        className="absolute top-0 left-0 mr-4 text-green-600"
+                                                    />
+                                                ) : (
+                                                    <div className="w-[22px] h-[22px] mr-4 absolute top-0 left-0 rounded-sm border-2 border-black"></div>
+                                                )}
+                                            </div>
+                                            <img
+                                                src={
+                                                    item.product
+                                                        .productImages[0]
+                                                }
+                                                alt={item.product.productName}
+                                                className="object-cover w-16 h-16 rounded"
+                                            />
+                                            <div className="ml-4">
+                                                <p className="flex gap-4 font-bold">
+                                                    {item.product.productName}
+                                                    {checkPromotion(
+                                                        promotionDetails,
+                                                        item.product
+                                                    ) && (
+                                                        <div className="left-0 flex items-center justify-center w-10 h-6 text-white bg-red-500 top-4">
+                                                            <p className="text-center">
+                                                                Sale
+                                                            </p>
+                                                        </div>
+                                                    )}
+                                                </p>
+                                                <p className="text-sm text-gray-500">
+                                                    {item.product.description}
+                                                </p>
+                                                {(() => {
+                                                    const promotion =
+                                                        checkPromotion(
+                                                            promotionDetails,
+                                                            item.product
+                                                        );
+
+                                                    if (promotion) {
+                                                        const discountedPrice =
+                                                            (
+                                                                item.product
+                                                                    .selling -
+                                                                promotion.discount
+                                                            ).toFixed(2);
+
+                                                        return (
+                                                            <div className="flex gap-3">
+                                                                <p className="font-medium text-green-600">
+                                                                    {discountedPrice.toLocaleString()}
+                                                                    $
+                                                                </p>
+                                                                <p className="line-through text-slate-500">
+                                                                    {item.product.selling
+                                                                        .toFixed(
+                                                                            2
+                                                                        )
+                                                                        .toLocaleString()}
+                                                                    $
+                                                                </p>
+                                                            </div>
+                                                        );
+                                                    } else {
+                                                        return (
+                                                            <p className="font-medium text-green-600">
+                                                                {item.product.selling.toLocaleString()}
+                                                                $
+                                                            </p>
+                                                        );
+                                                    }
+                                                })()}
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <button
+                                                className="px-2 py-1 border rounded hover:bg-gray-200"
+                                                onClick={() =>
+                                                    handleUpdateQuantity(
+                                                        item.product._id,
+                                                        item.quantity - 1
+                                                    )
+                                                }
+                                                disabled={item.quantity <= 1}
+                                            >
+                                                -
+                                            </button>
+                                            <span className="mx-2">
+                                                {item.quantity}
+                                            </span>
+                                            <button
+                                                className="px-2 py-1 border rounded hover:bg-gray-200"
+                                                onClick={() =>
+                                                    handleUpdateQuantity(
+                                                        item.product._id,
+                                                        item.quantity + 1
+                                                    )
+                                                }
+                                            >
+                                                +
+                                            </button>
+                                            <button
+                                                className="p-2 ml-4 text-red-600 bg-red-100 rounded-full"
+                                                onClick={() =>
+                                                    handleRemoveProduct(
+                                                        item.product._id
+                                                    )
+                                                }
+                                            >
+                                                <FaTrash />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         ))
                     ) : (
@@ -282,13 +456,30 @@ const Cart = () => {
                                 <span>
                                     $
                                     {(
-                                        cart.products.reduce(
-                                            (sum, item) =>
-                                                sum +
-                                                item.product.selling *
-                                                    item.quantity,
-                                            0
-                                        ) * taxRate
+                                        cart.products.reduce((sum, item) => {
+                                            const promotion = checkPromotion(
+                                                promotionDetails,
+                                                item.product
+                                            );
+
+                                            if (promotion) {
+                                                const discountedPrice = (
+                                                    item.product.selling -
+                                                    promotion.discount
+                                                ).toFixed(2);
+                                                return (
+                                                    sum +
+                                                    discountedPrice *
+                                                        item.quantity
+                                                );
+                                            } else {
+                                                return (
+                                                    sum +
+                                                    item.product.selling *
+                                                        item.quantity
+                                                );
+                                            }
+                                        }, 0) * taxRate
                                     ).toFixed(2)}
                                 </span>
                             </div>
@@ -297,11 +488,31 @@ const Cart = () => {
                                 <span>Total:</span>
                                 <span>{calculateTotal().toFixed(2)}VND</span>
                             </div>
+
+                            <div className="flex flex-col gap-2 mb-4">
+                                <select
+                                    name="paymentMethod"
+                                    id="paymentMethod"
+                                    className="p-2 border border-green-700 outline-none"
+                                    value={paymentMethod}
+                                    onChange={(e) =>
+                                        setPaymentMethod(e.target.value)
+                                    }
+                                >
+                                    <option value={paymentMethods.COD}>
+                                        COD
+                                    </option>
+                                    <option value={paymentMethods.VNPAY}>
+                                        VNPay
+                                    </option>
+                                </select>
+                            </div>
+
                             <button
                                 className="w-full py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
-                                onClick={handleCheckoutWithVNPay}
+                                onClick={handleCheckout}
                             >
-                                Checkout
+                                Order
                             </button>
                         </>
                     )}

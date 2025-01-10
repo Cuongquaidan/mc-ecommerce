@@ -7,6 +7,7 @@ import addToCart from "../helpers/addToCart";
 import VerticalCardProduct from "../components/VerticalCardProduct";
 import checkPromotion from "../helpers/checkPromotion";
 import { useSelector } from "react-redux";
+import { IoMdStar } from "react-icons/io";
 // logic zoom ảnh
 //  Lay toa do theo phan tram
 // Dat lai vi tri scale  (điểm gốc biến đổi (transform origin))
@@ -146,12 +147,13 @@ const ProductDetails = () => {
                     <p className="capitalize text-slate-400">
                         {data?.category}
                     </p>
-                    <div className="flex items-center gap-1 text-yellow-500">
-                        <FaStar />
-                        <FaStar />
-                        <FaStar />
-                        <FaStar />
-                        <FaStarHalf />
+
+                    <div className="text-md text-slate-400">
+                        Stock: {data?.stock}
+                    </div>
+                    <div className="flex items-center gap-1 text-md text-slate-400">
+                        {data?.rating}{" "}
+                        <IoMdStar size={25} className="text-yellow-500 " />
                     </div>
 
                     {(() => {
@@ -180,7 +182,7 @@ const ProductDetails = () => {
                             );
                         } else {
                             return (
-                                <p className="font-medium text-green-600">
+                                <p className="text-2xl font-medium text-green-600  lg:text-3xl">
                                     {data.selling.toLocaleString()}$
                                 </p>
                             );

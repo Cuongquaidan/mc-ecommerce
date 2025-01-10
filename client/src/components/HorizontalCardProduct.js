@@ -6,6 +6,7 @@ import addToCart from "../helpers/addToCart";
 import { useContextGlobal } from "../context";
 import { useSelector } from "react-redux";
 import checkPromotion from "../helpers/checkPromotion";
+import { IoMdStar } from "react-icons/io";
 
 function HorizontalCardProduct({ category, heading }) {
     const { fetchGetCart } = useContextGlobal();
@@ -155,6 +156,18 @@ function HorizontalCardProduct({ category, heading }) {
                                               );
                                           }
                                       })()}
+                                      <div className="flex justify-between">
+                                          <div className="text-sm text-slate-500">
+                                              Stock: {product.stock}
+                                          </div>
+                                          <div className="flex items-center gap-1 text-sm text-slate-500">
+                                              {product.rating}{" "}
+                                              <IoMdStar
+                                                  size={20}
+                                                  className="text-yellow-500 "
+                                              />
+                                          </div>
+                                      </div>
 
                                       <button
                                           onClick={(e) =>

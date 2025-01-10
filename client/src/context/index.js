@@ -17,7 +17,7 @@ const ContextProvider = ({ children }) => {
             });
             const result = await response.json();
             if (result.success) {
-                toast.success(result.message);
+                // toast.success(result.message);
                 dispatch(setUserInfo(result.data));
             }
             if (result.error) {

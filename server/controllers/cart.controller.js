@@ -145,6 +145,18 @@ const updateQuantity = async (req, res) => {
             });
         }
 
+        const productDB = await ProductModel.findById(productId);
+        const stock = productDB.stock;
+
+        if (quantity > stock) {
+            return res.status(400).json({
+                error: true,
+                success: false,
+                data: [],
+                message: `The quantity must be less than or equal to the stock. Stock:${stock}`,
+            });
+        }
+
         cart.products[productIndex].quantity = quantity;
 
         await cart.save();

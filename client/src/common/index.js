@@ -109,6 +109,10 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/payment/vnpay_ipn`,
         method: "GET",
     },
+    updateUserInfo: {
+        url: `${API_PREFIX}/users/update-info`,
+        method: "PATCH",
+    },
 };
 
 export default SUMMARY_API;

@@ -3,9 +3,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 async function register(req, res) {
     try {
-        const { email, password, avatar, name } = req.body;
+        const { email, password, avatar, name, address, phone } = req.body;
 
-        if (!email || !password || !avatar) {
+        if (!email || !password || !avatar || !name || !address || !phone) {
             return res
                 .status(400)
                 .json({ error: "All fields are required", success: false });
@@ -18,6 +18,8 @@ async function register(req, res) {
             avatar,
             role: "user",
             name,
+            address,
+            phone,
         });
         const data = await newUser.save();
         return res.status(201).json({
@@ -175,4 +177,37 @@ async function updateUser(req, res) {
     }
 }
 
-module.exports = { register, login, getInfo, logout, getAll, updateUser };
+async function updateUserInfo(req, res) {
+    try {
+        const user = req.user;
+        const { name, address, phone } = req.body;
+        const updatedUser = await UserModel.findByIdAndUpdate(
+            user._id,
+            { name, address, phone },
+            { new: true }
+        );
+        const { password, ...userNoPass } = updatedUser;
+        return res.status(200).json({
+            message: "User information updated successfully",
+            success: true,
+            data: userNoPass,
+            error: false,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Server error",
+            success: false,
+            error: true,
+        });
+    }
+}
+
+module.exports = {
+    register,
+    login,
+    getInfo,
+    logout,
+    getAll,
+    updateUser,
+    updateUserInfo,
+};

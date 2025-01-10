@@ -1,3 +1,4 @@
+const { error } = require("jquery");
 const { adminPermission } = require("../helper/permission");
 const productModel = require("../models/product.model");
 
@@ -231,6 +232,36 @@ async function getBrands(req, res) {
     }
 }
 
+async function updateSomething(req, res) {
+    try {
+        const { stock, numSold, numReviews, rating } = req.body;
+        const updatedProduct = await productModel.updateMany(
+            {},
+            {
+                $set: {
+                    stock,
+                    numReviews,
+                    numSold,
+                    rating,
+                },
+            }
+        );
+
+        return res.status(200).json({
+            message: "updated",
+            error: false,
+            success: true,
+            data: updatedProduct,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error || error.message,
+            error: true,
+            success: false,
+        });
+    }
+}
+
 module.exports = {
     addProduct,
     getAllProducts,
@@ -241,4 +272,5 @@ module.exports = {
     searchProduct,
     filterProduct,
     getBrands,
+    updateSomething,
 };

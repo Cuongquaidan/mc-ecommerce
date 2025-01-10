@@ -18,6 +18,8 @@ function Register() {
         confirmPassword: "",
         name: "",
         avatar: "",
+        phone: "",
+        address: "",
     });
     const handleChange = (e) => {
         setData({
@@ -70,13 +72,13 @@ function Register() {
     };
     return (
         <section id="register" className="mt-5 ">
-            <div className="container px-4 mx-auto">
+            <div className="container px-4 pb-4 mx-auto">
                 <div className="flex flex-col items-center w-full max-w-md gap-5 p-4 mx-auto bg-white rounded-md shadow-sm shadow-slate-500">
                     <p className="text-2xl font-bold text-blue-700">Register</p>
 
                     <form
                         onSubmit={handleSubmit}
-                        className="flex flex-col items-center w-full gap-10 p-4"
+                        className="flex flex-col items-center w-full gap-4 p-4"
                     >
                         <div>
                             <label htmlFor="avatar" className="cursor-pointer">
@@ -126,6 +128,30 @@ function Register() {
                                 className="w-full p-3 outline-none bg-slate-100"
                                 onChange={handleChange}
                                 value={data.email}
+                            />
+                        </div>
+                        <div className="flex flex-col w-full gap-2">
+                            <label htmlFor="phone">Phone</label>
+                            <input
+                                type="text"
+                                placeholder="Enter your phone"
+                                id="phone"
+                                name="phone"
+                                className="w-full p-3 outline-none bg-slate-100"
+                                onChange={handleChange}
+                                value={data.phone}
+                            />
+                        </div>
+                        <div className="flex flex-col w-full gap-2">
+                            <label htmlFor="address">Address</label>
+                            <input
+                                type="text"
+                                placeholder="Enter your address"
+                                id="address"
+                                name="address"
+                                className="w-full p-3 outline-none bg-slate-100"
+                                onChange={handleChange}
+                                value={data.address}
                             />
                         </div>
                         <div className="flex flex-col w-full gap-2">

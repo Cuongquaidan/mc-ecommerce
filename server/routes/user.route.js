@@ -9,4 +9,5 @@ router.route("/get-info").get(authToken, userController.getInfo);
 router.route("/get-all").get(authToken, userController.getAll);
 router.route("/logout").get(userController.logout);
 router.route("/update/:userId").patch(authToken, userController.updateUser);
+router.route("/update-info").patch(authToken, userController.updateUserInfo);
 module.exports = router;

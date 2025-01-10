@@ -109,6 +109,22 @@ function Header() {
                                             Admin panel
                                         </Link>
                                     </Typography>
+                                    <Typography
+                                        sx={{
+                                            p: 2,
+                                            borderTop: "1px solid #ccc",
+                                        }}
+                                    >
+                                        <Link to="my-orders">My orders</Link>
+                                    </Typography>
+                                    <Typography
+                                        sx={{
+                                            p: 2,
+                                            borderTop: "1px solid #ccc",
+                                        }}
+                                    >
+                                        <Link to="my-profile">My profile</Link>
+                                    </Typography>
                                 </Popover>
                             </>
                         ) : (
