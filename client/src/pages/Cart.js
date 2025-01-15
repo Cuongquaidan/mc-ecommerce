@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useContextGlobal } from "../context";
 import SUMMARY_API from "../common";
 import { Modal, Button, Typography, Box } from "@mui/material";
@@ -12,11 +12,16 @@ import groupProductByBrand from "../helpers/groupProductByBrand";
 
 import { FaRegSquareCheck } from "react-icons/fa6";
 import ungroupProductBrand from "../helpers/ungroupProductBrand";
+import createOrder from "../helpers/createOrder";
+import { setCurrentCartOrder } from "../store/cartSlice";
 const Cart = () => {
+    const cartOrder = useSelector((state) => state?.cart?.cartOrder); // Lấy giỏ hàng từ Redux
+    console.log(cartOrder);
     const [groups, setGroups] = useState([]);
     const [groupsSelected, setGroupsSelected] = useState([]);
-    const cart = useSelector((state) => state.cart); // Lấy giỏ hàng từ Redux
+    const cart = useSelector((state) => state?.cart?.cart); // Lấy giỏ hàng từ Redux
     const user = useSelector((state) => state?.user?.user);
+    console.log(cart);
     const navigate = useNavigate();
     const { fetchGetCart } = useContextGlobal(); // Lấy hàm fetchGetCart từ Context
 
@@ -25,7 +30,7 @@ const Cart = () => {
     const [openModal, setOpenModal] = useState(false);
     const [modalContent, setModalContent] = useState({});
     const [paymentMethod, setPaymentMethod] = useState(paymentMethods.COD);
-
+    const dispatch = useDispatch();
     const handleUpdateQuantity = async (productId, quantity) => {
         if (quantity === 0) {
             setModalContent({
@@ -49,7 +54,7 @@ const Cart = () => {
             });
             const result = await response.json();
             if (result.success) {
-                fetchGetCart();
+                await fetchGetCart();
             }
             if (result.error) {
                 toast.error(result.message);
@@ -135,7 +140,76 @@ const Cart = () => {
                 return;
             }
             if (paymentMethod === paymentMethods.COD) {
+                const result = createOrder(
+                    {
+                        phone: user.phone,
+                        address: user.address,
+                        tax: 0.05,
+                        subtotal: ((calculateTotal() / 25000) * 100) / 105,
+                        total: calculateTotal(),
+                        orderDetails: ungroupProductBrand(groupsSelected).map(
+                            (item) => ({
+                                product: item.product._id,
+                                quantity: item.quantity,
+                                selling: item.product.selling,
+                                sellingPriceAfterPromo: (() => {
+                                    const promotion = checkPromotion(
+                                        promotionDetails,
+                                        item.product
+                                    );
+                                    if (promotion) {
+                                        return (
+                                            item.product.selling -
+                                            promotion.discount
+                                        );
+                                    } else {
+                                        return item.product.selling;
+                                    }
+                                })(),
+                            })
+                        ),
+                    },
+                    fetchGetCart
+                );
+                if (result) {
+                    navigate("/");
+                } else {
+                    toast.error("Order failed");
+                }
             } else if (paymentMethod === paymentMethods.VNPAY) {
+                dispatch(
+                    setCurrentCartOrder({
+                        phone: user.phone,
+                        address: user.address,
+                        tax: 0.05,
+                        subtotal: ((calculateTotal() / 25000) * 100) / 105,
+                        total: calculateTotal(),
+                        paymentMethod: paymentMethods.VNPAY,
+                        orderDetails: ungroupProductBrand(groupsSelected).map(
+                            (item) => ({
+                                product: item.product._id,
+                                quantity: item.quantity,
+                                selling: item.product.selling,
+                                sellingPriceAfterPromo: (() => {
+                                    const promotion = checkPromotion(
+                                        promotionDetails,
+                                        item.product
+                                    );
+                                    if (promotion) {
+                                        return (
+                                            item.product.selling -
+                                            promotion.discount
+                                        );
+                                    } else {
+                                        return item.product.selling;
+                                    }
+                                })(),
+                            })
+                        ),
+                    })
+                );
+                console.log(cartOrder);
+
                 const response = await fetch(
                     `${SUMMARY_API.createVNPAYUrl.url}`,
                     {
@@ -184,7 +258,6 @@ const Cart = () => {
                 groups.find((item) => item.brand === brand),
             ]);
         }
-        console.log(groupsSelected);
     };
     const handleCheckItem = (productId, brand) => {
         const groupSelectedCheck = groupsSelected.find(
@@ -207,6 +280,7 @@ const Cart = () => {
                 : item
         );
         setGroupsSelected(newGroupsSelected);
+        console.log(ungroupProductBrand(newGroupsSelected));
     };
 
     const checkAllProductOfBrand = (brand) => {
@@ -231,7 +305,7 @@ const Cart = () => {
             setGroups(groupProductByBrand(cart.products));
             setGroupsSelected(groupProductByBrand(cart.products));
         }
-        console.log(groups);
+        console.log(ungroupProductBrand(groupsSelected));
     }, [cart]);
     return (
         <div className="container p-4 mx-auto">
@@ -260,7 +334,7 @@ const Cart = () => {
                                                 className="text-green-600"
                                             />
                                         ) : (
-                                            <div className="w-[28px] h-[28px] mr-2 rounded-sm border-4 border-black"></div>
+                                            <div className="w-[28px] h-[28px] mr-4 rounded-sm border-4 border-black"></div>
                                         )}
                                     </div>
                                 </div>
@@ -269,7 +343,7 @@ const Cart = () => {
                                         key={item._id}
                                         className="relative flex items-center justify-between p-4 overflow-hidden border-b"
                                     >
-                                        <div className="flex items-center">
+                                        <div className="flex items-center gap-4">
                                             <div
                                                 className="relative w-8 h-4 cursor-pointer"
                                                 onClick={() =>

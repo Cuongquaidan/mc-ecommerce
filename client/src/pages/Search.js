@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import SUMMARY_API from "../common";
-import VerticalCard from "../components/VerticalCard";
+import ListCardSearch from "../components/ListCardSearch";
 
 function Search() {
     const [data, setData] = useState([]);
@@ -46,7 +46,7 @@ function Search() {
             )}
 
             {data.length !== 0 && !loading && (
-                <VerticalCard loading={loading} data={data} />
+                <ListCardSearch loading={loading} data={data} />
             )}
         </div>
     );

@@ -20,7 +20,8 @@ function Header() {
         setAnchorEl(null);
     };
 
-    const cartNum = useSelector((state) => state?.cart?.numOfProducts);
+    const cartNum =
+        useSelector((state) => state?.cart?.cart?.numOfProducts) || 0;
 
     const open = Boolean(anchorEl);
     const id = open ? "simple-popover" : undefined;

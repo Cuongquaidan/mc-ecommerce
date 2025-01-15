@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import VerticalCard from "../components/VerticalCard";
+import VerticalCard from "../components/ListCardSearch";
 import SummaryApi from "../common";
 import { LuFilter } from "react-icons/lu";
 import { LuFilterX } from "react-icons/lu";

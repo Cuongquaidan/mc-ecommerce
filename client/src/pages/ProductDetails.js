@@ -25,7 +25,8 @@ const ProductDetails = () => {
     const [loading, setLoading] = useState(true);
     const productImageListLoading = new Array(4).fill(null);
     const [activeImage, setActiveImage] = useState("");
-
+    const cartProducts = useSelector((state) => state?.cart?.cart?.products);
+    const cartProductIds = cartProducts?.map((product) => product.product._id);
     const [zoom, setZoom] = useState(false);
     const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
 
@@ -182,7 +183,7 @@ const ProductDetails = () => {
                             );
                         } else {
                             return (
-                                <p className="text-2xl font-medium text-green-600  lg:text-3xl">
+                                <p className="text-2xl font-medium text-green-600 lg:text-3xl">
                                     {data.selling.toLocaleString()}$
                                 </p>
                             );
@@ -199,8 +200,11 @@ const ProductDetails = () => {
                         <button
                             className="border-2 border-blue-600 rounded px-3 py-1 min-w-[120px] font-medium text-blue-600 hover:bg-blue-600 bg-white hover:text-white"
                             onClick={(e) => handleAddToCart(e, data?._id)}
+                            disabled={cartProductIds?.includes(data?._id)}
                         >
-                            Add To Cart
+                            {cartProductIds?.includes(data?._id)
+                                ? "Added"
+                                : "Add to cart"}
                         </button>
                     </div>
                     <div>

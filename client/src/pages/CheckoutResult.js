@@ -3,13 +3,24 @@ import { Link, useLocation } from "react-router-dom";
 import SUMMARY_API from "../common";
 import { CiCircleCheck } from "react-icons/ci";
 import { ImCancelCircle } from "react-icons/im";
+import { toast } from "react-toastify";
+import createOrder from "../helpers/createOrder";
+import { useSelector, useDispatch } from "react-redux";
+import { useContextGlobal } from "../context";
+import paymentStatus from "../common/paymentStatus";
+import { setCurrentCartOrder } from "../store/cartSlice";
 function CheckoutResult() {
+    const cartOrder = useSelector((state) => state?.cart?.cartOrder); // Lấy giỏ hàng từ Redux
+    console.log(cartOrder);
+    const { fetchGetCart } = useContextGlobal(); // Lấy hàm fetchGetCart từ Context
     const [data, setData] = useState({
         RspCode: "",
         Message: "",
     });
     const location = useLocation();
     const searchParams = location.search;
+    const dispatch = useDispatch();
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -18,12 +29,28 @@ function CheckoutResult() {
                 );
                 const result = await response.json();
                 setData(result);
+                if (result?.RspCode === "00") {
+                    const resultCreate = await createOrder(
+                        {
+                            ...cartOrder,
+                            paymentStatus: paymentStatus.COMPLETED,
+                        },
+                        fetchGetCart
+                    );
+                    console.log(resultCreate);
+                    if (resultCreate) {
+                        dispatch(setCurrentCartOrder(null));
+                    } else {
+                        toast.error("Order failed");
+                    }
+                }
             } catch (error) {
                 console.log("error");
             }
         };
         fetchData();
     }, [searchParams]);
+
     return (
         <div className="container flex items-center justify-center p-10 mx-auto">
             {data.RspCode === "00" ? (

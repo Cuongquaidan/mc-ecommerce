@@ -113,6 +113,18 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/users/update-info`,
         method: "PATCH",
     },
+    createOrder: {
+        url: `${API_PREFIX}/orders/create`,
+        method: "POST",
+    },
+    clearCart: {
+        url: `${API_PREFIX}/cart/clear-cart`,
+        method: "PATCH",
+    },
+    removeItemsFromCart: {
+        url: `${API_PREFIX}/cart/remove-items`,
+        method: "PATCH",
+    },
 };
 
 export default SUMMARY_API;

@@ -6,13 +6,15 @@ import reportWebVitals from "./reportWebVitals";
 import { RouterProvider } from "react-router-dom";
 import router from "./routes";
 import { ThemeProvider } from "@material-tailwind/react";
-
+import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
-import { store } from "./store";
+import { store, persistor } from "./store";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <Provider store={store}>
-        <RouterProvider router={router}></RouterProvider>
+        <PersistGate loading={null} persistor={persistor}>
+            <RouterProvider router={router}></RouterProvider>
+        </PersistGate>
     </Provider>
 );
 

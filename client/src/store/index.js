@@ -1,12 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./userSlice";
-import cartReducer from "./cartSlice";
-import promotionDetailsReducer from "./promotionDetailsSlice";
+import persistedReducer from "./configPersist";
+import persistStore from "redux-persist/es/persistStore";
 
 export const store = configureStore({
-    reducer: {
-        user: userReducer,
-        cart: cartReducer,
-        promotionDetails: promotionDetailsReducer,
-    },
+    reducer: persistedReducer, // Sử dụng persistedReducer
 });
+
+export const persistor = persistStore(store); // Tạo persistor
