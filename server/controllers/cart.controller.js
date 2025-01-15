@@ -237,4 +237,74 @@ const removeProduct = async (req, res) => {
     }
 };
 
-module.exports = { addToCart, getCart, updateQuantity, removeProduct };
+async function clearCart(req, res) {
+    try {
+        const userId = req.user._id;
+        const cart = await CartModel.findOne({ user: userId });
+        if (!cart) {
+            return res.status(404).json({
+                error: true,
+                success: false,
+                data: [],
+                message: "Cart not found",
+            });
+        }
+        cart.products = [];
+        await cart.save();
+        return res.status(200).json({
+            error: false,
+            success: true,
+            data: cart,
+            message: "Cart cleared successfully",
+        });
+    } catch (error) {
+        return res.status(500).json({
+            error: true,
+            success: false,
+            data: [],
+            message: error.message || error,
+        });
+    }
+}
+
+async function removeItemsFromCart(req, res) {
+    try {
+        const userId = req.user._id;
+        const { productIds } = req.body;
+        const cart = await CartModel.findOne({ user: userId });
+        if (!cart) {
+            return res.status(404).json({
+                error: true,
+                success: false,
+                data: [],
+                message: "Cart not found",
+            });
+        }
+        cart.products = cart.products.filter(
+            (product) => !productIds.includes(product.product.toString())
+        );
+        await cart.save();
+        return res.status(200).json({
+            error: false,
+            success: true,
+            data: cart,
+            message: "Items removed successfully",
+        });
+    } catch (error) {
+        return res.status(500).json({
+            error: true,
+            success: false,
+            data: [],
+            message: error.message || error,
+        });
+    }
+}
+
+module.exports = {
+    addToCart,
+    getCart,
+    updateQuantity,
+    removeProduct,
+    clearCart,
+    removeItemsFromCart,
+};

@@ -6,6 +6,7 @@ const categoryRoute = require("../routes/category.route");
 const promotionRoute = require("../routes/promotion.route");
 const promotionDetailsRoute = require("../routes/promotionDetails.route");
 const paymentRoute = require("../routes/payment.route");
+const orderRoute = require("../routes/order.route");
 const router = express.Router();
 
 router.use("/users", userRoute);
@@ -15,5 +16,6 @@ router.use("/categories", categoryRoute);
 router.use("/promotions", promotionRoute);
 router.use("/promotion-details", promotionDetailsRoute);
 router.use("/payment", paymentRoute);
+router.use("/orders", orderRoute);
 
 module.exports = router;

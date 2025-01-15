@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const { paymentMethods } = require("../constants/paymentMethods");
-const { shippingStatus } = require("../constants/shippingStatus");
-const { paymentStatus } = require("../constants/paymentStatus");
+const paymentMethods = require("../constants/paymentMethods");
+const shippingStatus = require("../constants/shippingStatus");
+const paymentStatus = require("../constants/paymentStatus");
 const orderSchema = mongoose.Schema(
     {
         user: {

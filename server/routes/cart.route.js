@@ -10,5 +10,9 @@ router
     .route("/update-quantity")
     .patch(authToken, cartController.updateQuantity);
 router.route("/remove-product").patch(authToken, cartController.removeProduct);
+router.route("/clear-cart").patch(authToken, cartController.clearCart);
+router
+    .route("/remove-items")
+    .patch(authToken, cartController.removeItemsFromCart);
 
 module.exports = router;
