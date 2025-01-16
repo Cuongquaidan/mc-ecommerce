@@ -129,6 +129,10 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/orders/get`,
         method: "GET",
     },
+    getOrdersByOrderId: {
+        url: `${API_PREFIX}/order-details/getByOrderId`,
+        method: "GET",
+    },
 };
 
 export default SUMMARY_API;
