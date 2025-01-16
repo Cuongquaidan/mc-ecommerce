@@ -8,6 +8,7 @@ async function createOrder(req, res) {
         const newOrder = new orderModel({
             ...orderWithNoOD,
             user: user._id,
+            firstDetail: orderDetails[0],
         });
         const savedOrder = await newOrder.save();
         await orderDetailController.createOrderDetails(
@@ -33,7 +34,9 @@ async function createOrder(req, res) {
 async function getOrders(req, res) {
     try {
         const user = req.user;
-        const orders = await orderModel.find({ user: user._id });
+        const orders = await orderModel
+            .find({ user: user._id })
+            .populate("firstDetail.product");
         return res.status(200).json({
             message: "Orders successfully",
             error: false,

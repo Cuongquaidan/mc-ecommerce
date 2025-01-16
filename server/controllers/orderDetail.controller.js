@@ -23,4 +23,23 @@ async function createOrderDetails(orderDetails, orderId) {
     }
 }
 
-module.exports = { createOrderDetails };
+async function getOrderDetailsByOrderId(req, res) {
+    try {
+        const orderId = req.params.id;
+        const orderDetails = await orderDetailModel.find({ order: orderId });
+        return res.status(200).json({
+            message: "Order details successfully",
+            error: false,
+            success: true,
+            data: orderDetails,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error || error.message,
+            error: true,
+            success: false,
+        });
+    }
+}
+
+module.exports = { createOrderDetails, getOrderDetailsByOrderId };
