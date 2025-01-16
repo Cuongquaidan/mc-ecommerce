@@ -26,8 +26,13 @@ function MyOrders() {
                 {ordersLoading.map((_, index) => (
                     <div
                         key={index}
-                        className="flex flex-col flex-shrink-0 gap-4 bg-white rounded-md shadow-md h-52"
-                    ></div>
+                        className="flex flex-col justify-center flex-shrink-0 gap-4 p-8 bg-white rounded-md shadow-md h-52"
+                    >
+                        <div className="h-4 rounded-md w-[30%] bg-slate-300 animate-pulse"></div>
+                        <div className="h-4 rounded-md w-[50%] bg-slate-300 animate-pulse"></div>
+                        <div className="h-4 rounded-md w-[70%] bg-slate-300 animate-pulse"></div>
+                        <div className="h-4 rounded-md w-[70%] bg-slate-300 animate-pulse"></div>
+                    </div>
                 ))}
             </div>
         </div>
