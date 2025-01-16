@@ -7,6 +7,7 @@ const promotionRoute = require("../routes/promotion.route");
 const promotionDetailsRoute = require("../routes/promotionDetails.route");
 const paymentRoute = require("../routes/payment.route");
 const orderRoute = require("../routes/order.route");
+const orderDetailRoute = require("../routes/orderDetail.route");
 const router = express.Router();
 
 router.use("/users", userRoute);
@@ -17,5 +18,6 @@ router.use("/promotions", promotionRoute);
 router.use("/promotion-details", promotionDetailsRoute);
 router.use("/payment", paymentRoute);
 router.use("/orders", orderRoute);
+router.use("/order-details", orderDetailRoute);
 
 module.exports = router;
