@@ -30,4 +30,23 @@ async function createOrder(req, res) {
     }
 }
 
-module.exports = { createOrder };
+async function getOrders(req, res) {
+    try {
+        const user = req.user;
+        const orders = await orderModel.find({ user: user._id });
+        return res.status(200).json({
+            message: "Orders successfully",
+            error: false,
+            success: true,
+            data: orders,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error || error.message,
+            error: true,
+            success: false,
+        });
+    }
+}
+
+module.exports = { createOrder, getOrders };
