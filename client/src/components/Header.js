@@ -106,7 +106,10 @@ function Header() {
                                     }}
                                 >
                                     <Typography sx={{ p: 2 }}>
-                                        <Link to="admin-panel">
+                                        <Link
+                                            to="admin-panel"
+                                            onClick={handleClose}
+                                        >
                                             Admin panel
                                         </Link>
                                     </Typography>
@@ -116,7 +119,12 @@ function Header() {
                                             borderTop: "1px solid #ccc",
                                         }}
                                     >
-                                        <Link to="my-orders">My orders</Link>
+                                        <Link
+                                            to="my-orders"
+                                            onClick={handleClose}
+                                        >
+                                            My orders
+                                        </Link>
                                     </Typography>
                                     <Typography
                                         sx={{
@@ -124,7 +132,12 @@ function Header() {
                                             borderTop: "1px solid #ccc",
                                         }}
                                     >
-                                        <Link to="my-profile">My profile</Link>
+                                        <Link
+                                            to="my-profile"
+                                            onClick={handleClose}
+                                        >
+                                            My profile
+                                        </Link>
                                     </Typography>
                                 </Popover>
                             </>

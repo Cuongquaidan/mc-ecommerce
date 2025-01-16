@@ -125,6 +125,10 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/cart/remove-items`,
         method: "PATCH",
     },
+    getOrders: {
+        url: `${API_PREFIX}/orders/get`,
+        method: "GET",
+    },
 };
 
 export default SUMMARY_API;
