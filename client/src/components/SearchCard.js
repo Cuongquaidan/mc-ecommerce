@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import addToCart from "../helpers/addToCart";
 import { Link } from "react-router-dom";
 import { useContextGlobal } from "../context";
@@ -14,18 +14,49 @@ function SearchCard({ product, ...props }) {
     };
     const cartProducts = useSelector((state) => state?.cart?.cart?.products);
     const cartProductIds = cartProducts?.map((product) => product.product._id);
+    const [indexImage, setIndexImage] = useState(0);
+    const intervalRef = useRef(null); // Lưu trữ interval ID
+    const handleMouseEnter = () => {
+        // Đặt một timeout trước khi chuyển đổi hình
+
+        intervalRef.current = setInterval(() => {
+            setIndexImage((prev) =>
+                prev === product.productImages.length - 1 ? 0 : prev + 1
+            );
+        }, 2000);
+        // Đợi 0.2 giây trước khi bắt đầu chuyển đổi
+    };
+
+    const handleMouseLeave = () => {
+        // Xóa timeout và interval khi chuột rời đi
+
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
+        setIndexImage(0);
+    };
     return (
         <Link
             {...props}
             to={"/product/" + product?._id}
             className="w-full min-w-[280px]  md:min-w-[300px] max-w-[280px] md:max-w-[300px]  bg-white rounded-sm shadow "
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
         >
             <div className="bg-slate-200 relative overflow-hidden h-48 p-4 min-w-[280px] md:min-w-[145px] flex justify-center items-center">
-                <img
-                    src={product?.productImages[0]}
-                    className="object-scale-down h-full transition-all hover:scale-110 mix-blend-multiply"
-                    alt="MCSHOP"
-                />
+                {product.productImages.map((image, idx) => (
+                    <img
+                        key={idx}
+                        src={image}
+                        className={`absolute top-[10%] left-0 h-[80%] mix-blend-multiply w-full object-scale-down transition-transform duration-500 ease-in-out ${
+                            idx === indexImage
+                                ? "translate-x-0 opacity-100"
+                                : "translate-x-full opacity-0"
+                        }`}
+                        alt={product.description}
+                    />
+                ))}
                 {checkPromotion(promotionDetails, product) && (
                     <div className="absolute flex items-center justify-center w-full h-8 text-white rotate-45 bg-red-500 top-2 -right-32">
                         <p className="text-center">Sale</p>
@@ -77,13 +108,15 @@ function SearchCard({ product, ...props }) {
                 </div>
 
                 <button
-                    className="px-3 py-2 text-lg text-white bg-blue-600 rounded-full hover:bg-blue-700"
                     onClick={(e) => handleAddToCart(e, product?._id)}
                     disabled={cartProductIds?.includes(product?._id)}
+                    className={`text-md mt-4 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-full w-[120px] mx-auto ${
+                        product.stock === 0 && "bg-red-600 hover:bg-red-600"
+                    }`}
                 >
-                    {cartProductIds?.includes(product?._id)
+                    {cartProductIds?.some((item) => item === product?._id)
                         ? "Added"
-                        : "Add to cart"}
+                        : (product.stock === 0 && "Sold out") || "Add to Cart"}
                 </button>
             </div>
         </Link>

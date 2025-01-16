@@ -21,7 +21,10 @@ const Cart = () => {
     const [groupsSelected, setGroupsSelected] = useState([]);
     const cart = useSelector((state) => state?.cart?.cart); // Lấy giỏ hàng từ Redux
     const user = useSelector((state) => state?.user?.user);
-    console.log(cart);
+    const productsSoldOut = groupProductByBrand(
+        cart.products.filter((product) => product.product.stock === 0)
+    );
+    console.log(productsSoldOut);
     const navigate = useNavigate();
     const { fetchGetCart } = useContextGlobal(); // Lấy hàm fetchGetCart từ Context
 
@@ -303,9 +306,12 @@ const Cart = () => {
     useEffect(() => {
         if (cart && cart.products) {
             setGroups(groupProductByBrand(cart.products));
-            setGroupsSelected(groupProductByBrand(cart.products));
+            setGroupsSelected(
+                groupProductByBrand(
+                    cart.products.filter((product) => product.product.stock > 0)
+                )
+            );
         }
-        console.log(ungroupProductBrand(groupsSelected));
     }, [cart]);
     return (
         <div className="container p-4 mx-auto">
@@ -322,11 +328,15 @@ const Cart = () => {
                                     <h2 className="text-2xl italic font-bold">
                                         {group.brand}
                                     </h2>
-                                    <div
-                                        className="relative cursor-pointer"
+                                    <button
+                                        className="relative"
                                         onClick={() =>
                                             handleCheckBrand(group.brand)
                                         }
+                                        disabled={productsSoldOut.some(
+                                            (groupSO) =>
+                                                groupSO.brand === group.brand
+                                        )}
                                     >
                                         {checkAllProductOfBrand(group.brand) ? (
                                             <FaRegSquareCheck
@@ -336,7 +346,7 @@ const Cart = () => {
                                         ) : (
                                             <div className="w-[28px] h-[28px] mr-4 rounded-sm border-4 border-black"></div>
                                         )}
-                                    </div>
+                                    </button>
                                 </div>
                                 {group.products.map((item) => (
                                     <div
@@ -344,8 +354,16 @@ const Cart = () => {
                                         className="relative flex items-center justify-between p-4 overflow-hidden border-b"
                                     >
                                         <div className="flex items-center gap-4">
-                                            <div
-                                                className="relative w-8 h-4 cursor-pointer"
+                                            <button
+                                                className="relative w-8 h-4 "
+                                                disabled={productsSoldOut.some(
+                                                    (groupSO) =>
+                                                        groupSO.products.some(
+                                                            (product) =>
+                                                                product._id ===
+                                                                item._id
+                                                        )
+                                                )}
                                                 onClick={() =>
                                                     handleCheckItem(
                                                         item._id,
@@ -368,7 +386,7 @@ const Cart = () => {
                                                 ) : (
                                                     <div className="w-[22px] h-[22px] mr-4 absolute top-0 left-0 rounded-sm border-2 border-black"></div>
                                                 )}
-                                            </div>
+                                            </button>
                                             <img
                                                 src={
                                                     item.product
@@ -437,32 +455,51 @@ const Cart = () => {
                                             </div>
                                         </div>
                                         <div className="flex items-center">
-                                            <button
-                                                className="px-2 py-1 border rounded hover:bg-gray-200"
-                                                onClick={() =>
-                                                    handleUpdateQuantity(
-                                                        item.product._id,
-                                                        item.quantity - 1
-                                                    )
-                                                }
-                                                disabled={item.quantity <= 1}
-                                            >
-                                                -
-                                            </button>
-                                            <span className="mx-2">
-                                                {item.quantity}
-                                            </span>
-                                            <button
-                                                className="px-2 py-1 border rounded hover:bg-gray-200"
-                                                onClick={() =>
-                                                    handleUpdateQuantity(
-                                                        item.product._id,
-                                                        item.quantity + 1
-                                                    )
-                                                }
-                                            >
-                                                +
-                                            </button>
+                                            {productsSoldOut.some((groupSO) =>
+                                                groupSO.products.some(
+                                                    (product) =>
+                                                        product._id === item._id
+                                                )
+                                            ) ? (
+                                                <p className="text-red-600">
+                                                    Sold out
+                                                </p>
+                                            ) : (
+                                                <div className="flex items-center gap-4">
+                                                    <button
+                                                        className="px-2 py-1 border rounded hover:bg-gray-200"
+                                                        onClick={() =>
+                                                            handleUpdateQuantity(
+                                                                item.product
+                                                                    ._id,
+                                                                item.quantity -
+                                                                    1
+                                                            )
+                                                        }
+                                                        disabled={
+                                                            item.quantity <= 1
+                                                        }
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <span className="mx-2">
+                                                        {item.quantity}
+                                                    </span>
+                                                    <button
+                                                        className="px-2 py-1 border rounded hover:bg-gray-200"
+                                                        onClick={() =>
+                                                            handleUpdateQuantity(
+                                                                item.product
+                                                                    ._id,
+                                                                item.quantity +
+                                                                    1
+                                                            )
+                                                        }
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            )}
                                             <button
                                                 className="p-2 ml-4 text-red-600 bg-red-100 rounded-full"
                                                 onClick={() =>
@@ -492,7 +529,7 @@ const Cart = () => {
                                 <span>Subtotal:</span>
                                 <span>
                                     $
-                                    {cart.products
+                                    {ungroupProductBrand(groupsSelected)
                                         .reduce(
                                             (sum, item) => {
                                                 const promotion =
@@ -530,7 +567,9 @@ const Cart = () => {
                                 <span>
                                     $
                                     {(
-                                        cart.products.reduce((sum, item) => {
+                                        ungroupProductBrand(
+                                            groupsSelected
+                                        ).reduce((sum, item) => {
                                             const promotion = checkPromotion(
                                                 promotionDetails,
                                                 item.product
