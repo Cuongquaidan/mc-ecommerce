@@ -36,7 +36,8 @@ async function getOrders(req, res) {
         const user = req.user;
         const orders = await orderModel
             .find({ user: user._id })
-            .populate("firstDetail.product");
+            .populate("firstDetail.product")
+            .sort({ createdAt: -1 });
         return res.status(200).json({
             message: "Orders successfully",
             error: false,
