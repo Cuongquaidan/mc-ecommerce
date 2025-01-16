@@ -26,7 +26,15 @@ async function createOrderDetails(orderDetails, orderId) {
 async function getOrderDetailsByOrderId(req, res) {
     try {
         const orderId = req.params.id;
+        const user = req.user;
         const orderDetails = await orderDetailModel.find({ order: orderId });
+        if (user._id !== orderDetails[0].order.user && user.role !== "admin") {
+            return res.status(401).json({
+                message: "Unauthorized",
+                error: true,
+                success: false,
+            });
+        }
         return res.status(200).json({
             message: "Order details successfully",
             error: false,
