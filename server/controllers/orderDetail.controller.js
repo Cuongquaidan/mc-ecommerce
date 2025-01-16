@@ -25,9 +25,11 @@ async function createOrderDetails(orderDetails, orderId) {
 
 async function getOrderDetailsByOrderId(req, res) {
     try {
-        const orderId = req.params.id;
+        const orderId = req.params.orderId;
         const user = req.user;
-        const orderDetails = await orderDetailModel.find({ order: orderId });
+        const orderDetails = await orderDetailModel
+            .find({ order: orderId })
+            .populate("product");
         if (user._id !== orderDetails[0].order.user && user.role !== "admin") {
             return res.status(401).json({
                 message: "Unauthorized",
