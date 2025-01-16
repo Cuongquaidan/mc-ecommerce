@@ -17,6 +17,7 @@ import PromotionSpecificCategories from "../pages/PromotionSpecificCategories";
 import PromotionSpecificBrands from "../pages/PromotionSpecificBrands";
 import CheckoutResult from "../pages/CheckoutResult";
 import MyProfile from "../pages/MyProfile";
+import MyOrders from "../pages/MyOrders";
 const { createBrowserRouter } = require("react-router-dom");
 
 const router = createBrowserRouter([
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
             {
                 path: "my-profile",
                 element: <MyProfile />,
+            },
+            {
+                path: "my-orders",
+                element: <MyOrders />,
             },
             {
                 path: "admin-panel",
