@@ -137,6 +137,10 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/order-details/getByMonthAndYear`,
         method: "GET",
     },
+    getTotalOfOrderDetailsByMonthAndYear: {
+        url: `${API_PREFIX}/order-details/getTotalOfOrderDetailsByMonthAndYear`,
+        method: "GET",
+    },
 };
 
 export default SUMMARY_API;

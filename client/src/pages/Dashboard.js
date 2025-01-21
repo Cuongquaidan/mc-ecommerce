@@ -4,7 +4,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { BarChart } from "@mui/x-charts/BarChart";
 import SUMMARY_API from "../common";
 import { axisClasses } from "@mui/x-charts/ChartsAxis";
+import { PieChart } from "@mui/x-charts/PieChart";
 function Dashboard() {
+    const [type, setType] = useState("Quantity");
     const [month, setMonth] = useState(new Date().getMonth() + 1);
     const [year, setYear] = useState(new Date().getFullYear());
     const [data, setData] = useState([]);
@@ -64,13 +66,24 @@ function Dashboard() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(
-                    `${SUMMARY_API.getByMonthAndYear.url}?month=${month}&year=${year}`,
-                    {
-                        method: SUMMARY_API.getByMonthAndYear.method,
-                        credentials: "include",
-                    }
-                );
+                const response =
+                    type === "Quantity"
+                        ? await fetch(
+                              `${SUMMARY_API.getByMonthAndYear.url}?month=${month}&year=${year}`,
+                              {
+                                  method: SUMMARY_API.getByMonthAndYear.method,
+                                  credentials: "include",
+                              }
+                          )
+                        : await fetch(
+                              `${SUMMARY_API.getTotalOfOrderDetailsByMonthAndYear.url}?month=${month}&year=${year}`,
+                              {
+                                  method: SUMMARY_API
+                                      .getTotalOfOrderDetailsByMonthAndYear
+                                      .method,
+                                  credentials: "include",
+                              }
+                          );
                 const result = await response.json();
                 if (result.success) {
                     setData(result.data);
@@ -82,7 +95,7 @@ function Dashboard() {
         };
 
         fetchData();
-    }, [month, year]);
+    }, [month, year, type]);
     const chartSetting = {
         yAxis: [
             {
@@ -93,7 +106,7 @@ function Dashboard() {
         height: 500,
         sx: {
             [`.${axisClasses.left} .${axisClasses.label}`]: {
-                transform: "translateX(-20px)",
+                transform: "translateX(-10px)",
             },
         },
     };
@@ -102,9 +115,21 @@ function Dashboard() {
     }
 
     return (
-        <div className="container p-4">
+        <div className="container p-8">
+            <select
+                name="type"
+                id="type"
+                className="p-4 mb-8 text-xl font-bold border-2 border-gray-400 rounded-md shadow-md"
+                onChange={(e) => setType(e.target.value)}
+            >
+                <option value="Quantity">Quantity</option>
+                <option value="Revenue">Revenue</option>
+            </select>
+
             <div>
-                <h2 className="text-xl italic font-bold">Monthly Statistics</h2>
+                <h2 className="text-xl italic font-bold">
+                    Monthly Statistics ({type})
+                </h2>
                 <div className="flex items-center gap-8 py-4">
                     <div className="flex items-center gap-4">
                         <h4 className="text-xl italic font-bold text-blue-600">
@@ -150,37 +175,68 @@ function Dashboard() {
                     </div>
                 </div>
                 {data ? (
-                    <div className="w-full ml-5 overflow-x-auto">
-                        <BarChart
-                            dataset={data}
-                            xAxis={[
-                                {
-                                    scaleType: "band",
-                                    dataKey: "_id",
-                                    colorMap: {
-                                        type: "piecewise",
-                                        thresholds: [
-                                            new Date(2021, 1, 1),
-                                            new Date(2023, 1, 1),
-                                        ],
-                                        colors: [
-                                            "#F93827",
-                                            "#FF9D23",
-                                            "#16C47F",
-                                        ],
+                    <div className="w-full mx-auto ml-8">
+                        {type === "Quantity" ? (
+                            <BarChart
+                                dataset={data}
+                                xAxis={[
+                                    {
+                                        scaleType: "band",
+                                        dataKey: "_id",
+                                        colorMap: {
+                                            type: "piecewise",
+                                            thresholds: [
+                                                new Date(2021, 1, 1),
+                                                new Date(2023, 1, 1),
+                                            ],
+                                            colors: [
+                                                "#F93827",
+                                                "#FF9D23",
+                                                "#16C47F",
+                                            ],
+                                        },
                                     },
-                                },
-                            ]}
-                            series={[
-                                {
-                                    dataKey: "totalQuantity",
-                                    label: "Quantity",
+                                ]}
+                                series={[
+                                    {
+                                        dataKey: "totalQuantity",
+                                        label: "Quantity",
+                                        color: "#F93827",
 
-                                    capitalizeFirstLetter,
-                                },
-                            ]}
-                            {...chartSetting}
-                        />
+                                        capitalizeFirstLetter,
+                                    },
+                                ]}
+                                {...chartSetting}
+                            />
+                        ) : (
+                            <BarChart
+                                dataset={data}
+                                xAxis={[
+                                    {
+                                        scaleType: "band",
+                                        dataKey: "_id",
+                                        colorMap: {
+                                            type: "piecewise",
+                                            thresholds: [
+                                                new Date(2021, 1, 1),
+                                                new Date(2023, 1, 1),
+                                            ],
+                                            colors: ["#FF9D23", "#16C47F"],
+                                        },
+                                    },
+                                ]}
+                                series={[
+                                    {
+                                        dataKey: "total",
+                                        label: "Total",
+                                        color: "#FF9D23",
+
+                                        capitalizeFirstLetter,
+                                    },
+                                ]}
+                                {...chartSetting}
+                            />
+                        )}
                     </div>
                 ) : (
                     <div>No have data</div>

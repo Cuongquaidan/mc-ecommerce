@@ -12,4 +12,10 @@ router.get(
     orderDetailController.getOrderDetailsByMonthAndYear
 );
 
+router.get(
+    "/getTotalOfOrderDetailsByMonthAndYear",
+    authToken,
+    orderDetailController.getTotalOfOrderDetailsByMonthAndYear
+);
+
 module.exports = router;
