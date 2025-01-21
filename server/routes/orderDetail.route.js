@@ -6,5 +6,10 @@ router.get(
     authToken,
     orderDetailController.getOrderDetailsByOrderId
 );
+router.get(
+    "/getByMonthAndYear",
+    authToken,
+    orderDetailController.getOrderDetailsByMonthAndYear
+);
 
 module.exports = router;

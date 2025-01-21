@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SUMMARY_API from "../common";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function OrderDetails() {
     const [orderDetails, setOrderDetails] = useState([]);
@@ -31,6 +31,12 @@ function OrderDetails() {
     }, []);
     return (
         <div className="container gap-4 mx-auto mt-8">
+            <Link
+                to={"/my-orders"}
+                className="flex items-center gap-2 italic font-medium text-blue-600 "
+            >
+                {"<<"} <p className="underline">My orders</p>
+            </Link>
             {orderDetails.map((orderDetail) => (
                 <div
                     className="border-b-2 border-gray-300"
@@ -53,7 +59,7 @@ function OrderDetails() {
                             </div>
                         </div>
                         <div className="flex flex-col gap-2 items-right">
-                            <span className="italic  text-gray">
+                            <span className="italic text-gray">
                                 Quantity: {orderDetail.quantity}
                             </span>
                             <div>
