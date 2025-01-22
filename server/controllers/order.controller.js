@@ -63,8 +63,19 @@ async function getOrdersByAdmin(req, res) {
                 success: false,
             });
         }
+
+        const total = await orderModel.countDocuments();
+        const numOfPages = Math.ceil(total / limit);
+        if (page < 1 || page > numOfPages) {
+            return res.status(400).json({
+                message: "Invalid page",
+                error: true,
+                success: false,
+            });
+        }
         const orders = await orderModel
             .find()
+            .populate("firstDetail.product")
             .sort({ createdAt: -1 })
             .skip((page - 1) * limit)
             .limit(limit);
@@ -72,7 +83,7 @@ async function getOrdersByAdmin(req, res) {
             message: "Get orders successfully",
             error: false,
             success: true,
-            data: orders,
+            data: { orders, total, numOfPages },
         });
     } catch (error) {
         return res.status(500).json({

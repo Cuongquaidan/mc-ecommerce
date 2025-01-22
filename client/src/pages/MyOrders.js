@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ImPointDown } from "react-icons/im";
 import { Link } from "react-router-dom";
 import SUMMARY_API from "../common";
-import OrderItem from "./OrderItem";
+import OrderItem from "../components/OrderItem";
 
 import ConMeo from "../assest/conmeochidan.png";
 import moment from "moment";

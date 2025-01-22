@@ -141,6 +141,10 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/order-details/getTotalOfOrderDetailsByMonthAndYear`,
         method: "GET",
     },
+    getOrdersByAdmin: {
+        url: `${API_PREFIX}/orders/getOrdersByAdmin`,
+        method: "GET",
+    },
 };
 
 export default SUMMARY_API;
