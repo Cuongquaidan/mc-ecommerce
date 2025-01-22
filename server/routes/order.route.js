@@ -5,5 +5,8 @@ const { authToken } = require("../middlewares/authToken");
 
 router.route("/create").post(authToken, orderController.createOrder);
 router.route("/get").get(authToken, orderController.getOrders);
+router
+    .route("/getOrdersByAdmin")
+    .get(authToken, orderController.getOrdersByAdmin);
 
 module.exports = router;

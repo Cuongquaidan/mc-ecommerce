@@ -19,6 +19,7 @@ import { IoMdHome } from "react-icons/io";
 import { useSelector } from "react-redux";
 import { FaBars } from "react-icons/fa";
 import { BiSolidDiscount } from "react-icons/bi";
+import { FaMoneyBill } from "react-icons/fa";
 function AdminPanel() {
     const user = useSelector((state) => state?.user?.user);
     const dataAside = [
@@ -41,6 +42,11 @@ function AdminPanel() {
             title: "All Promotions",
             icon: <BiSolidDiscount size={30} />,
             link: "/admin-panel/all-promotions",
+        },
+        {
+            title: "All Orders",
+            icon: <FaMoneyBill size={30} />,
+            link: "/admin-panel/all-orders",
         },
     ];
 

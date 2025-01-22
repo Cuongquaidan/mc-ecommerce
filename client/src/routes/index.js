@@ -20,6 +20,7 @@ import MyProfile from "../pages/MyProfile";
 import MyOrders from "../pages/MyOrders";
 import OrderDetails from "../pages/OrderDetails";
 import Dashboard from "../pages/Dashboard";
+import AllOrders from "../pages/AllOrders";
 const { createBrowserRouter } = require("react-router-dom");
 
 const router = createBrowserRouter([
@@ -110,6 +111,10 @@ const router = createBrowserRouter([
                     {
                         path: "",
                         element: <Dashboard></Dashboard>,
+                    },
+                    {
+                        path: "all-orders",
+                        element: <AllOrders />,
                     },
                 ],
             },

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import SUMMARY_API from "../common";
 import { toast } from "react-toastify";
 import { setUserInfo } from "../store/userSlice";
+
 function Header() {
     const [anchorEl, setAnchorEl] = useState(null);
     const [search, setSearch] = useState("");

@@ -39,7 +39,37 @@ async function getOrders(req, res) {
             .populate("firstDetail.product")
             .sort({ createdAt: -1 });
         return res.status(200).json({
-            message: "Orders successfully",
+            message: "Get orders successfully",
+            error: false,
+            success: true,
+            data: orders,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error || error.message,
+            error: true,
+            success: false,
+        });
+    }
+}
+async function getOrdersByAdmin(req, res) {
+    try {
+        const user = req.user;
+        const { page, limit } = req.query;
+        if (user.role !== "admin") {
+            return res.status(403).json({
+                message: "You are not authorized",
+                error: true,
+                success: false,
+            });
+        }
+        const orders = await orderModel
+            .find()
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit);
+        return res.status(200).json({
+            message: "Get orders successfully",
             error: false,
             success: true,
             data: orders,
@@ -53,4 +83,4 @@ async function getOrders(req, res) {
     }
 }
 
-module.exports = { createOrder, getOrders };
+module.exports = { createOrder, getOrders, getOrdersByAdmin };
