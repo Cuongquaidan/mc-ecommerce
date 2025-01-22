@@ -145,6 +145,10 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/orders/getOrdersByAdmin`,
         method: "GET",
     },
+    checkIsBought: {
+        url: `${API_PREFIX}/order-details/checkIsBought`,
+        method: "GET",
+    },
 };
 
 export default SUMMARY_API;

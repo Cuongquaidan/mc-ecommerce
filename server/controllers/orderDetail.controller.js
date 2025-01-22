@@ -223,9 +223,36 @@ async function getTotalOfOrderDetailsByMonthAndYear(req, res) {
         });
     }
 }
+async function checkIsBought(req, res) {
+    try {
+        const user = req.user;
+        const productId = req.params.productId;
+        const orderDetails = await orderDetailModel
+            .find({ product: productId })
+            .populate("order");
+
+        const isBought = orderDetails.some((orderDetail) => {
+            return orderDetail.order.user.toString() === user._id.toString();
+        });
+
+        return res.status(200).json({
+            message: "Check bought successfully",
+            error: false,
+            success: true,
+            data: isBought,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message || "An error occurred while checking bought",
+            error: true,
+            success: false,
+        });
+    }
+}
 module.exports = {
     createOrderDetails,
     getOrderDetailsByOrderId,
     getOrderDetailsByMonthAndYear,
     getTotalOfOrderDetailsByMonthAndYear,
+    checkIsBought,
 };

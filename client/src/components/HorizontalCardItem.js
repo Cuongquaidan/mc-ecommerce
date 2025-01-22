@@ -37,7 +37,7 @@ function HorizontalCardItem({ product, ...props }) {
     return (
         <Link
             to={"/product/" + product?._id}
-            className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] h-40 bg-white rounded-sm shadow-md flex"
+            className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] h-48 bg-white rounded-sm shadow-md flex"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
@@ -61,8 +61,7 @@ function HorizontalCardItem({ product, ...props }) {
                         <p className="text-center">Sale</p>
                     </div>
                 )}
-
-                <h2 className="text-base font-medium text-black md:text-lg text-ellipsis line-clamp-1">
+                <h2 className="text-xl font-medium text-slate-700 text-ellipsis line-clamp-1">
                     {product?.productName}
                 </h2>
                 <p className="capitalize text-slate-500">{product?.category}</p>

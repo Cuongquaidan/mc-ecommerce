@@ -29,6 +29,7 @@ const ProductDetails = () => {
     const cartProductIds = cartProducts?.map((product) => product.product._id);
     const [zoom, setZoom] = useState(false);
     const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
+    const [isBought, setIsBought] = useState(false);
 
     const navigate = useNavigate();
 
@@ -49,10 +50,40 @@ const ProductDetails = () => {
         setData(dataResponse?.data);
         setActiveImage(dataResponse?.data?.productImages[0]);
     };
-
+    const [reviews, setReviews] = useState([
+        {
+            id: 1,
+            user: "John Doe",
+            rating: 4.5,
+            comment: "Great product! Highly recommend it.",
+        },
+        {
+            id: 2,
+            user: "Jane Smith",
+            rating: 5,
+            comment: "Excellent quality and value for money.",
+        },
+    ]);
+    const [newReview, setNewReview] = useState({
+        rating: 0,
+        comment: "",
+    });
     useEffect(() => {
         window.scrollTo(0, 0);
         fetchProductDetails();
+        const checkIsBought = async () => {
+            const response = await fetch(
+                SummaryApi.checkIsBought.url + "/" + params.id,
+                {
+                    method: SummaryApi.checkIsBought.method,
+                    credentials: "include",
+                }
+            );
+            const data = await response.json();
+            console.log(data);
+            setIsBought(data?.data);
+        };
+        checkIsBought();
     }, [params]);
 
     const handleMouseMove = useCallback((e) => {
@@ -221,6 +252,114 @@ const ProductDetails = () => {
                     heading={"Recommended Product"}
                 ></VerticalCardProduct>
             )}
+            <div className="container p-4 mx-auto">
+                {/* Product Details Section (existing code) */}
+                <div className="mt-8">
+                    <div className="flex gap-4">
+                        <h2 className="text-xl font-bold">Reviews</h2>
+                        <div className="flex items-center gap-1">
+                            ( <p>4.5</p>
+                            <IoMdStar size={25} className="text-yellow-500 " />)
+                        </div>
+                    </div>
+                    <div className="mt-4">
+                        {isBought ? (
+                            <form>
+                                <div className="flex items-center gap-2">
+                                    <label
+                                        htmlFor="rating"
+                                        className="font-medium"
+                                    >
+                                        Rating:
+                                    </label>
+                                    <select
+                                        id="rating"
+                                        value={newReview.rating}
+                                        onChange={(e) =>
+                                            setNewReview({
+                                                ...newReview,
+                                                rating: parseFloat(
+                                                    e.target.value
+                                                ),
+                                            })
+                                        }
+                                        className="px-2 py-1 border rounded"
+                                    >
+                                        <option value={0}>Select</option>
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <option key={star} value={star}>
+                                                {star}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="mt-4">
+                                    <textarea
+                                        value={newReview.comment}
+                                        onChange={(e) =>
+                                            setNewReview({
+                                                ...newReview,
+                                                comment: e.target.value,
+                                            })
+                                        }
+                                        placeholder="Write your review..."
+                                        className="w-full p-2 border rounded"
+                                        rows={3}
+                                    ></textarea>
+                                </div>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 mt-4 text-white bg-blue-600 rounded"
+                                >
+                                    Submit Review
+                                </button>
+                            </form>
+                        ) : (
+                            <p className="text-gray-600">
+                                You need to purchase this product to leave a
+                                review.
+                            </p>
+                        )}
+                    </div>
+                    <div className="mt-6">
+                        {reviews.length > 0 ? (
+                            reviews.map((review) => (
+                                <div
+                                    key={review.id}
+                                    className="flex flex-col gap-2 py-4 border-b"
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-bold">
+                                            {review.user}
+                                        </span>
+                                        <div className="flex">
+                                            {Array.from(
+                                                {
+                                                    length: Math.floor(
+                                                        review.rating
+                                                    ),
+                                                },
+                                                (_, i) => (
+                                                    <FaStar
+                                                        key={i}
+                                                        className="text-yellow-500"
+                                                    />
+                                                )
+                                            )}
+                                            {review.rating % 1 !== 0 && (
+                                                <FaStarHalf className="text-yellow-500" />
+                                            )}
+                                        </div>
+                                    </div>
+                                    <p>{review.comment}</p>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No reviews yet.</p>
+                        )}
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

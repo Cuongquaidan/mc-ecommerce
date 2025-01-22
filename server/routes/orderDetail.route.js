@@ -17,5 +17,10 @@ router.get(
     authToken,
     orderDetailController.getTotalOfOrderDetailsByMonthAndYear
 );
+router.get(
+    "/checkIsBought/:productId",
+    authToken,
+    orderDetailController.checkIsBought
+);
 
 module.exports = router;
