@@ -12,7 +12,7 @@ import {
     Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { AiFillProduct } from "react-icons/ai";
 import { FaUserFriends } from "react-icons/fa";
 import { IoMdHome } from "react-icons/io";
@@ -22,6 +22,9 @@ import { BiSolidDiscount } from "react-icons/bi";
 import { FaMoneyBill } from "react-icons/fa";
 function AdminPanel() {
     const user = useSelector((state) => state?.user?.user);
+    const location = useLocation();
+    const path = location.pathname;
+    console.log(location);
     const dataAside = [
         {
             title: "Dashboard",
@@ -71,7 +74,15 @@ function AdminPanel() {
                         <List className="flex flex-col h-full">
                             {dataAside.map((item, index) => (
                                 <>
-                                    <ListItem key={item.title} disablePadding>
+                                    <ListItem
+                                        key={item.title}
+                                        disablePadding
+                                        className={
+                                            path === item.link
+                                                ? "bg-blue-500 text-white"
+                                                : ""
+                                        }
+                                    >
                                         <Link to={item.link} className="w-full">
                                             <ListItemButton>
                                                 <ListItemIcon>
@@ -110,7 +121,15 @@ function AdminPanel() {
                 <List className="flex flex-col h-full">
                     {dataAside.map((item, index) => (
                         <>
-                            <ListItem key={item.title} disablePadding>
+                            <ListItem
+                                key={item.title}
+                                disablePadding
+                                className={
+                                    path === item.link
+                                        ? "bg-blue-500 text-white"
+                                        : ""
+                                }
+                            >
                                 <Link to={item.link} className="w-full">
                                     <ListItemButton>
                                         <ListItemIcon>{item.icon}</ListItemIcon>
