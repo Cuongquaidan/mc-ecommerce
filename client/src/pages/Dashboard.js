@@ -130,9 +130,9 @@ function Dashboard() {
                 <h2 className="text-xl italic font-bold">
                     Monthly Statistics ({type})
                 </h2>
-                <div className="flex items-center gap-8 py-4">
-                    <div className="flex items-center gap-4">
-                        <h4 className="text-xl italic font-bold text-blue-600">
+                <div className="flex flex-col gap-8 py-4 overflow-x-auto lg:items-center lg:flex-row">
+                    <div className="flex items-center gap-4 ">
+                        <h4 className="text-xl min-w-[100px] italic font-bold text-blue-600">
                             Month:
                         </h4>
                         <div className="flex items-center gap-2 cursor-pointer">
@@ -153,7 +153,7 @@ function Dashboard() {
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <h4 className="text-xl italic font-bold text-blue-600">
+                        <h4 className="text-xl min-w-[100px] italic font-bold text-blue-600">
                             Year:
                         </h4>
                         <div className="flex items-center gap-2 cursor-pointer">
@@ -175,7 +175,7 @@ function Dashboard() {
                     </div>
                 </div>
                 {data ? (
-                    <div className="w-full mx-auto ml-8">
+                    <div className="w-full ml-8">
                         {type === "Quantity" ? (
                             <BarChart
                                 dataset={data}
@@ -207,6 +207,7 @@ function Dashboard() {
                                     },
                                 ]}
                                 {...chartSetting}
+                                className="!w-full "
                             />
                         ) : (
                             <BarChart
