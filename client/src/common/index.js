@@ -149,6 +149,14 @@ const SUMMARY_API = {
         url: `${API_PREFIX}/order-details/checkIsBought`,
         method: "GET",
     },
+    createReview: {
+        url: `${API_PREFIX}/reviews/create`,
+        method: "POST",
+    },
+    getReviewsByProductId: {
+        url: `${API_PREFIX}/reviews/product`,
+        method: "GET",
+    },
 };
 
 export default SUMMARY_API;

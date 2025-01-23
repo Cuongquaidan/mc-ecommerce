@@ -12,9 +12,7 @@ function OrderItem({ order, SetShowConMeo }) {
             onMouseLeave={() => SetShowConMeo(false)}
         >
             <div className="flex flex-col flex-1 gap-4">
-                <p className="text-lg font-bold">
-                    {moment().format("LL").slice(1)}
-                </p>
+                <p className="text-lg font-bold">{moment().format("LL")}</p>
                 <p className="text-2xl font-bold text-green-700">
                     {order.total.toLocaleString()} VND
                 </p>

@@ -1,4 +1,5 @@
 const reviewModel = require("../models/review.model");
+const productModel = require("../models/product.model");
 
 async function createReview(req, res) {
     try {
@@ -11,6 +12,12 @@ async function createReview(req, res) {
             comment,
         });
         const nr = await newReview.save();
+
+        const avgRating = await calculateAvgRating(product);
+        await productModel.findByIdAndUpdate(product, {
+            rating: avgRating,
+        });
+
         return res.status(201).json({
             message: "Review created successfully",
             error: false,
@@ -67,11 +74,13 @@ async function getReviewsByProductId(req, res) {
                 .find({ product: productId, rating: 5 })
                 .populate("user");
         }
+        const numOfRatings = await getNumOfReviewRatings(productId);
         return res.status(200).json({
             message: "Get Reviews successfully",
             error: false,
             success: true,
             data: reviews,
+            numOfRatings,
         });
     } catch (error) {
         return res.status(500).json({
@@ -79,6 +88,38 @@ async function getReviewsByProductId(req, res) {
             error: true,
             success: false,
         });
+    }
+}
+async function getNumOfReviewRatings(productId) {
+    try {
+        const reviews = await reviewModel.find({ product: productId });
+        const numOfRatings = {
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0,
+            5: 0,
+        };
+        reviews.forEach((review) => {
+            numOfRatings[review.rating] += 1;
+        });
+        return numOfRatings;
+    } catch (error) {
+        return error;
+    }
+}
+
+async function calculateAvgRating(productId) {
+    try {
+        const reviews = await reviewModel.find({ product: productId });
+        let totalRating = 0;
+        reviews.forEach((review) => {
+            totalRating += review.rating;
+        });
+        const avgRating = totalRating / reviews.length;
+        return avgRating;
+    } catch (error) {
+        return error;
     }
 }
 

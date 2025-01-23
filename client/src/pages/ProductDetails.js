@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+    useCallback,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SummaryApi from "../common";
 import { FaStar } from "react-icons/fa";
@@ -8,6 +14,9 @@ import VerticalCardProduct from "../components/VerticalCardProduct";
 import checkPromotion from "../helpers/checkPromotion";
 import { useSelector } from "react-redux";
 import { IoMdStar } from "react-icons/io";
+import moment from "moment";
+import "moment/locale/vi";
+import { toast } from "react-toastify";
 // logic zoom ảnh
 //  Lay toa do theo phan tram
 // Dat lai vi tri scale  (điểm gốc biến đổi (transform origin))
@@ -21,6 +30,7 @@ const ProductDetails = () => {
         price: "",
         selling: "",
     });
+    const [type, setType] = useState("newest");
     const params = useParams();
     const [loading, setLoading] = useState(true);
     const productImageListLoading = new Array(4).fill(null);
@@ -30,11 +40,13 @@ const ProductDetails = () => {
     const [zoom, setZoom] = useState(false);
     const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
     const [isBought, setIsBought] = useState(false);
+    const [isShowAll, setIsShowAll] = useState(false);
 
     const navigate = useNavigate();
-
+    const areaRef = useRef(null);
     const fetchProductDetails = async () => {
         setLoading(true);
+
         const response = await fetch(SummaryApi.productDetails.url, {
             method: SummaryApi.productDetails.method,
             headers: {
@@ -50,24 +62,45 @@ const ProductDetails = () => {
         setData(dataResponse?.data);
         setActiveImage(dataResponse?.data?.productImages[0]);
     };
-    const [reviews, setReviews] = useState([
-        {
-            id: 1,
-            user: "John Doe",
-            rating: 4.5,
-            comment: "Great product! Highly recommend it.",
-        },
-        {
-            id: 2,
-            user: "Jane Smith",
-            rating: 5,
-            comment: "Excellent quality and value for money.",
-        },
-    ]);
+    const [reviews, setReviews] = useState([]);
+    const [numOfRatings, setNumOfRatings] = useState({});
+    const [areaHeight, setAreaHeight] = useState(30);
     const [newReview, setNewReview] = useState({
         rating: 0,
         comment: "",
     });
+    const handleAddReview = async () => {
+        if (newReview.rating === 0) {
+            toast.error("Please rate the product.");
+            return;
+        }
+        const response = await fetch(SummaryApi.createReview.url, {
+            method: SummaryApi.createReview.method,
+            headers: {
+                "content-type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                product: params.id,
+                rating: newReview.rating,
+                comment: newReview.comment,
+            }),
+        });
+        const data = await response.json();
+        if (data?.success) {
+            setReviews([data?.data, ...reviews]);
+            setNumOfRatings({
+                ...numOfRatings,
+                [data?.data.rating]: (numOfRatings[data?.data.rating] || 0) + 1,
+            });
+            setType("newest");
+            setNewReview({
+                rating: 0,
+                comment: "",
+            });
+        }
+    };
+
     useEffect(() => {
         window.scrollTo(0, 0);
         fetchProductDetails();
@@ -80,11 +113,13 @@ const ProductDetails = () => {
                 }
             );
             const data = await response.json();
-            console.log(data);
             setIsBought(data?.data);
         };
         checkIsBought();
     }, [params]);
+    useEffect(() => {
+        setAreaHeight(areaRef?.current?.scrollHeight);
+    }, [newReview.comment]);
 
     const handleMouseMove = useCallback((e) => {
         const { left, top, width, height } = e.target.getBoundingClientRect();
@@ -105,6 +140,21 @@ const ProductDetails = () => {
     const handleBuyProduct = async (e, id) => {
         await addToCart(e, id);
     };
+    useEffect(() => {
+        const fetchReviews = async () => {
+            const response = await fetch(
+                SummaryApi.getReviewsByProductId.url +
+                    "/" +
+                    params.id +
+                    "?type=" +
+                    type
+            );
+            const data = await response.json();
+            setReviews(data?.data);
+            setNumOfRatings(data?.numOfRatings);
+        };
+        fetchReviews();
+    }, [params, type]);
 
     return (
         <div className="container p-4 mx-auto">
@@ -184,7 +234,7 @@ const ProductDetails = () => {
                         Stock: {data?.stock}
                     </div>
                     <div className="flex items-center gap-1 text-md text-slate-400">
-                        {data?.rating}{" "}
+                        {data?.rating?.toFixed(2)}{" "}
                         <IoMdStar size={25} className="text-yellow-500 " />
                     </div>
 
@@ -258,7 +308,7 @@ const ProductDetails = () => {
                     <div className="flex gap-4">
                         <h2 className="text-xl font-bold">Reviews</h2>
                         <div className="flex items-center gap-1">
-                            ( <p>4.5</p>
+                            ( <p>{data.rating}</p>
                             <IoMdStar size={25} className="text-yellow-500 " />)
                         </div>
                     </div>
@@ -272,26 +322,39 @@ const ProductDetails = () => {
                                     >
                                         Rating:
                                     </label>
-                                    <select
-                                        id="rating"
-                                        value={newReview.rating}
-                                        onChange={(e) =>
-                                            setNewReview({
-                                                ...newReview,
-                                                rating: parseFloat(
-                                                    e.target.value
-                                                ),
-                                            })
-                                        }
-                                        className="px-2 py-1 border rounded"
-                                    >
-                                        <option value={0}>Select</option>
-                                        {[1, 2, 3, 4, 5].map((star) => (
-                                            <option key={star} value={star}>
-                                                {star}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <div className="flex items-center gap-1 cursor-pointer">
+                                        {new Array(newReview.rating)
+                                            .fill(null)
+                                            .map((_, i) => (
+                                                <IoMdStar
+                                                    size={25}
+                                                    className="text-yellow-500 "
+                                                    onClick={() => {
+                                                        setNewReview({
+                                                            ...newReview,
+                                                            rating: i + 1,
+                                                        });
+                                                    }}
+                                                />
+                                            ))}
+                                        {new Array(5 - newReview.rating)
+                                            .fill(null)
+                                            .map((_, i) => (
+                                                <IoMdStar
+                                                    size={25}
+                                                    className="text-gray-400 "
+                                                    onClick={() => {
+                                                        setNewReview({
+                                                            ...newReview,
+                                                            rating:
+                                                                newReview.rating +
+                                                                i +
+                                                                1,
+                                                        });
+                                                    }}
+                                                />
+                                            ))}
+                                    </div>
                                 </div>
                                 <div className="mt-4">
                                     <textarea
@@ -303,13 +366,17 @@ const ProductDetails = () => {
                                             })
                                         }
                                         placeholder="Write your review..."
-                                        className="w-full p-2 border rounded"
-                                        rows={3}
+                                        className="w-full p-2 overflow-hidden leading-6 border rounded resize-none"
+                                        ref={areaRef}
+                                        style={{
+                                            minHeight: `${areaHeight}px`,
+                                        }}
                                     ></textarea>
                                 </div>
                                 <button
-                                    type="submit"
+                                    type="button"
                                     className="px-4 py-2 mt-4 text-white bg-blue-600 rounded"
+                                    onClick={handleAddReview}
                                 >
                                     Submit Review
                                 </button>
@@ -321,39 +388,132 @@ const ProductDetails = () => {
                             </p>
                         )}
                     </div>
+                    <div className="flex items-center gap-2 mt-6">
+                        <label htmlFor="rating" className="font-medium">
+                            Sort by:
+                        </label>
+                        <select
+                            value={type}
+                            onChange={(e) => {
+                                setType(e.target.value);
+                                navigate(
+                                    "/product/" +
+                                        params.id +
+                                        "?type=" +
+                                        e.target.value
+                                );
+                            }}
+                            className="px-2 py-1 border rounded"
+                        >
+                            <option value={"newest"}>Newest</option>
+                            <option value={"highest"}>Highest</option>
+                            <option value={"lowest"}>Lowest</option>
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <option key={star} value={star + ""}>
+                                    {star} ({numOfRatings[star] || 0})
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                     <div className="mt-6">
                         {reviews.length > 0 ? (
-                            reviews.map((review) => (
-                                <div
-                                    key={review.id}
-                                    className="flex flex-col gap-2 py-4 border-b"
-                                >
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-bold">
-                                            {review.user}
-                                        </span>
-                                        <div className="flex">
-                                            {Array.from(
-                                                {
-                                                    length: Math.floor(
-                                                        review.rating
-                                                    ),
-                                                },
-                                                (_, i) => (
-                                                    <FaStar
-                                                        key={i}
-                                                        className="text-yellow-500"
-                                                    />
-                                                )
-                                            )}
-                                            {review.rating % 1 !== 0 && (
-                                                <FaStarHalf className="text-yellow-500" />
-                                            )}
+                            isShowAll ? (
+                                <>
+                                    {reviews.map((review) => (
+                                        <div
+                                            key={review.id}
+                                            className="flex flex-col gap-2 py-4 border-b"
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-bold">
+                                                    {review.user.name}
+                                                </span>
+
+                                                <div className="flex">
+                                                    {Array.from(
+                                                        {
+                                                            length: Math.floor(
+                                                                review.rating
+                                                            ),
+                                                        },
+                                                        (_, i) => (
+                                                            <FaStar
+                                                                key={i}
+                                                                className="text-yellow-500"
+                                                            />
+                                                        )
+                                                    )}
+                                                    {review.rating % 1 !==
+                                                        0 && (
+                                                        <FaStarHalf className="text-yellow-500" />
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <span className="text-sm italic text-slate-500">
+                                                {moment(
+                                                    review?.createdAt,
+                                                    moment.ISO_8601
+                                                ).fromNow()}
+                                            </span>
+                                            <p>{review.comment}</p>
                                         </div>
-                                    </div>
-                                    <p>{review.comment}</p>
-                                </div>
-                            ))
+                                    ))}
+                                    <button
+                                        className="italic font-bold text-red-400 underline text-md"
+                                        onClick={() => setIsShowAll(false)}
+                                    >
+                                        Hide all
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    {reviews.slice(0, 3).map((review) => (
+                                        <div
+                                            key={review.id}
+                                            className="flex flex-col gap-2 py-4 border-b"
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                <span className="font-bold">
+                                                    {review.user.name}
+                                                </span>
+
+                                                <div className="flex">
+                                                    {Array.from(
+                                                        {
+                                                            length: Math.floor(
+                                                                review.rating
+                                                            ),
+                                                        },
+                                                        (_, i) => (
+                                                            <FaStar
+                                                                key={i}
+                                                                className="text-yellow-500"
+                                                            />
+                                                        )
+                                                    )}
+                                                    {review.rating % 1 !==
+                                                        0 && (
+                                                        <FaStarHalf className="text-yellow-500" />
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <span className="text-sm italic text-slate-500">
+                                                {moment(
+                                                    review?.createdAt,
+                                                    moment.ISO_8601
+                                                ).fromNow()}
+                                            </span>
+                                            <p>{review.comment}</p>
+                                        </div>
+                                    ))}
+                                    <button
+                                        className="italic font-bold text-blue-400 underline text-md"
+                                        onClick={() => setIsShowAll(true)}
+                                    >
+                                        Show all
+                                    </button>
+                                </>
+                            )
                         ) : (
                             <p>No reviews yet.</p>
                         )}
