@@ -38,7 +38,7 @@ function VerticalCardItem({ product, ...props }) {
     return (
         <Link
             to={"/product/" + product?._id}
-            className="w-full min-w-[280px]   md:min-w-[320px] max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow-md dark:bg-neutral-900 dark:text-slate-300 "
+            className="w-full min-w-[280px]   md:min-w-[320px] dark:border max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow-md dark:bg-neutral-900 dark:text-slate-300 "
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >

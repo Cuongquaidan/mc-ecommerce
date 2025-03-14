@@ -138,7 +138,7 @@ function AllUsers() {
                             .map((row, index) => {
                                 return (
                                     <TableRow
-                                        hover
+                                        
                                         role="checkbox"
                                         tabIndex={-1}
                                         key={row.code}

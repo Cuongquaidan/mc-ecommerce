@@ -74,16 +74,27 @@ function ModalEditProduct({ data, isEditing, onClose, fetchData }) {
         });
     };
     const handleImageUpload = async (e) => {
-        const file = e.target.files[0];
+        // const file = e.target.files[0];
 
-        if (!file) return;
+        // if (!file) return;
 
-        const imageCloudinary = await uploadImage(file);
+        // const imageCloudinary = await uploadImage(file);
 
-        setProductEditing((prev) => ({
-            ...prev,
-            productImages: [...prev.productImages, imageCloudinary.url],
-        }));
+        // setNewProduct((prev) => ({
+        //     ...prev,
+        //     productImages: [...prev.productImages, imageCloudinary.url],
+        // }));
+        const files = e.target.files;
+        if (!files) return;
+        for(let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const imageCloudinary = await uploadImage(file);
+            setProductEditing((prev) => ({
+                ...prev,
+                productImages: [...prev.productImages, imageCloudinary.url],
+            }));
+        }
+        e.target.value = null;
     };
     const openImageInModal = (imgUrl) => {
         setSelectedImage(imgUrl);

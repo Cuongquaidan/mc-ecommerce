@@ -20,35 +20,36 @@ import { useSelector } from "react-redux";
 import { FaBars } from "react-icons/fa";
 import { BiSolidDiscount } from "react-icons/bi";
 import { FaMoneyBill } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 function AdminPanel() {
     const user = useSelector((state) => state?.user?.user);
     const location = useLocation();
     const path = location.pathname;
-    console.log(location);
+    const { t } = useTranslation();
     const dataAside = [
         {
-            title: "Dashboard",
-            icon: <IoMdHome size={30} />,
+            title: t("admin.dashboard"),
+            icon: <IoMdHome size={30} className="text-gray-700 dark:text-blue-300"/>,
             link: "/admin-panel",
         },
         {
-            title: "All Users",
-            icon: <FaUserFriends size={30} />,
+            title: t("admin.all-users"),
+            icon: <FaUserFriends size={30} className="text-gray-700 dark:text-blue-300"/>,
             link: "/admin-panel/all-users",
         },
         {
-            title: "All Products",
-            icon: <AiFillProduct size={30} />,
+            title:t("admin.all-products"),
+            icon: <AiFillProduct size={30} className="text-gray-700 dark:text-blue-300"/>,
             link: "/admin-panel/all-products",
         },
         {
-            title: "All Promotions",
-            icon: <BiSolidDiscount size={30} />,
+            title: t("admin.all-promotions"),
+            icon: <BiSolidDiscount size={30} className="text-gray-700 dark:text-blue-300"/>,
             link: "/admin-panel/all-promotions",
         },
         {
-            title: "All Orders",
-            icon: <FaMoneyBill size={30} />,
+            title: t("admin.all-orders"),
+            icon: <FaMoneyBill size={30} className="text-gray-700 dark:text-blue-300"/>,
             link: "/admin-panel/all-orders",
         },
     ];
@@ -71,7 +72,7 @@ function AdminPanel() {
                         role="presentation"
                         onClick={toggleDrawer(false)}
                     >
-                        <List className="flex flex-col h-full">
+                        <List className="flex flex-col h-full dark:bg-neutral-800">
                             {dataAside.map((item, index) => (
                                 <>
                                     <ListItem
@@ -118,7 +119,7 @@ function AdminPanel() {
                 </Drawer>
             </div>
             <aside className="hidden w-full h-full bg-white border shadow-inner md:block">
-                <List className="flex flex-col h-full">
+                <List className="flex flex-col h-full dark:bg-neutral-800">
                     {dataAside.map((item, index) => (
                         <>
                             <ListItem

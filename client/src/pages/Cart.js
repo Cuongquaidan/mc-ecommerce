@@ -14,7 +14,9 @@ import { FaRegSquareCheck } from "react-icons/fa6";
 import ungroupProductBrand from "../helpers/ungroupProductBrand";
 import createOrder from "../helpers/createOrder";
 import { setCurrentCartOrder } from "../store/cartSlice";
+import { useTranslation} from "react-i18next"
 const Cart = () => {
+    const {t} = useTranslation();
     const cartOrder = useSelector((state) => state?.cart?.cartOrder); // Lấy giỏ hàng từ Redux
     console.log(cartOrder);
     const [groups, setGroups] = useState([]);
@@ -71,7 +73,7 @@ const Cart = () => {
         setModalContent({
             type: "remove",
             productId,
-            message: "Are you sure you want to remove this product?",
+            message: t("cart.confirm-message"),
         });
         setOpenModal(true);
     };
@@ -404,7 +406,7 @@ const Cart = () => {
                                                     ) && (
                                                         <div className="left-0 flex items-center justify-center w-10 h-6 text-white bg-red-500 top-4">
                                                             <p className="text-center">
-                                                                Sale
+                                                                {t("sale")}
                                                             </p>
                                                         </div>
                                                     )}
@@ -462,7 +464,7 @@ const Cart = () => {
                                                 )
                                             ) ? (
                                                 <p className="text-red-600">
-                                                    Sold out
+                                                    {t("sold-out")}         
                                                 </p>
                                             ) : (
                                                 <div className="flex items-center gap-4">
@@ -516,17 +518,17 @@ const Cart = () => {
                             </div>
                         ))
                     ) : (
-                        <p>Your cart is empty.</p>
+                        <p>{t("cart.empty-message")}</p>
                     )}
                 </div>
 
                 {/* Thanh toán */}
                 <div className="p-4 border rounded">
-                    <h2 className="mb-4 text-lg font-bold">Summary</h2>
+                    <h2 className="mb-4 text-lg font-bold">{t("cart.summary")}</h2>
                     {cart && cart.products.length > 0 && (
                         <>
                             <div className="flex justify-between mb-2">
-                                <span>Subtotal:</span>
+                                <span>{t("cart.subtotal")}:</span>
                                 <span>
                                     $
                                     {ungroupProductBrand(groupsSelected)
@@ -563,7 +565,7 @@ const Cart = () => {
                                 </span>
                             </div>
                             <div className="flex justify-between mb-2">
-                                <span>Tax (5%):</span>
+                                <span>{t("cart.tax")} (5%):</span>
                                 <span>
                                     $
                                     {(
@@ -598,7 +600,7 @@ const Cart = () => {
                             </div>
 
                             <div className="flex justify-between mb-4 font-bold">
-                                <span>Total:</span>
+                                <span>{t("cart.total")}:</span>
                                 <span>{calculateTotal().toFixed(2)}VND</span>
                             </div>
 
@@ -606,16 +608,16 @@ const Cart = () => {
                                 <select
                                     name="paymentMethod"
                                     id="paymentMethod"
-                                    className="p-2 border border-green-700 outline-none"
+                                    className="p-2 border border-green-700 outline-none dark:bg-neutral-500 dark:text-neutral-100"
                                     value={paymentMethod}
                                     onChange={(e) =>
                                         setPaymentMethod(e.target.value)
                                     }
                                 >
-                                    <option value={paymentMethods.COD}>
+                                    <option value={paymentMethods.COD} className="p-2">
                                         COD
                                     </option>
-                                    <option value={paymentMethods.VNPAY}>
+                                    <option value={paymentMethods.VNPAY} className="p-2">
                                         VNPay
                                     </option>
                                 </select>
@@ -625,7 +627,7 @@ const Cart = () => {
                                 className="w-full py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
                                 onClick={handleCheckout}
                             >
-                                Order
+                                {t("cart.order")}
                             </button>
                         </>
                     )}
@@ -657,14 +659,14 @@ const Cart = () => {
                             onClick={confirmAction}
                             className="mr-2"
                         >
-                            Confirm
+                            {t("cart.confirm")}
                         </Button>
                         <Button
                             variant="outlined"
                             color="primary"
                             onClick={cancelAction}
                         >
-                            Cancel
+                            {t("cart.cancel")}
                         </Button>
                     </div>
                 </Box>

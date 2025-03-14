@@ -19,6 +19,11 @@
   "searchHolder": "Search products here...",
   "sale": "Sale",
   "stock": "Stock",
+  "search-result": "Search result",
+  "plth": "Price - Low to High",
+  "phtl": "Price - High to Low",
+  "sort-by": "Sort by",
+  "category": "Category",
   "action":{
     "Admin panel": "Admin panel",
     "My orders": "My orders",
@@ -67,6 +72,54 @@
     "highest": "Highest",
     "lowest": "Lowest",
     "newest": "Newest"
+  },
+  "cart":{
+      "summary": "Summary",
+      "subtotal": "Subtotal",
+      "total": "Total",
+      "order": "Order",
+      "confirm-message": "Are you sure you want to remove this product?",
+      "tax": "Tax",
+      "empty-message": "Your cart is empty",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+  },
+  "order":{
+    "list-order": "List Order",
+    "shipping-status": "Shipping Status",
+    "payment-method": "Payment Method",
+    "my-orders": "My Orders",
+    "quantity": "Quantity"
+  },
+  "profile": {
+    "title": "Profile",
+    "name": "Name",
+    "phone": "Phone",
+    "address": "Address",
+    "update": "Update",
+    "upload-image": "Upload your image"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "all-users": "All Users",
+    "all-products": "All Products",
+    "all-promotions": "All Promotions",
+    "all-orders": "All Orders",
+    "db":{
+      "quantity": "Quantity",
+      "revenue": "Revenue",
+      "monthly-statistics": "Monthly Statistics",
+      "month": "Month",
+      "year": "Year"
+    },
+    "promotions":{
+      "title": "Promotion Management",
+      "all-products": "All Products",
+      "specific-products": "Specific Products",
+      "specific-users": "Specific Users",
+      "specific-categories": "Specific Categories",
+      "specific-brands": "Specific Brands"
+    }
   }
   
 }

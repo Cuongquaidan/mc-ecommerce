@@ -1,54 +1,57 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-const promotionTypes = [
-    {
-        id: 1,
-        name: "All Products",
-        description: "Applies to all products in the store.",
-        status: "active",
-        link: "/admin-panel/all-promotions/all-products",
-        color: "text-blue-500",
-    },
-    {
-        id: 2,
-        name: "Specific Products",
-        description: "Applies to selected products only.",
-        status: "active",
-        link: "/admin-panel/all-promotions/specific-products",
-        color: "text-green-500",
-    },
-    {
-        id: 3,
-        name: "Specific Categories",
-        description: "Applies to selected categories of products.",
-        status: "active",
-        link: "/admin-panel/all-promotions/specific-categories",
-        color: "text-yellow-500",
-    },
-    {
-        id: 4,
-        name: "Specific Users",
-        description: "Available for specific users or groups.",
-        status: "disabled",
-        link: "/admin-panel/all-promotions/specific-users",
-        color: "text-red-500",
-    },
-    {
-        id: 5,
-        name: "Specific Brands",
-        description: "Applies to selected brands only.",
-        status: "active",
-        link: "/admin-panel/all-promotions/specific-brands",
-        color: "text-purple-500",
-    },
-];
+
 
 function AllPromotions() {
+    const {t} = useTranslation();
+    const promotionTypes = [
+        {
+            id: 1,
+            name: t("admin.promotions.all-products"),
+            description: "Applies to all products in the store.",
+            status: "active",
+            link: "/admin-panel/all-promotions/all-products",
+            color: "text-blue-500",
+        },
+        {
+            id: 2,
+            name: t("admin.promotions.specific-products"),
+            description: "Applies to selected products only.",
+            status: "active",
+            link: "/admin-panel/all-promotions/specific-products",
+            color: "text-green-500",
+        },
+        {
+            id: 3,
+            name: t("admin.promotions.specific-categories"),
+            description: "Applies to selected categories of products.",
+            status: "active",
+            link: "/admin-panel/all-promotions/specific-categories",
+            color: "text-yellow-500",
+        },
+        {
+            id: 4,
+            name: t("admin.promotions.specific-users"),
+            description: "Available for specific users or groups.",
+            status: "disabled",
+            link: "/admin-panel/all-promotions/specific-users",
+            color: "text-red-500",
+        },
+        {
+            id: 5,
+            name: t("admin.promotions.specific-brands"),
+            description: "Applies to selected brands only.",
+            status: "active",
+            link: "/admin-panel/all-promotions/specific-brands",
+            color: "text-purple-500",
+        },
+    ];
     return (
         <div className="min-h-screen p-6 bg-gray-50">
             <h2 className="mb-6 text-2xl font-bold text-gray-800">
-                Promotion Management
+                {t("admin.promotions.title")}
             </h2>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

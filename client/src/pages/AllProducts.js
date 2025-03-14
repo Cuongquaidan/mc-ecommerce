@@ -24,6 +24,7 @@ import uploadImage from "../helpers/uploadImage";
 import { toast } from "react-toastify";
 import SUMMARY_API from "../common";
 import ModalEditProduct from "../components/ModalEditProduct";
+import { useTranslation } from "react-i18next";
 
 const AllProducts = () => {
     const [productCategory, setProductCategory] = useState([]);
@@ -63,16 +64,27 @@ const AllProducts = () => {
     };
 
     const handleImageUpload = async (e) => {
-        const file = e.target.files[0];
+        // const file = e.target.files[0];
 
-        if (!file) return;
+        // if (!file) return;
 
-        const imageCloudinary = await uploadImage(file);
+        // const imageCloudinary = await uploadImage(file);
 
-        setNewProduct((prev) => ({
-            ...prev,
-            productImages: [...prev.productImages, imageCloudinary.url],
-        }));
+        // setNewProduct((prev) => ({
+        //     ...prev,
+        //     productImages: [...prev.productImages, imageCloudinary.url],
+        // }));
+        const files = e.target.files;
+        if (!files) return;
+        for(let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const imageCloudinary = await uploadImage(file);
+            setNewProduct((prev) => ({
+                ...prev,
+                productImages: [...prev.productImages, imageCloudinary.url],
+            }));
+        }
+        e.target.value = null;
     };
 
     const handleAddProduct = async (e) => {
@@ -180,6 +192,7 @@ const AllProducts = () => {
         };
         fetchCategory();
     }, []);
+    const { t } = useTranslation();
 
     return (
         <Box p={3}>
@@ -191,7 +204,7 @@ const AllProducts = () => {
                 mb={3}
             >
                 <Typography variant="h5" fontWeight="bold">
-                    All Products
+                    {t("admin.all-products")}
                 </Typography>
                 <Button
                     variant="contained"

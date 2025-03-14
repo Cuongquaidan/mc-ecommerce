@@ -69,7 +69,7 @@ function Header() {
     };
 
     return (
-        <header className="h-24 px-5 bg-white shadow-md dark:bg-neutral-900 dark:text-slate-300 ">
+        <header className="h-24 px-5 bg-white shadow-md dark:bg-neutral-800 dark:text-slate-300 ">
             <div className="container flex items-center justify-between h-full mx-auto">
                 <div className="">
                     <Logo></Logo>

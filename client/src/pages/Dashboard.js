@@ -5,6 +5,7 @@ import { BarChart } from "@mui/x-charts/BarChart";
 import SUMMARY_API from "../common";
 import { axisClasses } from "@mui/x-charts/ChartsAxis";
 import { PieChart } from "@mui/x-charts/PieChart";
+import { useTranslation } from "react-i18next";
 function Dashboard() {
     const [type, setType] = useState("Quantity");
     const [month, setMonth] = useState(new Date().getMonth() + 1);
@@ -113,69 +114,69 @@ function Dashboard() {
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
-
+    const { t } = useTranslation();
     return (
         <div className="container p-8">
             <select
                 name="type"
                 id="type"
-                className="p-4 mb-8 text-xl font-bold border-2 border-gray-400 rounded-md shadow-md"
+                className="p-4 mb-8 text-xl font-bold border-2 border-gray-400 rounded-md shadow-md dark:text-neutral-900"
                 onChange={(e) => setType(e.target.value)}
             >
-                <option value="Quantity">Quantity</option>
-                <option value="Revenue">Revenue</option>
+                <option value="Quantity">{t("quantity")}</option>
+                <option value="Revenue">{t("revenue")}</option>
             </select>
 
             <div>
                 <h2 className="text-xl italic font-bold">
-                    Monthly Statistics ({type})
+                    {t("admin.db.monthly-statistics")} ({type})
                 </h2>
                 <div className="flex flex-col gap-8 py-4 overflow-x-auto lg:items-center lg:flex-row">
                     <div className="flex items-center gap-4 ">
-                        <h4 className="text-xl min-w-[100px] italic font-bold text-blue-600">
-                            Month:
+                        <h4 className="text-xl min-w-[100px] italic font-bold text-blue-600 dark:text-blue-300">
+                            {t("admin.db.month")}:
                         </h4>
                         <div className="flex items-center gap-2 cursor-pointer">
                             <FaChevronLeft
-                                className="w-12 h-12 p-3 bg-red-400 rounded-full shadow-md"
+                                className="w-12 h-12 p-3 bg-red-400 rounded-full shadow-md dark:text-blue-950 "
                                 onClick={() => handleMonthChange(false)}
                             />
                             <input
                                 type="text"
                                 value={month}
                                 readOnly
-                                className="w-16 p-2 text-xl font-bold text-center shadow-md outline-none"
+                                className="w-16 p-2 text-xl font-bold text-center shadow-md outline-none dark:text-blue-950"
                             />
                             <FaChevronRight
-                                className="w-12 h-12 p-3 bg-green-400 rounded-full shadow-md"
+                                className="w-12 h-12 p-3 bg-green-400 rounded-full shadow-md dark:text-blue-950"
                                 onClick={() => handleMonthChange(true)}
                             />
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <h4 className="text-xl min-w-[100px] italic font-bold text-blue-600">
-                            Year:
+                        <h4 className="text-xl min-w-[100px] italic font-bold text-blue-600 dark:text-blue-300 ">
+                            {t("admin.db.year")}:
                         </h4>
                         <div className="flex items-center gap-2 cursor-pointer">
                             <FaChevronLeft
-                                className="w-12 h-12 p-3 bg-red-400 rounded-full shadow-md"
+                                className="w-12 h-12 p-3 bg-red-400 rounded-full shadow-md dark:text-blue-950"
                                 onClick={() => handleYearChange(false)}
                             />
                             <input
                                 type="text"
                                 value={year}
                                 readOnly
-                                className="w-16 p-2 text-xl font-bold text-center shadow-md outline-none"
+                                className="w-16 p-2 text-xl font-bold text-center shadow-md outline-none dark:text-blue-950"
                             />
                             <FaChevronRight
-                                className="w-12 h-12 p-3 bg-green-400 rounded-full shadow-md"
+                                className="w-12 h-12 p-3 bg-green-400 rounded-full shadow-md dark:text-blue-950"
                                 onClick={() => handleYearChange(true)}
                             />
                         </div>
                     </div>
                 </div>
                 {data ? (
-                    <div className="w-full ml-8">
+                    <div className="w-full ml-8 ">
                         {type === "Quantity" ? (
                             <BarChart
                                 dataset={data}
@@ -207,7 +208,7 @@ function Dashboard() {
                                     },
                                 ]}
                                 {...chartSetting}
-                                className="!w-full "
+                                className="!w-full dark:bg-white"
                             />
                         ) : (
                             <BarChart
@@ -236,6 +237,7 @@ function Dashboard() {
                                     },
                                 ]}
                                 {...chartSetting}
+                                  className="!w-full dark:bg-white"
                             />
                         )}
                     </div>

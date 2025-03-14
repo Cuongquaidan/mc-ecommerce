@@ -19,6 +19,11 @@
   "searchHolder": "Tìm kiếm sản phẩm ở đây...",
   "sale": "Giảm giá",
   "stock": "Còn",
+  "search-result": "Kết quả tìm kiếm",
+  "plth": "Giá - Thấp đến Cao",
+  "phtl": "Giá - Cao đến Thấp",
+  "sort-by": "Sắp xếp theo",
+  "category": "Danh mục",
   "action":{
     "Admin panel": "Bảng quản trị",
     "My orders": "Đơn hàng của tôi",
@@ -67,5 +72,53 @@
     "highest": "Cao nhất",
     "lowest": "Thấp nhất",
     "newest": "Mới nhất"
+  },
+  "cart": {
+    "summary": "Tóm tắt",
+    "subtotal": "Tạm tính",
+    "total": "Tổng cộng",
+    "order": "Đặt hàng",
+    "confirm-message": "Bạn có chắc chắn muốn xóa sản phẩm này không?",
+    "tax": "Thuế",
+    "empty-message": "Giỏ hàng của bạn đang trống",
+    "confirm": "Xác nhận",
+    "cancel": "Hủy"
+  },
+  "order":{
+    "list-order": "Danh sách đơn hàng",
+    "shipping-status": "Trạng thái vận chuyển",
+    "payment-method": "Phương thức thanh toán",
+    "my-orders": "Đơn hàng của tôi",
+    "quantity": "Số lượng"
+  },
+  "profile": {
+    "title": "Hồ sơ",
+    "name": "Tên",
+    "phone": "Số điện thoại",
+    "address": "Địa chỉ",
+    "update": "Cập nhật",
+    "upload-image": "Tải ảnh của bạn"
+  },
+  "admin": {
+    "dashboard": "Bảng điều khiển",
+    "all-users": "Tất cả người dùng",
+    "all-products": "Tất cả sản phẩm",
+    "all-promotions": "Tất cả khuyến mãi",
+    "all-orders": "Tất cả đơn hàng",
+    "db": {
+      "quantity": "Số lượng",
+      "revenue": "Doanh thu",
+      "monthly-statistics": "Thống kê hàng tháng",
+      "month": "Tháng",
+      "year": "Năm"
+    },
+    "promotions": {
+      "title": "Quản lý khuyến mãi",
+      "all-products": "Tất cả sản phẩm",
+      "specific-products": "Sản phẩm cụ thể",
+      "specific-users": "Người dùng cụ thể",
+      "specific-categories": "Danh mục cụ thể",
+      "specific-brands": "Thương hiệu cụ thể"
+    }
   }
 }

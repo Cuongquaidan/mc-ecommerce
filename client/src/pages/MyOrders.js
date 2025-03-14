@@ -6,8 +6,10 @@ import OrderItem from "../components/OrderItem";
 
 import ConMeo from "../assest/conmeochidan.png";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 import "moment/locale/vi";
 function MyOrders() {
+    const {t} = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [isShowConMeo, setIsShowConMeo] = useState(false);
     const ordersLoading = new Array(15).fill(0);
@@ -64,7 +66,7 @@ function MyOrders() {
                     <p className="text-sm italic font-bold">Scroll </p>
                 </div>
             )}
-            <h2 className="text-2xl italic font-bold">List orders</h2>
+            <h2 className="text-2xl italic font-bold">{t("order.list-order")}</h2>
             <div className="flex flex-col gap-16 mt-8 max-h-[calc(100vh-400px)] overflow-y-scroll scrollbar-hide">
                 {isLoading
                     ? ordersLoading.map((_, index) => (

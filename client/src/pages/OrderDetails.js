@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import SUMMARY_API from "../common";
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function OrderDetails() {
     const [orderDetails, setOrderDetails] = useState([]);
     const location = useLocation();
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchOrderDetails = async () => {
@@ -33,13 +35,13 @@ function OrderDetails() {
         <div className="container gap-4 mx-auto mt-8">
             <Link
                 to={"/my-orders"}
-                className="flex items-center gap-2 italic font-medium text-blue-600 "
+                className="flex items-center gap-2 italic font-medium text-blue-600 dark:text-blue-300"
             >
-                {"<<"} <p className="underline">My orders</p>
+                {"<<"} <p className="underline">{t("order.my-orders")}</p>
             </Link>
             {orderDetails.map((orderDetail) => (
                 <div
-                    className="border-b-2 border-gray-300"
+                    className="mt-4 border-b-2 border-gray-300 dark:bg-neutral-300 dark:text-black"
                     key={orderDetail._id}
                 >
                     <div className="relative flex items-center justify-between p-4 overflow-hidden border-b">
@@ -60,7 +62,7 @@ function OrderDetails() {
                         </div>
                         <div className="flex flex-col gap-2 items-right">
                             <span className="italic text-gray">
-                                Quantity: {orderDetail.quantity}
+                                {t("order.quantity")}: {orderDetail.quantity}
                             </span>
                             <div>
                                 {orderDetail.sellingPriceAfterPromo !==

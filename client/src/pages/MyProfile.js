@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { IoIosEye } from "react-icons/io";
-import { IoIosEyeOff } from "react-icons/io";
-import { Button, TextField } from "@mui/material";
-import Logo from "../components/Logo";
+import { Button, } from "@mui/material";
 import { FaRegUserCircle } from "react-icons/fa";
 import convertToBase64 from "../helpers/convertToBase64";
 import SUMMARY_API from "../common";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useContextGlobal } from "../context";
+import { useTranslation } from "react-i18next";
 function MyProfile() {
     const user = useSelector((state) => state?.user?.user);
     const { getUserInfo } = useContextGlobal();
@@ -66,18 +63,19 @@ function MyProfile() {
         setData(user);
     }, [user]);
 
+    const { t } = useTranslation();
     return (
         <section id="register" className="mt-5 ">
             {data && (
                 <div className="container px-4 pb-4 mx-auto">
-                    <div className="relative flex flex-col items-center w-full max-w-md gap-5 mx-auto bg-white rounded-md shadow-sm shadow-slate-500">
+                    <div className="relative flex flex-col items-center w-full max-w-md gap-5 mx-auto bg-white rounded-md shadow-sm shadow-slate-500 dark:bg-neutral-800 dark:text-white dark:border">
                         {isLoading && (
                             <div className="absolute flex items-center justify-center w-full h-full opacity-80 bg-slate-200">
                                 <div className="w-20 h-20 border-8 border-white rounded-full border-b-transparent border-t-transparent animate-spin"></div>
                             </div>
                         )}
-                        <p className="text-2xl font-bold text-blue-700">
-                            MyProfile
+                        <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">
+                            {t("profile.title")}
                         </p>
 
                         <form
@@ -99,7 +97,7 @@ function MyProfile() {
                                         <div className="flex flex-col items-center">
                                             <FaRegUserCircle className="w-20 h-20" />
                                             <p className="italic text-gray-600">
-                                                Upload your image
+                                                {t("profile.upload-image")}
                                             </p>
                                         </div>
                                     )}
@@ -114,7 +112,7 @@ function MyProfile() {
                                 </label>
                             </div>
                             <div className="flex flex-col w-full gap-2">
-                                <label htmlFor="name">Name</label>
+                                <label htmlFor="name">{t("profile.name")}</label>
                                 <input
                                     type="text"
                                     placeholder="Enter your name"
@@ -127,7 +125,7 @@ function MyProfile() {
                             </div>
 
                             <div className="flex flex-col w-full gap-2">
-                                <label htmlFor="phone">Phone</label>
+                                <label htmlFor="phone">{t("profile.phone")}</label>
                                 <input
                                     type="text"
                                     placeholder="Enter your phone"
@@ -139,7 +137,7 @@ function MyProfile() {
                                 />
                             </div>
                             <div className="flex flex-col w-full gap-2">
-                                <label htmlFor="address">Address</label>
+                                <label htmlFor="address">{t("profile.address")}</label>
                                 <input
                                     type="text"
                                     placeholder="Enter your address"
@@ -157,7 +155,7 @@ function MyProfile() {
                                 disabled={isLoading}
                                 type="submit"
                             >
-                                Update
+                                {t("profile.update")}
                             </Button>
                         </form>
                     </div>

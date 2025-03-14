@@ -4,6 +4,7 @@ import VerticalCard from "../components/ListCardSearch";
 import SummaryApi from "../common";
 import { LuFilter } from "react-icons/lu";
 import { LuFilterX } from "react-icons/lu";
+import { useTranslation } from "react-i18next";
 
 const CategoryProduct = () => {
     const [productCategory, setProductCategory] = useState([]);
@@ -23,8 +24,9 @@ const CategoryProduct = () => {
     const [selectCategory, setSelectCategory] = useState(urlCategoryListObject);
     const [filterCategoryList, setFilterCategoryList] = useState([]);
     const [sortBy, setSortBy] = useState("");
-
+    const {t} = useTranslation();
     const fetchData = async () => {
+        
         setLoading(true);
         const response = await fetch(SummaryApi.filterProduct.url, {
             method: SummaryApi.filterProduct.method,
@@ -109,7 +111,7 @@ const CategoryProduct = () => {
                     {/** Sắp xếp */}
                     <div className="mb-4">
                         <h3 className="pb-1 text-base font-medium uppercase border-b text-slate-500 border-slate-300">
-                            Sort by
+                            
                         </h3>
                         <form className="flex flex-col gap-2 py-2 text-sm">
                             <div className="flex items-center gap-3">
@@ -120,7 +122,7 @@ const CategoryProduct = () => {
                                     onChange={handleOnChangeSortBy}
                                     value={"asc"}
                                 />
-                                <label>Price - Low to High</label>
+                                <label>{t("plth")}</label>
                             </div>
                             <div className="flex items-center gap-3">
                                 <input
@@ -130,7 +132,7 @@ const CategoryProduct = () => {
                                     onChange={handleOnChangeSortBy}
                                     value={"dsc"}
                                 />
-                                <label>Price - High to Low</label>
+                                <label>{t("phtl")}</label>
                             </div>
                         </form>
                     </div>
@@ -138,7 +140,7 @@ const CategoryProduct = () => {
                     {/** Lọc danh mục */}
                     <div>
                         <h3 className="pb-1 text-base font-medium uppercase border-b text-slate-500 border-slate-300">
-                            Category
+                            {t("category")}
                         </h3>
                         <form className="grid grid-cols-2 gap-2 py-2 text-sm lg:flex lg:flex-col">
                             {productCategory.map((categoryName) => (
@@ -157,7 +159,7 @@ const CategoryProduct = () => {
                                         onChange={handleSelectCategory}
                                     />
                                     <label htmlFor={categoryName.value}>
-                                        {categoryName.label}
+                                        {t(categoryName.value)}
                                     </label>
                                 </div>
                             ))}
@@ -168,7 +170,7 @@ const CategoryProduct = () => {
                 {/** Danh sách sản phẩm */}
                 <div className="px-4">
                     <p className="my-2 text-lg font-medium text-slate-800 dark:text-slate-100">
-                        Search Results: {data.length}
+                        {t("search-result")}: {data.length}
                     </p>
                     <div className="min-h-[calc(100vh-120px)] overflow-y-scroll max-h-[calc(100vh-120px)]">
                         {data.length !== 0 && !loading && (

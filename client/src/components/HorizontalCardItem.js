@@ -39,7 +39,7 @@ function HorizontalCardItem({ product, ...props }) {
     return (
         <Link
             to={"/product/" + product?._id}
-            className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] h-48 bg-white rounded-sm shadow-md flex dark:bg-neutral-950  "
+            className="w-full min-w-[280px] dark:border md:min-w-[320px] max-w-[280px] md:max-w-[320px] h-48 bg-white rounded-sm shadow-md flex dark:bg-neutral-950  "
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
