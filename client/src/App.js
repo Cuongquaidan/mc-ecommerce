@@ -5,12 +5,12 @@ import Header from "./components/Header";
 import { Outlet } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import SUMMARY_API from "./common";
 import { ContextProvider } from "./context";
 function App() {
     return (
-        <>
+        <Suspense fallback="loading">
             <ContextProvider>
                 <Header></Header>
                 <ToastContainer></ToastContainer>
@@ -19,7 +19,7 @@ function App() {
                 </main>
                 <Footer></Footer>
             </ContextProvider>
-        </>
+        </Suspense>
     );
 }
 

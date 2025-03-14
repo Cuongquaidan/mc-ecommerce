@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SUMMARY_API from "../common";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function CategoryList() {
     const [categoryProduct, setCategoryProduct] = useState([]);
@@ -18,6 +19,8 @@ function CategoryList() {
             console.error("Failed to fetch category product");
         }
     };
+ 
+     const { t, i18n } = useTranslation();
 
     useEffect(() => {
         fetchCategoryProduct();
@@ -48,8 +51,8 @@ function CategoryList() {
                                       alt={product.description}
                                   ></img>
                               </div>
-                              <h3 className="text-sm font-medium capitalize">
-                                  {product.category}
+                              <h3 className="text-sm font-medium ">
+                                  {t(product.category)}
                               </h3>
                           </Link>
                       ))}

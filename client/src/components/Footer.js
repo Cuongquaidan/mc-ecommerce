@@ -1,27 +1,49 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 function Footer() {
+    const {t} = useTranslation();
     return (
         <footer className="px-5 py-10 text-white bg-gray-800">
             <div className="container grid grid-cols-1 gap-10 mx-auto sm:grid-cols-2 lg:grid-cols-4">
                 {/** Liên hệ */}
                 <div>
-                    <h4 className="mb-4 text-lg font-bold">Liên hệ</h4>
-                    <p>Hotline: 1900 123 456</p>
-                    <p>Email: support@ecommerce.com</p>
-                    <p>Địa chỉ: 123 Đường ABC, Quận 1, TP. HCM</p>
+                    <h4 className="mb-4 text-lg font-bold">{
+                        t("footer.contact.title")
+                    }</h4>
+                    <p>
+                        {
+                            t("footer.contact.hotline")
+                        }
+                    </p>
+                    <p>
+                        {
+                            t("footer.contact.email")
+                        }
+                    </p>
+                    <p>
+                        {
+                            t("footer.contact.address")
+                        }
+                    </p>
                 </div>
 
                 {/** Hỗ trợ */}
                 <div>
-                    <h4 className="mb-4 text-lg font-bold">Hỗ trợ</h4>
+                    <h4 className="mb-4 text-lg font-bold">
+                        {
+                            t("footer.support.title")
+                        }
+                    </h4>
                     <ul>
                         <li>
                             <a
                                 href="/chinh-sach-doi-tra"
                                 className="hover:underline"
                             >
-                                Chính sách đổi trả
+                                {
+                                    t("footer.support.return_policy")
+                                }
                             </a>
                         </li>
                         <li>
@@ -29,12 +51,16 @@ function Footer() {
                                 href="/chinh-sach-van-chuyen"
                                 className="hover:underline"
                             >
-                                Chính sách vận chuyển
+                                {
+                                    t("footer.support.shipping_policy")
+                                }
                             </a>
                         </li>
                         <li>
                             <a href="/bao-mat" className="hover:underline">
-                                Chính sách bảo mật
+                              {
+                                    t("footer.support.privacy_policy")
+                              }
                             </a>
                         </li>
                         <li>
@@ -42,7 +68,9 @@ function Footer() {
                                 href="/dieu-khoan-su-dung"
                                 className="hover:underline"
                             >
-                                Điều khoản sử dụng
+                                {
+                                    t("footer.support.terms_of_use")
+                                }
                             </a>
                         </li>
                     </ul>
@@ -50,21 +78,31 @@ function Footer() {
 
                 {/** Về chúng tôi */}
                 <div>
-                    <h4 className="mb-4 text-lg font-bold">Về chúng tôi</h4>
+                    <h4 className="mb-4 text-lg font-bold">
+                        {
+                            t("footer.about.title")
+                        }
+                    </h4>
                     <ul>
                         <li>
                             <a href="/gioi-thieu" className="hover:underline">
-                                Giới thiệu
+                                {
+                                    t("footer.about.about_us")
+                                }
                             </a>
                         </li>
                         <li>
                             <a href="/tuyen-dung" className="hover:underline">
-                                Tuyển dụng
+                               {
+                                    t("footer.about.careers")    
+                               }
                             </a>
                         </li>
                         <li>
                             <a href="/tin-tuc" className="hover:underline">
-                                Tin tức
+                                {
+                                    t("footer.about.news")
+                                }
                             </a>
                         </li>
                     </ul>
@@ -72,7 +110,11 @@ function Footer() {
 
                 {/** Kết nối */}
                 <div>
-                    <h4 className="mb-4 text-lg font-bold">Kết nối</h4>
+                    <h4 className="mb-4 text-lg font-bold">
+                        {
+                            t("footer.connect.title")
+                        }
+                    </h4>
                     <div className="flex space-x-4">
                         <a
                             href="https://facebook.com"
@@ -99,7 +141,9 @@ function Footer() {
             {/** Hệ thống cửa hàng */}
             <div className="container mx-auto mt-10">
                 <h4 className="mb-4 text-lg font-bold text-center">
-                    Hệ thống cửa hàng
+                    {
+                        t("footer.store_system.title")
+                    }
                 </h4>
                 <div className="w-full overflow-hidden rounded-lg h-60 sm:h-80">
                     <iframe
@@ -117,7 +161,9 @@ function Footer() {
             {/** Footer bản quyền */}
             <div className="mt-5 text-center">
                 <p className="text-sm sm:text-base">
-                    &copy; 2024 Ecommerce.com. Tất cả quyền được bảo lưu.
+                   {
+                        t("footer.copy_right")
+                   }
                 </p>
             </div>
         </footer>

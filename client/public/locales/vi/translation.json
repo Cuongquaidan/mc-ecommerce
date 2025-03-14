@@ -1,0 +1,71 @@
+{
+  "Sold out": "Hết",
+  "Add to cart": "Thêm vào giỏ",
+  "Added": "Đã thêm",
+  "Log out": "Đăng xuất",
+  "Login": "Đăng nhập",
+  "Mouse": "Chuột",
+  "airpodes": "Tai nghe",
+  "camera": "Máy ảnh",
+  "earphones": "Tai nghe",
+  "mobiles": "Điện thoại",
+  "printers": "Máy in",
+  "processor": "Bộ xử lý",
+  "refrigerator": "Tủ lạnh",
+  "speakers": "Loa",
+  "televisions": "Tivi",
+  "trimmers": "Máy cắt tóc",
+  "watches": "Đồng hồ",
+  "searchHolder": "Tìm kiếm sản phẩm ở đây...",
+  "sale": "Giảm giá",
+  "stock": "Còn",
+  "action":{
+    "Admin panel": "Bảng quản trị",
+    "My orders": "Đơn hàng của tôi",
+    "My profile": "Hồ sơ của tôi"
+  },
+  "footer": {
+    "contact": {
+      "title": "Liên hệ",
+      "hotline": "Hotline: 1900 123 456",
+      "email": "Email: support@ecommerce.com",
+      "address": "Địa chỉ: 123 Đường ABC, Quận 1, TP. HCM"
+    },
+    "support": {
+      "title": "Hỗ trợ",
+      "return_policy": "Chính sách đổi trả",
+      "shipping_policy": "Chính sách vận chuyển",
+      "privacy_policy": "Chính sách bảo mật",
+      "terms_of_use": "Điều khoản sử dụng"
+    },
+    "about": {
+      "title": "Về chúng tôi",
+      "about_us": "Giới thiệu",
+      "careers": "Tuyển dụng",
+      "news": "Tin tức"
+    },
+    "connect": {
+      "title": "Kết nối"
+    },
+    "store_system": {
+      "title": "Hệ thống cửa hàng"
+    },
+    "copyright": "© 2024 Ecommerce.com. Tất cả quyền được bảo lưu."
+  }
+  ,
+  "pro-details":{
+    "buy": "Mua",
+    "desc": "Mô tả",
+    "reviews": "Đánh giá",
+    "rating": "Đánh giá",
+    "submit": "Gửi",
+    "submit-re": "Bạn cần mua sản phẩm này để đánh giá",
+    "sort-by": "Sắp xếp theo",
+    "show": "Xem tất cả",
+    "hide": "Ẩn tất cả",
+    "no-re": "Chưa có đánh giá nào",
+    "highest": "Cao nhất",
+    "lowest": "Thấp nhất",
+    "newest": "Mới nhất"
+  }
+}

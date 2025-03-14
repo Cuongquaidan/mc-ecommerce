@@ -5,8 +5,10 @@ import { useContextGlobal } from "../context";
 import checkPromotion from "../helpers/checkPromotion";
 import { IoMdStar } from "react-icons/io";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 function HorizontalCardItem({ product, ...props }) {
+    const {t} = useTranslation();
     const { fetchGetCart } = useContextGlobal();
     const promotionDetails = useSelector((state) => state?.promotionDetails);
     const cartProducts = useSelector((state) => state?.cart?.cart?.products);
@@ -58,7 +60,9 @@ function HorizontalCardItem({ product, ...props }) {
             <div className="relative z-10 grid p-4 overflow-hidden">
                 {checkPromotion(promotionDetails, product) && (
                     <div className="absolute flex items-center justify-center w-full h-6 text-white rotate-45 bg-red-500 top-4 -right-12">
-                        <p className="text-center">Sale</p>
+                        <p className="text-center">
+                            {t("sale")}
+                        </p>
                     </div>
                 )}
                 <h2 className="text-xl font-medium text-slate-700 text-ellipsis line-clamp-1">
@@ -97,7 +101,7 @@ function HorizontalCardItem({ product, ...props }) {
                 })()}
                 <div className="flex justify-between">
                     <div className="text-sm text-slate-500">
-                        Stock: {product.stock}
+                        {t("stock")}: {product.stock}
                     </div>
                     <div className="flex items-center gap-1 text-sm text-slate-500">
                         {product.rating}{" "}
@@ -111,13 +115,13 @@ function HorizontalCardItem({ product, ...props }) {
                         cartProductIds?.some((item) => item === product?._id) ||
                         product.stock === 0
                     }
-                    className={`text-md mt-4 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-full w-[120px] mx-auto ${
+                    className={`text-md mt-4 bg-blue-600 hover:bg-blue-700 text-white px-2 py-2 rounded-full w-[120px] mx-auto ${
                         product.stock === 0 && "bg-red-600 hover:bg-red-600"
                     }`}
                 >
                     {cartProductIds?.some((item) => item === product?._id)
-                        ? "Added"
-                        : (product.stock === 0 && "Sold out") || "Add to Cart"}
+                        ? (t("Added"))
+                        : (product.stock === 0 && t("Sold out")) || t("Add to cart")}
                 </button>
             </div>
         </Link>

@@ -5,9 +5,10 @@ import { useContextGlobal } from "../context";
 import { useSelector } from "react-redux";
 import checkPromotion from "../helpers/checkPromotion";
 import { IoMdStar } from "react-icons/io";
+import { useTranslation } from "react-i18next";
 function VerticalCardItem({ product, ...props }) {
     const { fetchGetCart } = useContextGlobal();
-
+    const {t} = useTranslation();
     const promotionDetails = useSelector((state) => state?.promotionDetails);
 
     const cartProducts = useSelector((state) => state?.cart?.cart?.products);
@@ -56,7 +57,9 @@ function VerticalCardItem({ product, ...props }) {
                 ))}
                 {checkPromotion(promotionDetails, product) && (
                     <div className="absolute flex items-center justify-center w-full h-8 text-white rotate-45 bg-red-500 top-2 -right-32">
-                        <p className="text-center">Sale</p>
+                        <p className="text-center">
+                            {t("sale")}
+                        </p>
                     </div>
                 )}
             </div>
@@ -64,7 +67,7 @@ function VerticalCardItem({ product, ...props }) {
                 <h2 className="text-base font-medium text-black md:text-lg text-ellipsis line-clamp-1">
                     {product?.productName}
                 </h2>
-                <p className="capitalize text-slate-500">{product?.category}</p>
+                <p className="capitalize text-slate-500">{t(product?.category)}</p>
 
                 {(() => {
                     const promotion = checkPromotion(promotionDetails, product);
@@ -97,7 +100,7 @@ function VerticalCardItem({ product, ...props }) {
                 })()}
                 <div className="flex justify-between">
                     <div className="text-sm text-slate-500">
-                        Stock: {product.stock}
+                        {t("stock")}: {product.stock}
                     </div>
                     <div className="flex items-center gap-1 text-sm text-slate-500">
                         {product.rating}{" "}
@@ -108,13 +111,13 @@ function VerticalCardItem({ product, ...props }) {
                 <button
                     onClick={(e) => addToCart(e, product._id, 1, fetchGetCart)}
                     disabled={cartProductIds?.includes(product._id)}
-                    className={`text-md mt-4 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-full w-[120px] mx-auto ${
+                    className={`text-md mt-4 bg-blue-600 hover:bg-blue-700 text-white px-2 py-2 rounded-full w-[120px] mx-auto ${
                         product.stock === 0 && "bg-red-600 hover:bg-red-600"
                     }`}
                 >
-                    {cartProductIds?.some((item) => item === product?._id)
-                        ? "Added"
-                        : (product.stock === 0 && "Sold out") || "Add to Cart"}
+                     {cartProductIds?.some((item) => item === product?._id)
+                        ? (t("Added"))
+                        : (product.stock === 0 && t("Sold out")) || t("Add to cart")}
                 </button>
             </div>
         </Link>

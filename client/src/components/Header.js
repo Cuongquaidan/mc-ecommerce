@@ -9,8 +9,16 @@ import { useDispatch, useSelector } from "react-redux";
 import SUMMARY_API from "../common";
 import { toast } from "react-toastify";
 import { setUserInfo } from "../store/userSlice";
+import { useTranslation } from "react-i18next";
+
+
 
 function Header() {
+    const langs =[
+        { code: "en", name: "English" },
+        { code: "vi", name: "Vietnamese" },
+    ]
+    const { t, i18n } = useTranslation();
     const [anchorEl, setAnchorEl] = useState(null);
     const [search, setSearch] = useState("");
     const handleClick = (event) => {
@@ -66,7 +74,7 @@ function Header() {
                 </div>
                 <div className="items-center hidden gap-4 lg:flex">
                     <TextField
-                        placeholder="Search product here..."
+                        placeholder={t("searchHolder")}
                         variant="outlined"
                         className="!min-w-[300px] !p-0"
                         InputProps={{
@@ -87,6 +95,22 @@ function Header() {
                     </Button>
                 </div>
                 <div className="flex items-center gap-5">
+                        <div>
+                            <select
+                                onChange={(e) => {
+                                    i18n.changeLanguage(e.target.value);
+                                }}
+                                className="!h-[40px] w-24
+                                outline-none border-none shadow-md bg-transparent cursor-pointer"
+                                    
+                            >
+                                {langs.map((lang) => (
+                                    <option key={lang.code} value={lang.code}>
+                                        {lang.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     <div className="text-2xl cursor-pointer lg:text-3xl">
                         {user ? (
                             <>
@@ -111,7 +135,7 @@ function Header() {
                                             to="admin-panel"
                                             onClick={handleClose}
                                         >
-                                            Admin panel
+                                           { t("action.Admin panel") }
                                         </Link>
                                     </Typography>
                                     <Typography
@@ -124,7 +148,9 @@ function Header() {
                                             to="my-orders"
                                             onClick={handleClose}
                                         >
-                                            My orders
+                                            {
+                                                t("action.My orders")
+                                            }
                                         </Link>
                                     </Typography>
                                     <Typography
@@ -137,7 +163,9 @@ function Header() {
                                             to="my-profile"
                                             onClick={handleClose}
                                         >
-                                            My profile
+                                            {
+                                                t("action.My profile")
+                                            }
                                         </Link>
                                     </Typography>
                                 </Popover>
@@ -162,7 +190,7 @@ function Header() {
                                 className="!h-[40px] lg:w-32 w-28 !bg-red-600"
                                 onClick={handleLogout}
                             >
-                                Log out
+                                {t("Log out")}
                             </Button>
                         ) : (
                             <Link to={"/login"}>
@@ -170,7 +198,9 @@ function Header() {
                                     variant="contained"
                                     className="!h-[40px] w-24"
                                 >
-                                    Login
+                                    {
+                                        t("Login")
+                                    }
                                 </Button>
                             </Link>
                         )}

@@ -1,0 +1,72 @@
+{
+  "Sold out": "Sold out",
+  "Add to cart": "Add to cart",
+  "Added": "Added",
+  "Log out": "Log out",
+  "Log in": "Login",
+  "Mouse": "Mouse",
+  "airpodes": "Airpodes",
+  "camera": "Camera",
+  "earphones": "Earphones",
+  "mobiles": "Mobiles",
+  "printers": "Printers",
+  "processor": "Processor",
+  "refrigerator": "Refrigerator",
+  "speakers": "Speakers",
+  "televisions": "Televisions",
+  "trimmers" : "Trimmers",
+  "watches": "Watches",
+  "searchHolder": "Search products here...",
+  "sale": "Sale",
+  "stock": "Stock",
+  "action":{
+    "Admin panel": "Admin panel",
+    "My orders": "My orders",
+    "My profile": "My profile"
+  },
+  "footer": {
+    "contact": {
+      "title": "Contact",
+      "hotline": "Hotline: 1900 123 456",
+      "email": "Email: support@ecommerce.com",
+      "address": "Address: 123 ABC Street, District 1, HCM City"
+    },
+    "support": {
+      "title": "Support",
+      "return_policy": "Return Policy",
+      "shipping_policy": "Shipping Policy",
+      "privacy_policy": "Privacy Policy",
+      "terms_of_use": "Terms of Use"
+    },
+    "about": {
+      "title": "About Us",
+      "about_us": "About",
+      "careers": "Careers",
+      "news": "News"
+    },
+    "connect": {
+      "title": "Connect"
+      
+    },
+    "store_system": {
+      "title": "Store System"
+    },
+    "copyright": "© 2024 Ecommerce.com. All rights reserved."
+  },
+  "pro-details":{
+    "buy": "Buy",
+    "desc": "Description",
+    "reviews": "Reviews",
+    "rating": "Rating",
+    "submit": "Submit Review",
+    "submit-re": "You need to purchase this product to leave a review.",
+    "sort-by": "Sort by",
+    "show": "Show all",
+    "hide": "Hide all",
+    "no-re": "No reviews yet",
+    "highest": "Highest",
+    "lowest": "Lowest",
+    "newest": "Newest"
+  }
+  
+}

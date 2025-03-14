@@ -17,10 +17,12 @@ import { IoMdStar } from "react-icons/io";
 import moment from "moment";
 import "moment/locale/vi";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 // logic zoom ảnh
 //  Lay toa do theo phan tram
 // Dat lai vi tri scale  (điểm gốc biến đổi (transform origin))
 const ProductDetails = () => {
+    const {t} = useTranslation();
     const [data, setData] = useState({
         productName: "",
         brandName: "",
@@ -219,7 +221,9 @@ const ProductDetails = () => {
                         </p>
                         {checkPromotion(promotionDetails, data) && (
                             <p className="inline-block px-2 text-red-600 bg-red-200 rounded-full w-fit">
-                                Sale
+                                {
+                                    t("sale")
+                                }
                             </p>
                         )}
                     </div>
@@ -227,11 +231,11 @@ const ProductDetails = () => {
                         {data?.productName}
                     </h2>
                     <p className="capitalize text-slate-400">
-                        {data?.category}
+                        {t(data?.category)}
                     </p>
 
                     <div className="text-md text-slate-400">
-                        Stock: {data?.stock}
+                        {t("stock")}: {data?.stock}
                     </div>
                     <div className="flex items-center gap-1 text-md text-slate-400">
                         {data?.rating?.toFixed(2)}{" "}
@@ -276,7 +280,9 @@ const ProductDetails = () => {
                             className="border-2 border-blue-600 rounded px-3 py-1 min-w-[120px] text-blue-600 font-medium hover:bg-blue-600 hover:text-white"
                             onClick={(e) => handleBuyProduct(e, data?._id)}
                         >
-                            Buy
+                            {
+                                t("pro-details.buy")
+                            }
                         </button>
                         <button
                             className="border-2 border-blue-600 rounded px-3 py-1 min-w-[120px] font-medium text-blue-600 hover:bg-blue-600 bg-white hover:text-white"
@@ -284,13 +290,15 @@ const ProductDetails = () => {
                             disabled={cartProductIds?.includes(data?._id)}
                         >
                             {cartProductIds?.includes(data?._id)
-                                ? "Added"
-                                : "Add to cart"}
+                                ? t("Added")
+                                : t("Add to cart")}
                         </button>
                     </div>
                     <div>
                         <p className="my-1 font-medium text-slate-600">
-                            Description:
+                            {
+                                t("pro-details.desc")
+                            }
                         </p>
                         <p>{data?.description}</p>
                     </div>
@@ -306,7 +314,11 @@ const ProductDetails = () => {
                 {/* Product Details Section (existing code) */}
                 <div className="mt-8">
                     <div className="flex gap-4">
-                        <h2 className="text-xl font-bold">Reviews</h2>
+                        <h2 className="text-xl font-bold">
+                            {
+                                t("pro-details.reviews")
+                            }
+                        </h2>
                         <div className="flex items-center gap-1">
                             ( <p>{data.rating}</p>
                             <IoMdStar size={25} className="text-yellow-500 " />)
@@ -320,7 +332,9 @@ const ProductDetails = () => {
                                         htmlFor="rating"
                                         className="font-medium"
                                     >
-                                        Rating:
+                                        {
+                                            t("pro-details.rating")
+                                        }
                                     </label>
                                     <div className="flex items-center gap-1 cursor-pointer">
                                         {new Array(newReview.rating)
@@ -378,19 +392,24 @@ const ProductDetails = () => {
                                     className="px-4 py-2 mt-4 text-white bg-blue-600 rounded"
                                     onClick={handleAddReview}
                                 >
-                                    Submit Review
+                                    {
+                                        t("pro-details.submit")
+                                    }
                                 </button>
                             </form>
                         ) : (
                             <p className="text-gray-600">
-                                You need to purchase this product to leave a
-                                review.
+                               {
+                                    t("pro-details.submit-re")
+                               }
                             </p>
                         )}
                     </div>
                     <div className="flex items-center gap-2 mt-6">
                         <label htmlFor="rating" className="font-medium">
-                            Sort by:
+                           {
+                            t("pro-details.sort-by")
+                           }
                         </label>
                         <select
                             value={type}
@@ -405,9 +424,21 @@ const ProductDetails = () => {
                             }}
                             className="px-2 py-1 border rounded"
                         >
-                            <option value={"newest"}>Newest</option>
-                            <option value={"highest"}>Highest</option>
-                            <option value={"lowest"}>Lowest</option>
+                            <option value={"newest"}>
+                                {
+                                    t("pro-details.newest")
+                                }
+                            </option>
+                            <option value={"highest"}>
+                                {
+                                    t("pro-details.highest")
+                                }
+                            </option>
+                            <option value={"lowest"}>
+                                {
+                                    t("pro-details.lowest")
+                                }
+                            </option>
                             {[1, 2, 3, 4, 5].map((star) => (
                                 <option key={star} value={star + ""}>
                                     {star} ({numOfRatings[star] || 0})
@@ -462,7 +493,9 @@ const ProductDetails = () => {
                                         className="italic font-bold text-red-400 underline text-md"
                                         onClick={() => setIsShowAll(false)}
                                     >
-                                        Hide all
+                                       {
+                                                t("pro-details.hide")
+                                       }
                                     </button>
                                 </>
                             ) : (
@@ -510,12 +543,16 @@ const ProductDetails = () => {
                                         className="italic font-bold text-blue-400 underline text-md"
                                         onClick={() => setIsShowAll(true)}
                                     >
-                                        Show all
+                                       {
+                                             t("pro-details.show")
+                                       }
                                     </button>
                                 </>
                             )
                         ) : (
-                            <p>No reviews yet.</p>
+                            <p>
+                                {t("pro-details.no-re")}
+                            </p>
                         )}
                     </div>
                 </div>
