@@ -26,12 +26,12 @@ function CategoryList() {
         fetchCategoryProduct();
     }, []);
     return (
-        <div>
+        <div >
             <div className="flex items-center gap-10 p-4 overflow-scroll scrollbar-hide">
                 {loading
                     ? categoryLoading.map((_, index) => (
                           <div
-                              className="w-20 h-20 overflow-hidden rounded-full shadow-md bg-slate-200 animate-pulse"
+                              className="w-20 h-20 overflow-hidden rounded-full shadow-md bg-slate-200 animate-pulse "
                               key={index}
                           ></div>
                       ))
@@ -42,9 +42,9 @@ function CategoryList() {
                                   product?.category
                               }
                               key={product._id}
-                              className="flex flex-col items-center gap-2 cursor-pointer"
+                              className="flex flex-col items-center gap-2 cursor-pointer "
                           >
-                              <div className="flex items-center justify-center w-20 h-20 p-3 overflow-hidden rounded-full shadow-md bg-slate-200">
+                              <div className="flex items-center justify-center w-20 h-20 p-3 overflow-hidden rounded-full shadow-md bg-slate-200 dark:border">
                                   <img
                                       className="object-contain w-full h-full transition-all mix-blend-multiply hover:scale-110"
                                       src={product.productImages[0]}

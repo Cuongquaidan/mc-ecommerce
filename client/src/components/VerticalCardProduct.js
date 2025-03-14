@@ -55,13 +55,13 @@ const VerticalCardProduct = ({ category, heading }) => {
                 ref={scrollElement}
             >
                 <button
-                    className="absolute z-50 hidden p-4 text-lg bg-white border border-gray-300 rounded-full shadow-md -left-2 md:block "
+                    className="absolute z-50 hidden p-4 text-lg bg-white border border-gray-300 rounded-full shadow-md -left-2 md:block dark:bg-neutral-950 dark:text-slate-300 dark:border "
                     onClick={scrollLeft}
                 >
                     <FaAngleLeft />
                 </button>
                 <button
-                    className="absolute z-50 hidden p-4 text-lg bg-white border border-gray-300 rounded-full shadow-md -right-2 md:block"
+                    className="absolute z-50 hidden p-4 text-lg bg-white border border-gray-300 rounded-full shadow-md -right-2 md:block dark:bg-neutral-950 dark:text-slate-300 dark:border"
                     onClick={scrollRight}
                 >
                     <FaAngleRight />

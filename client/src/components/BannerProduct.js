@@ -49,16 +49,16 @@ function BannerProduct() {
             <div className="relative w-full h-56 md:h-72 bg-slate-200">
                 {/* Desktop navigation buttons */}
                 <div className="absolute z-10 items-center hidden w-full h-full md:flex">
-                    <div className="flex justify-between w-full text-2xl">
+                    <div className="flex justify-between w-full text-2xl ">
                         <button
                             onClick={prevImage}
-                            className="p-4 bg-gray-100 rounded-full shadow-md ml-[-24px] border border-gray-300"
+                            className="p-4 bg-gray-100 rounded-full shadow-md ml-[-24px] border border-gray-300 dark:bg-neutral-950 dark:text-slate-300 "
                         >
                             <FaAngleLeft />
                         </button>
                         <button
                             onClick={nextImage}
-                            className="p-4 bg-gray-100 rounded-full shadow-md mr-[-24px] border border-gray-300"
+                            className="p-4 bg-gray-100 rounded-full shadow-md mr-[-24px] border border-gray-300 dark:bg-neutral-950 dark:text-slate-300 "
                         >
                             <FaAngleRight />
                         </button>

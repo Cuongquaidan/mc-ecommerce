@@ -42,16 +42,16 @@ function SearchCard({ product, ...props }) {
         <Link
             {...props}
             to={"/product/" + product?._id}
-            className="w-full min-w-[280px]  md:min-w-[300px] max-w-[280px] md:max-w-[300px]  bg-white rounded-sm shadow "
+            className="w-full min-w-[280px]  md:min-w-[300px] max-w-[280px] md:max-w-[300px]  bg-white rounded-sm shadow dark:bg-neutral-950 dark:text-slate-300 dark:border"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <div className="bg-slate-200 relative overflow-hidden h-48 p-4 min-w-[280px] md:min-w-[145px] flex justify-center items-center">
+            <div className="bg-slate-200 dark:bg-neutral-200 relative overflow-hidden h-48 p-4 min-w-[280px] md:min-w-[145px] flex justify-center items-center">
                 {product.productImages.map((image, idx) => (
                     <img
                         key={idx}
                         src={image}
-                        className={`absolute top-[10%] left-0 h-[80%] mix-blend-multiply w-full object-scale-down transition-transform duration-500 ease-in-out ${
+                        className={`absolute top-[10%] left-0 h-[80%] mix-blend-multiply w-full object-scale-down transition-transform duration-500  ease-in-out ${
                             idx === indexImage
                                 ? "translate-x-0 opacity-100"
                                 : "translate-x-full opacity-0"
@@ -68,10 +68,10 @@ function SearchCard({ product, ...props }) {
                 )}
             </div>
             <div className="grid gap-3 p-4">
-                <h2 className="text-base font-medium text-black md:text-lg text-ellipsis line-clamp-1">
+                <h2 className="text-base font-medium text-black md:text-lg text-ellipsis line-clamp-1 dark:text-slate-100">
                     {product?.productName}
                 </h2>
-                <p className="capitalize text-slate-500">{t(product?.category)}</p>
+                <p className="capitalize text-slate-500 dark:text-slate-100">{t(product?.category)}</p>
                 {(() => {
                     const promotion = checkPromotion(promotionDetails, product);
 
@@ -85,7 +85,7 @@ function SearchCard({ product, ...props }) {
                                 <p className="text-lg font-medium text-green-600">
                                     {discountedPrice.toLocaleString()}$
                                 </p>
-                                <p className="text-lg line-through text-slate-500">
+                                <p className="text-lg line-through text-slate-500 dark:text-slate-100">
                                     {product.selling
                                         .toFixed(2)
                                         .toLocaleString()}
@@ -102,10 +102,10 @@ function SearchCard({ product, ...props }) {
                     }
                 })()}
                 <div className="flex justify-between">
-                    <div className="text-sm text-slate-500">
+                    <div className="text-sm text-slate-500 dark:text-slate-300">
                         {t("stock")}: {product.stock}
                     </div>
-                    <div className="flex items-center gap-1 text-sm text-slate-500">
+                    <div className="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-300">
                         {product.rating}{" "}
                         <IoMdStar size={20} className="text-yellow-500 " />
                     </div>

@@ -54,13 +54,13 @@ function HorizontalCardProduct({ category, heading }) {
                 ref={scrollElement}
             >
                 <button
-                    className="absolute z-50 hidden p-4 text-lg bg-white border border-gray-300 rounded-full shadow-md -left-2 md:block "
+                    className="absolute z-50 hidden p-4 text-lg bg-white border border-gray-300 rounded-full shadow-md -left-2 md:block dark:bg-neutral-950 dark:text-slate-300 "
                     onClick={scrollLeft}
                 >
                     <FaAngleLeft />
                 </button>
                 <button
-                    className="absolute z-50 hidden p-4 text-lg bg-white border border-gray-300 rounded-full shadow-md -right-2 md:block"
+                    className="absolute z-50 hidden p-4 text-lg bg-white border border-gray-300 rounded-full shadow-md -right-2 md:block dark:bg-neutral-950 dark:text-slate-300 "
                     onClick={scrollRight}
                 >
                     <FaAngleRight />
@@ -69,7 +69,7 @@ function HorizontalCardProduct({ category, heading }) {
                 {loading
                     ? loadingList.map((product, index) => {
                           return (
-                              <div className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] h-36 bg-white rounded-sm shadow flex">
+                              <div className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] h-36 bg-white dark:bg-neutral-950 dark:text-slate-300  rounded-sm shadow flex ">
                                   <div className="bg-slate-200 h-full p-4 min-w-[120px] md:min-w-[145px] animate-pulse"></div>
                                   <div className="grid w-full gap-2 p-4">
                                       <div className="p-1 text-base font-medium text-black rounded-full md:text-lg text-ellipsis line-clamp-1 bg-slate-200 animate-pulse"></div>

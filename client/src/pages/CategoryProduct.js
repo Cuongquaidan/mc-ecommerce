@@ -102,7 +102,7 @@ const CategoryProduct = () => {
             <div className="lg:grid grid-cols-[300px,1fr]">
                 {/** Sidebar: Hiển thị dựa trên trạng thái isSidebarOpen */}
                 <div
-                    className={`bg-white p-2 lg:block ${
+                    className={`bg-white p-2 dark:bg-neutral-950 dark:text-slate-300 dark:border lg:block ${
                         isSidebarOpen ? "block" : "hidden"
                     } flex-col gap-5 lg:min-h-[calc(100vh-120px)] overflow-y-scroll`}
                 >
@@ -167,7 +167,7 @@ const CategoryProduct = () => {
 
                 {/** Danh sách sản phẩm */}
                 <div className="px-4">
-                    <p className="my-2 text-lg font-medium text-slate-800">
+                    <p className="my-2 text-lg font-medium text-slate-800 dark:text-slate-100">
                         Search Results: {data.length}
                     </p>
                     <div className="min-h-[calc(100vh-120px)] overflow-y-scroll max-h-[calc(100vh-120px)]">

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
-import { Avatar, Button, Popover, TextField, Typography } from "@mui/material";
+import { Avatar, Button, Popover, styled, Switch, TextField, Typography } from "@mui/material";
 import SearchIcon from "../icons/SearchIcon";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
@@ -10,6 +10,7 @@ import SUMMARY_API from "../common";
 import { toast } from "react-toastify";
 import { setUserInfo } from "../store/userSlice";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "./ThemeProvider";
 
 
 
@@ -18,6 +19,7 @@ function Header() {
         { code: "en", name: "English" },
         { code: "vi", name: "Vietnamese" },
     ]
+    const { setTheme, theme } = useTheme()
     const { t, i18n } = useTranslation();
     const [anchorEl, setAnchorEl] = useState(null);
     const [search, setSearch] = useState("");
@@ -67,25 +69,15 @@ function Header() {
     };
 
     return (
-        <header className="h-24 px-5 bg-white shadow-md">
+        <header className="h-24 px-5 bg-white shadow-md dark:bg-neutral-900 dark:text-slate-300 ">
             <div className="container flex items-center justify-between h-full mx-auto">
                 <div className="">
                     <Logo></Logo>
                 </div>
                 <div className="items-center hidden gap-4 lg:flex">
-                    <TextField
-                        placeholder={t("searchHolder")}
-                        variant="outlined"
-                        className="!min-w-[300px] !p-0"
-                        InputProps={{
-                            style: {
-                                height: "40px",
-                                padding: "10px",
-                            },
-                        }}
-                        onChange={(e) => setSearch(e.target.value)}
-                        value={search}
-                    ></TextField>
+                 
+                    <input type="text" placeholder={t("searchHolder")} className="!min-w-[300px] p-2.5 rounded-md dark:bg-neutral-600 dark:text-slate-100 "    onChange={(e) => setSearch(e.target.value)}
+                        value={search}/>
                     <Button
                         variant="contained"
                         className="!h-[40px] w-24"
@@ -95,17 +87,26 @@ function Header() {
                     </Button>
                 </div>
                 <div className="flex items-center gap-5">
+                         <select 
+                            value={theme}
+                            onChange={(e) => setTheme(e.target.value)}
+                            className="!h-[40px] w-32 outline-none border-2 rounded-md p-2 bg-transparent shadow-lg text-sm cursor-pointer"
+>
+                           <option value="light"  className="dark:bg-neutral-900 dark:text-slate-300 dark:border">Light</option>
+                             <option value="dark"  className="dark:bg-neutral-900 dark:text-slate-300 dark:border">Dark</option>
+                              <option value="system"  className="dark:bg-neutral-900 dark:text-slate-300 dark:border">System</option>
+                            </select>
                         <div>
                             <select
                                 onChange={(e) => {
                                     i18n.changeLanguage(e.target.value);
                                 }}
-                                className="!h-[40px] w-24
-                                outline-none border-none shadow-md bg-transparent cursor-pointer"
+                                className="!h-[40px] w-32
+                                outline-none border-2 rounded-md p-2 bg-transparent shadow-lg text-sm cursor-pointer"
                                     
                             >
                                 {langs.map((lang) => (
-                                    <option key={lang.code} value={lang.code}>
+                                    <option key={lang.code} value={lang.code}  className="dark:bg-neutral-900 dark:text-slate-300 dark:border">
                                         {lang.name}
                                     </option>
                                 ))}
@@ -113,12 +114,13 @@ function Header() {
                         </div>
                     <div className="text-2xl cursor-pointer lg:text-3xl">
                         {user ? (
-                            <>
+                            <div>
                                 <Avatar
                                     src={user.avatar}
                                     alt={user.name}
                                     aria-describedby={id}
                                     onClick={handleClick}
+                                    
                                 ></Avatar>
                                 <Popover
                                     id={id}
@@ -130,7 +132,7 @@ function Header() {
                                         horizontal: "center",
                                     }}
                                 >
-                                    <Typography sx={{ p: 2 }}>
+                                    <Typography sx={{ p: 2 }} className="dark:bg-neutral-900 dark:text-slate-300 dark:border">
                                         <Link
                                             to="admin-panel"
                                             onClick={handleClose}
@@ -143,6 +145,7 @@ function Header() {
                                             p: 2,
                                             borderTop: "1px solid #ccc",
                                         }}
+                                        className="dark:bg-neutral-900 dark:text-slate-300 dark:border"
                                     >
                                         <Link
                                             to="my-orders"
@@ -158,6 +161,7 @@ function Header() {
                                             p: 2,
                                             borderTop: "1px solid #ccc",
                                         }}
+                                         className="dark:bg-neutral-900 dark:text-slate-300 dark:border"  
                                     >
                                         <Link
                                             to="my-profile"
@@ -169,7 +173,7 @@ function Header() {
                                         </Link>
                                     </Typography>
                                 </Popover>
-                            </>
+                            </div>
                         ) : (
                             <FaRegUserCircle />
                         )}
@@ -212,3 +216,5 @@ function Header() {
 }
 
 export default Header;
+
+  

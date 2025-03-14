@@ -39,11 +39,11 @@ function HorizontalCardItem({ product, ...props }) {
     return (
         <Link
             to={"/product/" + product?._id}
-            className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] h-48 bg-white rounded-sm shadow-md flex"
+            className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] h-48 bg-white rounded-sm shadow-md flex dark:bg-neutral-950  "
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <div className="bg-slate-200 h-full p-4 min-w-[120px] md:min-w-[145px] relative overflow-hidden">
+            <div className="bg-slate-200 h-full p-4 min-w-[120px] md:min-w-[145px] relative overflow-hidden dark:bg-neutral-200 ">
                 {product.productImages.map((image, idx) => (
                     <img
                         key={idx}
@@ -65,10 +65,10 @@ function HorizontalCardItem({ product, ...props }) {
                         </p>
                     </div>
                 )}
-                <h2 className="text-xl font-medium text-slate-700 text-ellipsis line-clamp-1">
+                <h2 className="text-xl font-medium text-slate-700 dark:text-slate-100 text-ellipsis line-clamp-1">
                     {product?.productName}
                 </h2>
-                <p className="capitalize text-slate-500">{product?.category}</p>
+                <p className="capitalize text-slate-500 dark:text-slate-100">{product?.category}</p>
 
                 {(() => {
                     const promotion = checkPromotion(promotionDetails, product);
@@ -83,7 +83,7 @@ function HorizontalCardItem({ product, ...props }) {
                                 <p className="font-medium text-green-600">
                                     {discountedPrice.toLocaleString()}$
                                 </p>
-                                <p className="line-through text-slate-500">
+                                <p className="line-through text-slate-500 dark:text-slate-100">
                                     {product.selling
                                         .toFixed(2)
                                         .toLocaleString()}
@@ -93,17 +93,17 @@ function HorizontalCardItem({ product, ...props }) {
                         );
                     } else {
                         return (
-                            <p className="font-medium text-green-600">
+                            <p className="font-medium text-green-600 ">
                                 {product.selling.toLocaleString()}$
                             </p>
                         );
                     }
                 })()}
                 <div className="flex justify-between">
-                    <div className="text-sm text-slate-500">
+                    <div className="text-sm text-slate-500 dark:text-slate-300" >
                         {t("stock")}: {product.stock}
                     </div>
-                    <div className="flex items-center gap-1 text-sm text-slate-500">
+                    <div className="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-300">
                         {product.rating}{" "}
                         <IoMdStar size={20} className="text-yellow-500 " />
                     </div>

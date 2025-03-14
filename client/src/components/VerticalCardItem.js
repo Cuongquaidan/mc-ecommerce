@@ -38,11 +38,11 @@ function VerticalCardItem({ product, ...props }) {
     return (
         <Link
             to={"/product/" + product?._id}
-            className="w-full min-w-[280px]   md:min-w-[320px] max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow-md "
+            className="w-full min-w-[280px]   md:min-w-[320px] max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow-md dark:bg-neutral-900 dark:text-slate-300 "
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <div className="bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[145px] overflow-hidden flex justify-center items-center relative">
+            <div className="bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[145px] overflow-hidden flex justify-center items-center relative dark:bg-neutral-200">
                 {product.productImages.map((image, idx) => (
                     <img
                         key={idx}
@@ -64,10 +64,10 @@ function VerticalCardItem({ product, ...props }) {
                 )}
             </div>
             <div className="grid gap-3 p-4">
-                <h2 className="text-base font-medium text-black md:text-lg text-ellipsis line-clamp-1">
+                <h2 className="text-base font-medium text-black md:text-lg text-ellipsis line-clamp-1 dark:text-slate-100">
                     {product?.productName}
                 </h2>
-                <p className="capitalize text-slate-500">{t(product?.category)}</p>
+                <p className="capitalize dark:text-slate-100 text-slate-500">{t(product?.category)}</p>
 
                 {(() => {
                     const promotion = checkPromotion(promotionDetails, product);
@@ -82,7 +82,7 @@ function VerticalCardItem({ product, ...props }) {
                                 <p className="font-medium text-green-600">
                                     {discountedPrice.toLocaleString()}$
                                 </p>
-                                <p className="line-through text-slate-500">
+                                <p className="line-through text-slate-500 dark:text-slate-100">
                                     {product.selling
                                         .toFixed(2)
                                         .toLocaleString()}
@@ -99,10 +99,10 @@ function VerticalCardItem({ product, ...props }) {
                     }
                 })()}
                 <div className="flex justify-between">
-                    <div className="text-sm text-slate-500">
+                    <div className="text-sm text-slate-500 dark:text-slate-300">
                         {t("stock")}: {product.stock}
                     </div>
-                    <div className="flex items-center gap-1 text-sm text-slate-500">
+                    <div className="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-300">
                         {product.rating}{" "}
                         <IoMdStar size={20} className="text-yellow-500 " />
                     </div>

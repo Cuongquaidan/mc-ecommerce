@@ -32,7 +32,7 @@ function Search() {
     }, [query]);
 
     return (
-        <div className="container p-4 mx-auto">
+        <div className="container p-4 mx-auto dark:text-slate-100">
             {loading && <p className="text-lg text-center">Loading ...</p>}
 
             <p className="my-3 text-lg font-semibold">
