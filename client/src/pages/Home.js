@@ -3,12 +3,13 @@ import CategoryList from "../components/CategoryList";
 import BannerProduct from "../components/BannerProduct";
 import HorizontalCardProduct from "../components/HorizontalCardProduct";
 import VerticalCardProduct from "../components/VerticalCardProduct";
+import BrandEquity from "../components/BrandEquity";
 
 function Home() {
     return (
         <div className="container p-4 mx-auto">
-            <CategoryList></CategoryList>
             <BannerProduct></BannerProduct>
+            <CategoryList></CategoryList>
             <HorizontalCardProduct
                 category={"airpodes"}
                 heading={"Top's Airpodes"}
@@ -41,6 +42,7 @@ function Home() {
                 heading={"Refrigerator"}
             />
             <VerticalCardProduct category={"trimmers"} heading={"Trimmers"} />
+            <BrandEquity></BrandEquity>
         </div>
     );
 }

@@ -6,8 +6,11 @@ import { useSelector } from "react-redux";
 import checkPromotion from "../helpers/checkPromotion";
 import { IoMdStar } from "react-icons/io";
 import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+import variants from "../helpers/variantMotion";
 function VerticalCardItem({ product, ...props }) {
     const { fetchGetCart } = useContextGlobal();
+    const [isHover, setIsHover] = useState(false);
     const {t} = useTranslation();
     const promotionDetails = useSelector((state) => state?.promotionDetails);
 
@@ -17,6 +20,7 @@ function VerticalCardItem({ product, ...props }) {
     const intervalRef = useRef(null); // Lưu trữ interval ID
 
     const handleMouseEnter = () => {
+        setIsHover(true);
         // Đặt một timeout trước khi chuyển đổi hình
 
         intervalRef.current = setInterval(() => {
@@ -27,6 +31,7 @@ function VerticalCardItem({ product, ...props }) {
     };
 
     const handleMouseLeave = () => {
+        setIsHover(false);
         // Xóa timeout và interval khi chuột rời đi
 
         if (intervalRef.current) {
@@ -38,16 +43,17 @@ function VerticalCardItem({ product, ...props }) {
     return (
         <Link
             to={"/product/" + product?._id}
-            className="w-full min-w-[280px]   md:min-w-[320px] dark:border max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow-md dark:bg-neutral-900 dark:text-slate-300 "
+           
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <div className="bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[145px] overflow-hidden flex justify-center items-center relative dark:bg-neutral-200">
+          <motion.div variants={variants} initial="initial" whileInView="whileInView" className="w-full overflow-hidden min-w-[280px]   md:min-w-[320px] dark:border border-neutral-800  max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow-md dark:bg-neutral-900 dark:text-slate-300 ">
+          <div className="bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[145px] overflow-hidden flex justify-center items-center relative dark:bg-transparent">
                 {product.productImages.map((image, idx) => (
                     <img
                         key={idx}
                         src={image}
-                        className={`absolute top-[10%] left-0 h-[80%] mix-blend-multiply w-full object-scale-down transition-transform duration-500 ease-in-out ${
+                        className={`absolute top-[10%] left-0 h-[80%] mix-blend-multiply dark:mix-blend-normal w-full object-scale-down transition-transform duration-500 ease-in-out ${
                             idx === indexImage
                                 ? "translate-x-0 opacity-100"
                                 : "translate-x-full opacity-0"
@@ -63,7 +69,14 @@ function VerticalCardItem({ product, ...props }) {
                     </div>
                 )}
             </div>
-            <div className="grid gap-3 p-4">
+            <motion.div
+                initial={{
+                    y: 30
+                }}
+                animate={{
+                    y: isHover ? 0 : 30
+                }}
+             className="grid gap-3 p-4">
                 <h2 className="text-base font-medium text-black md:text-lg text-ellipsis line-clamp-1 dark:text-slate-100">
                     {product?.productName}
                 </h2>
@@ -108,7 +121,13 @@ function VerticalCardItem({ product, ...props }) {
                     </div>
                 </div>
 
-                <button
+                <motion.button
+                    initial={{
+                        y: 30
+                    }}
+                    animate={{
+                        y: isHover ? 0 : 30
+                    }}
                     onClick={(e) => addToCart(e, product._id, 1, fetchGetCart)}
                     disabled={cartProductIds?.includes(product._id)}
                     className={`text-md mt-4 bg-blue-600 hover:bg-blue-700 text-white px-2 py-2 rounded-full w-[120px] mx-auto ${
@@ -118,8 +137,9 @@ function VerticalCardItem({ product, ...props }) {
                      {cartProductIds?.some((item) => item === product?._id)
                         ? (t("Added"))
                         : (product.stock === 0 && t("Sold out")) || t("Add to cart")}
-                </button>
-            </div>
+                </motion.button>
+            </motion.div>
+          </motion.div>
         </Link>
     );
 }

@@ -11,16 +11,16 @@ import "moment/locale/vi";
 function MyOrders() {
     const {t} = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
-    const [isShowConMeo, setIsShowConMeo] = useState(false);
+    // const [isShowConMeo, setIsShowConMeo] = useState(false);
     const ordersLoading = new Array(15).fill(0);
     const [orders, setOrders] = useState([]);
-    const [showScrollDownIcon, setShowScrollDownIcon] = useState(false);
-    const handleMouseEnter = () => {
-        setShowScrollDownIcon(true);
-    };
-    const handleMouseLeave = () => {
-        setShowScrollDownIcon(false);
-    };
+    // const [showScrollDownIcon, setShowScrollDownIcon] = useState(false);
+    // const handleMouseEnter = () => {
+    //     setShowScrollDownIcon(true);
+    // };
+    // const handleMouseLeave = () => {
+    //     setShowScrollDownIcon(false);
+    // };
     useEffect(() => {
         const fetchOrders = async () => {
             setIsLoading(true);
@@ -48,10 +48,10 @@ function MyOrders() {
     return (
         <div
             className="container min-h-[calc(100vh-300px)] mx-auto p-4 mt-4 cursor-pointer relative"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            // onMouseEnter={handleMouseEnter}
+            // onMouseLeave={handleMouseLeave}
         >
-            <img
+            {/* <img
                 src={ConMeo}
                 alt="MCSHOP"
                 className={`w-[200px] h-[200px] fixed top-[50%] duration-500 ease-in -translate-y-1/2 left-10 ${
@@ -65,9 +65,9 @@ function MyOrders() {
                     <ImPointDown size={30} className="text-green-700" />
                     <p className="text-sm italic font-bold">Scroll </p>
                 </div>
-            )}
+            )} */}
             <h2 className="text-2xl italic font-bold">{t("order.list-order")}</h2>
-            <div className="flex flex-col gap-16 mt-8 max-h-[calc(100vh-400px)] overflow-y-scroll scrollbar-hide">
+            <div className="flex flex-col gap-16 mt-8 ">
                 {isLoading
                     ? ordersLoading.map((_, index) => (
                           <div
@@ -83,7 +83,7 @@ function MyOrders() {
                     : orders?.map((order) => (
                           <OrderItem
                               order={order}
-                              SetShowConMeo={setIsShowConMeo}
+                            //   SetShowConMeo={setIsShowConMeo}
                           />
                       ))}
             </div>

@@ -1,22 +1,33 @@
 import React, { useEffect, useState, useCallback } from "react";
 import image1 from "../assest/banner/img1.webp";
 import image2 from "../assest/banner/img2.webp";
-import image3 from "../assest/banner/img3.jpg";
-import image4 from "../assest/banner/img4.jpg";
+import image3 from "../assest/banner/img3.webp";
+import image4 from "../assest/banner/img4.webp";
 import image5 from "../assest/banner/img5.webp";
+import image6 from "../assest/banner/img6.webp";
+import image7 from "../assest/banner/img7.webp";
 
 import image1Mobile from "../assest/banner/img1_mobile.jpg";
 import image2Mobile from "../assest/banner/img2_mobile.webp";
 import image3Mobile from "../assest/banner/img3_mobile.jpg";
 import image4Mobile from "../assest/banner/img4_mobile.jpg";
 import image5Mobile from "../assest/banner/img5_mobile.png";
-
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
+import { motion } from "framer-motion";
+import variants from "../helpers/variantMotion";
 
 function BannerProduct() {
     const [currentImage, setCurrentImage] = useState(0);
 
-    const desktopImages = [image1, image2, image3, image4, image5];
+    const desktopImages = [
+        image1,
+        image2,
+        image3,
+        image4,
+        image5,
+        image6,
+        image7,
+    ];
     const mobileImages = [
         image1Mobile,
         image2Mobile,
@@ -45,8 +56,13 @@ function BannerProduct() {
     }, [nextImage]); // Thêm `nextImage` vào dependency array
 
     return (
-        <div className="container px-4 mx-auto rounded">
-            <div className="relative w-full h-56 md:h-72 bg-slate-200">
+        <motion.div
+            variants={variants}
+            initial="initial"
+            whileInView="whileInView"
+            className="container px-4 mx-auto rounded"
+        >
+            <div className="relative w-full h-56 md:h-screen bg-slate-200">
                 {/* Desktop navigation buttons */}
                 <div className="absolute z-10 items-center hidden w-full h-full md:flex">
                     <div className="flex justify-between w-full text-2xl ">
@@ -68,13 +84,13 @@ function BannerProduct() {
                 {/* Desktop version */}
                 <div className="hidden w-full h-full overflow-hidden md:flex">
                     {desktopImages.map((imageURL, index) => (
-                        <div
-                            className="w-full h-full min-w-full min-h-full transition-all"
+                        <motion.div
+                            className="w-full h-full transition-all shrink-0"
                             key={index}
                             style={{
                                 transform: `translateX(-${
                                     currentImage * 100
-                                }%)`,
+                                }%) `,
                             }}
                         >
                             <img
@@ -82,7 +98,7 @@ function BannerProduct() {
                                 className="w-full h-full"
                                 alt="MCSHOP"
                             />
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
 
@@ -107,7 +123,7 @@ function BannerProduct() {
                     ))}
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }
 

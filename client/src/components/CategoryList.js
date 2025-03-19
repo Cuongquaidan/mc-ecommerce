@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import SUMMARY_API from "../common";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
+import { motion } from "framer-motion";
+import variants from "../helpers/variantMotion";
 function CategoryList() {
     const [categoryProduct, setCategoryProduct] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -42,8 +43,9 @@ function CategoryList() {
                                   product?.category
                               }
                               key={product._id}
-                              className="flex flex-col items-center gap-2 cursor-pointer "
+                              
                           >
+                              <motion.div variants={variants} initial="initial" whileInView="whileInView" className="flex flex-col items-center gap-2 cursor-pointer ">
                               <div className="flex items-center justify-center w-20 h-20 p-3 overflow-hidden rounded-full shadow-md bg-slate-200 dark:border">
                                   <img
                                       className="object-contain w-full h-full transition-all mix-blend-multiply hover:scale-110"
@@ -54,6 +56,7 @@ function CategoryList() {
                               <h3 className="text-sm font-medium ">
                                   {t(product.category)}
                               </h3>
+                              </motion.div>
                           </Link>
                       ))}
             </div>

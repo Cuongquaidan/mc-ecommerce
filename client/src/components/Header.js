@@ -90,11 +90,11 @@ function Header() {
                          <select 
                             value={theme}
                             onChange={(e) => setTheme(e.target.value)}
-                            className="!h-[40px] w-32 outline-none border-2 rounded-md p-2 bg-transparent shadow-lg text-sm cursor-pointer"
+                            className="!h-[40px] w-32 outline-none border-2 rounded-md p-2 bg-transparent shadow-lg text-sm cursor-pointer dark:border-neutral-800"
 >
-                           <option value="light"  className="dark:bg-neutral-900 dark:text-slate-300 dark:border">Light</option>
-                             <option value="dark"  className="dark:bg-neutral-900 dark:text-slate-300 dark:border">Dark</option>
-                              <option value="system"  className="dark:bg-neutral-900 dark:text-slate-300 dark:border">System</option>
+                           <option value="light"  className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-800">Light</option>
+                             <option value="dark"  className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-800">Dark</option>
+                              <option value="system"  className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-800">System</option>
                             </select>
                         <div>
                             <select
@@ -102,11 +102,11 @@ function Header() {
                                     i18n.changeLanguage(e.target.value);
                                 }}
                                 className="!h-[40px] w-32
-                                outline-none border-2 rounded-md p-2 bg-transparent shadow-lg text-sm cursor-pointer"
+                                outline-none border-2 rounded-md p-2 bg-transparent shadow-lg text-sm cursor-pointer dark:border-neutral-800"
                                     
                             >
                                 {langs.map((lang) => (
-                                    <option key={lang.code} value={lang.code}  className="dark:bg-neutral-900 dark:text-slate-300 dark:border">
+                                    <option key={lang.code} value={lang.code}  className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-800">
                                         {lang.name}
                                     </option>
                                 ))}
