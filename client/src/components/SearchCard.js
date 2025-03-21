@@ -6,24 +6,23 @@ import checkPromotion from "../helpers/checkPromotion";
 import { useSelector } from "react-redux";
 import { IoMdStar } from "react-icons/io";
 import { useTranslation } from "react-i18next";
-import {motion} from "framer-motion";
+import { motion } from "framer-motion";
 function SearchCard({ product, ...props }) {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const { fetchGetCart } = useContextGlobal();
     const promotionDetails = useSelector((state) => state?.promotionDetails);
     const handleAddToCart = async (e, id) => {
         await addToCart(e, id, 1, fetchGetCart);
     };
-    const [isHover,setIsHover] = useState(false);
+    const [isHover, setIsHover] = useState(false);
     const cartProducts = useSelector((state) => state?.cart?.cart?.products);
     const cartProductIds = cartProducts?.map((product) => product.product._id);
     const [indexImage, setIndexImage] = useState(0);
     const intervalRef = useRef(null); // Lưu trữ interval ID
     const handleMouseEnter = () => {
-
         setIsHover(true);
         // Đặt một timeout trước khi chuyển đổi hình
-        
+
         intervalRef.current = setInterval(() => {
             setIndexImage((prev) =>
                 prev === product.productImages.length - 1 ? 0 : prev + 1
@@ -46,7 +45,7 @@ function SearchCard({ product, ...props }) {
         <Link
             {...props}
             to={"/product/" + product?._id}
-            className="w-full min-w-[280px] overflow-hidden md:min-w-[300px] max-w-[280px] md:max-w-[300px]  bg-white rounded-md shadow dark:bg-neutral-950 dark:text-slate-300 dark:border border-neutral-800 "
+            className="w-full min-w-[280px] overflow-hidden md:min-w-[300px] max-w-[280px] md:max-w-[300px]  bg-white rounded-md shadow dark:bg-neutral-950 dark:text-slate-300 dark:border border-neutral-600 "
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
@@ -65,24 +64,25 @@ function SearchCard({ product, ...props }) {
                 ))}
                 {checkPromotion(promotionDetails, product) && (
                     <div className="absolute flex items-center justify-center w-full h-8 text-white rotate-45 bg-red-500 top-2 -right-32">
-                        <p className="text-center">
-                            {t("sale")}
-                        </p>
+                        <p className="text-center">{t("sale")}</p>
                     </div>
                 )}
             </div>
-            <motion.div 
+            <motion.div
                 initial={{
-                    y: 30
+                    y: 30,
                 }}
                 animate={{
-                    y: isHover ? 0 : 30
+                    y: isHover ? 0 : 30,
                 }}
-             className="grid gap-3 p-4">
+                className="grid gap-3 p-4"
+            >
                 <h2 className="text-base font-medium text-black md:text-lg text-ellipsis line-clamp-1 dark:text-slate-100">
                     {product?.productName}
                 </h2>
-                <p className="capitalize text-slate-500 dark:text-slate-100">{t(product?.category)}</p>
+                <p className="capitalize text-slate-500 dark:text-slate-100">
+                    {t(product?.category)}
+                </p>
                 {(() => {
                     const promotion = checkPromotion(promotionDetails, product);
 
@@ -124,10 +124,10 @@ function SearchCard({ product, ...props }) {
 
                 <motion.button
                     initial={{
-                        y: 30
+                        y: 30,
                     }}
                     animate={{
-                        y: isHover ? 0 : 30
+                        y: isHover ? 0 : 30,
                     }}
                     onClick={(e) => handleAddToCart(e, product?._id)}
                     disabled={cartProductIds?.includes(product?._id)}
@@ -136,8 +136,9 @@ function SearchCard({ product, ...props }) {
                     }`}
                 >
                     {cartProductIds?.some((item) => item === product?._id)
-                        ? (t("Added"))
-                        : (product.stock === 0 && t("Sold out")) || t("Add to cart")}
+                        ? t("Added")
+                        : (product.stock === 0 && t("Sold out")) ||
+                          t("Add to cart")}
                 </motion.button>
             </motion.div>
         </Link>

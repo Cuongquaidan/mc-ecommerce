@@ -9,7 +9,7 @@ function OrderItem({ order, SetShowConMeo }) {
     return (
         <Link
             key={order._id}
-            className="flex items-center justify-center gap-8 p-4 bg-white rounded-md shadow-md dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-800"
+            className="flex items-center justify-center gap-8 p-4 bg-white rounded-md shadow-md dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-600"
             to={`/orders/${order._id}`}
             // onMouseEnter={() => SetShowConMeo(true)}
             // onMouseLeave={() => SetShowConMeo(false)}
@@ -42,7 +42,7 @@ function OrderItem({ order, SetShowConMeo }) {
                 </div>
             </div>
             <div>
-                <div className="flex flex-col items-center gap-1 p-2 text-white bg-blue-500 border-blue-500 rounded dark:bg-transparent dark:text-blue-500 dark:border"> 
+                <div className="flex flex-col items-center gap-1 p-2 text-white bg-blue-500 border-blue-500 rounded dark:bg-transparent dark:text-blue-500 dark:border">
                     <p className="text-sm italic text-center">
                         {t("order.shipping-status")}
                     </p>
@@ -50,7 +50,7 @@ function OrderItem({ order, SetShowConMeo }) {
                         {order.shippingStatus.toUpperCase()}
                     </p>
                 </div>
-                <div className="flex flex-col items-center gap-1 p-2 mt-4 text-white bg-green-500 border-green-500 rounded dark:bg-transparent dark:text-green-500 dark:border" >
+                <div className="flex flex-col items-center gap-1 p-2 mt-4 text-white bg-green-500 border-green-500 rounded dark:bg-transparent dark:text-green-500 dark:border">
                     <p className="text-sm italic text-center">
                         {t("order.payment-method")}
                     </p>

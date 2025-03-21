@@ -60,7 +60,7 @@ function BannerProduct() {
             variants={variants}
             initial="initial"
             whileInView="whileInView"
-            className="container px-4 mx-auto rounded"
+            className="container px-4 mx-auto mt-20 rounded"
         >
             <div className="relative w-full h-56 md:h-screen bg-slate-200">
                 {/* Desktop navigation buttons */}

@@ -18,11 +18,12 @@ import moment from "moment";
 import "moment/locale/vi";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
 // logic zoom ảnh
 //  Lay toa do theo phan tram
 // Dat lai vi tri scale  (điểm gốc biến đổi (transform origin))
 const ProductDetails = () => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [data, setData] = useState({
         productName: "",
         brandName: "",
@@ -36,11 +37,12 @@ const ProductDetails = () => {
     const params = useParams();
     const [loading, setLoading] = useState(true);
     const productImageListLoading = new Array(4).fill(null);
-    const [activeImage, setActiveImage] = useState("");
+    const [activeImage, setActiveImage] = useState(0);
+    const [preImage, setPreImage] = useState(0);
     const cartProducts = useSelector((state) => state?.cart?.cart?.products);
     const cartProductIds = cartProducts?.map((product) => product.product._id);
-    const [zoom, setZoom] = useState(false);
-    const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
+    // const [zoom, setZoom] = useState(false);
+    // const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
     const [isBought, setIsBought] = useState(false);
     const [isShowAll, setIsShowAll] = useState(false);
 
@@ -62,7 +64,7 @@ const ProductDetails = () => {
         const dataResponse = await response.json();
 
         setData(dataResponse?.data);
-        setActiveImage(dataResponse?.data?.productImages[0]);
+        setActiveImage(0);
     };
     const [reviews, setReviews] = useState([]);
     const [numOfRatings, setNumOfRatings] = useState({});
@@ -123,17 +125,17 @@ const ProductDetails = () => {
         setAreaHeight(areaRef?.current?.scrollHeight);
     }, [newReview.comment]);
 
-    const handleMouseMove = useCallback((e) => {
-        const { left, top, width, height } = e.target.getBoundingClientRect();
-        const x = ((e.clientX - left) / width) * 100;
-        const y = ((e.clientY - top) / height) * 100;
-        setZoomPosition({ x, y });
-    }, []);
+    // const handleMouseMove = useCallback((e) => {
+    //     const { left, top, width, height } = e.target.getBoundingClientRect();
+    //     const x = ((e.clientX - left) / width) * 100;
+    //     const y = ((e.clientY - top) / height) * 100;
+    //     setZoomPosition({ x, y });
+    // }, []);
 
     const promotionDetails = useSelector((state) => state?.promotionDetails);
-    const handleMouseEnter = () => setZoom(true);
+    // const handleMouseEnter = () => setZoom(true);
 
-    const handleMouseLeave = () => setZoom(false);
+    // const handleMouseLeave = () => setZoom(false);
 
     const handleAddToCart = async (e, id) => {
         await addToCart(e, id);
@@ -158,27 +160,60 @@ const ProductDetails = () => {
         fetchReviews();
     }, [params, type]);
 
+    const handleChangeActiveImage = (currentIndex, nextIndex) => {
+        setActiveImage(nextIndex);
+        setPreImage(currentIndex);
+    };
+
     return (
         <div className="container p-4 mx-auto">
             <div className="min-h-[200px] flex flex-col lg:flex-row gap-4 items-center">
                 {/*** Product Image Section ***/}
                 <div className="flex flex-col items-center gap-4 h-96 lg:flex-row-reverse">
-                    <div
-                        className="h-[300px] w-[300px] lg:h-96 lg:w-96 bg-slate-200 relative overflow-hidden"
-                        onMouseMove={handleMouseMove}
-                        onMouseEnter={handleMouseEnter}
-                        onMouseLeave={handleMouseLeave}
-                    >
-                        <img
-                            src={activeImage}
-                            className={`object-cover w-full h-full ${
-                                zoom ? "scale-[2]" : ""
-                            }`}
-                            alt="Product"
-                            style={{
-                                transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
-                            }}
-                        />
+                    <div className="h-[300px] w-[300px] lg:h-96 lg:w-96 bg-slate-200 relative overflow-hidden">
+                        {data?.productImages.map((imgURL, index) => (
+                            <motion.img
+                                // key={imgURL} // Cần key để React tối ưu render
+                                // onMouseMove={handleMouseMove}
+                                // onMouseEnter={handleMouseEnter}
+                                // onMouseLeave={handleMouseLeave}
+                                src={imgURL}
+                                className="absolute top-0 left-0 object-cover w-full h-full"
+                                alt="Product"
+                                animate={{
+                                    y:
+                                        index === activeImage
+                                            ? 0
+                                            : index > activeImage
+                                            ? "100%"
+                                            : "-100%",
+
+                                    opacity:
+                                        index === activeImage ||
+                                        index === preImage
+                                            ? 1
+                                            : 0,
+                                }}
+                                initial={{
+                                    y:
+                                        index === activeImage
+                                            ? 0
+                                            : index > activeImage
+                                            ? "100%"
+                                            : "-100%",
+
+                                    opacity:
+                                        index === activeImage ||
+                                        index === preImage
+                                            ? 1
+                                            : 0,
+                                }}
+                                transition={{
+                                    y: { type: "tween", duration: 0.6 }, // Chuyển động `y` mất 0.6s
+                                    opacity: { duration: 0.1 }, // `opacity` thay đổi trong 0.1s
+                                }}
+                            />
+                        ))}
                     </div>
 
                     <div className="h-full">
@@ -193,7 +228,7 @@ const ProductDetails = () => {
                             </div>
                         ) : (
                             <div className="flex h-full gap-2 overflow-scroll lg:flex-col scrollbar-hide">
-                                {data?.productImages?.map((imgURL) => (
+                                {data?.productImages?.map((imgURL, index) => (
                                     <div
                                         className="w-20 h-20 p-1 rounded bg-slate-200"
                                         key={imgURL}
@@ -202,8 +237,11 @@ const ProductDetails = () => {
                                             src={imgURL}
                                             alt="MCSHOP"
                                             className="object-scale-down w-full h-full cursor-pointer mix-blend-multiply"
-                                            onMouseEnter={() =>
-                                                setActiveImage(imgURL)
+                                            onClick={() =>
+                                                handleChangeActiveImage(
+                                                    activeImage,
+                                                    index
+                                                )
                                             }
                                         />
                                     </div>
@@ -221,9 +259,7 @@ const ProductDetails = () => {
                         </p>
                         {checkPromotion(promotionDetails, data) && (
                             <p className="inline-block px-2 text-red-600 bg-red-200 rounded-full w-fit">
-                                {
-                                    t("sale")
-                                }
+                                {t("sale")}
                             </p>
                         )}
                     </div>
@@ -280,9 +316,7 @@ const ProductDetails = () => {
                             className="border-2 border-blue-600 rounded px-3 py-1 min-w-[120px] text-blue-600 font-medium hover:bg-blue-600 hover:text-white"
                             onClick={(e) => handleBuyProduct(e, data?._id)}
                         >
-                            {
-                                t("pro-details.buy")
-                            }
+                            {t("pro-details.buy")}
                         </button>
                         <button
                             className="border-2 border-blue-600 rounded px-3 py-1 min-w-[120px] font-medium text-blue-600 hover:bg-blue-600 bg-white hover:text-white"
@@ -296,9 +330,7 @@ const ProductDetails = () => {
                     </div>
                     <div>
                         <p className="my-1 font-medium text-slate-600">
-                            {
-                                t("pro-details.desc")
-                            }
+                            {t("pro-details.desc")}
                         </p>
                         <p>{data?.description}</p>
                     </div>
@@ -315,9 +347,7 @@ const ProductDetails = () => {
                 <div className="mt-8">
                     <div className="flex gap-4">
                         <h2 className="text-xl font-bold">
-                            {
-                                t("pro-details.reviews")
-                            }
+                            {t("pro-details.reviews")}
                         </h2>
                         <div className="flex items-center gap-1">
                             ( <p>{data.rating}</p>
@@ -332,9 +362,7 @@ const ProductDetails = () => {
                                         htmlFor="rating"
                                         className="font-medium"
                                     >
-                                        {
-                                            t("pro-details.rating")
-                                        }
+                                        {t("pro-details.rating")}
                                     </label>
                                     <div className="flex items-center gap-1 cursor-pointer">
                                         {new Array(newReview.rating)
@@ -392,24 +420,18 @@ const ProductDetails = () => {
                                     className="px-4 py-2 mt-4 text-white bg-blue-600 rounded"
                                     onClick={handleAddReview}
                                 >
-                                    {
-                                        t("pro-details.submit")
-                                    }
+                                    {t("pro-details.submit")}
                                 </button>
                             </form>
                         ) : (
                             <p className="text-gray-600">
-                               {
-                                    t("pro-details.submit-re")
-                               }
+                                {t("pro-details.submit-re")}
                             </p>
                         )}
                     </div>
                     <div className="flex items-center gap-2 mt-6">
                         <label htmlFor="rating" className="font-medium">
-                           {
-                            t("pro-details.sort-by")
-                           }
+                            {t("pro-details.sort-by")}
                         </label>
                         <select
                             value={type}
@@ -425,19 +447,13 @@ const ProductDetails = () => {
                             className="px-2 py-1 border rounded"
                         >
                             <option value={"newest"}>
-                                {
-                                    t("pro-details.newest")
-                                }
+                                {t("pro-details.newest")}
                             </option>
                             <option value={"highest"}>
-                                {
-                                    t("pro-details.highest")
-                                }
+                                {t("pro-details.highest")}
                             </option>
                             <option value={"lowest"}>
-                                {
-                                    t("pro-details.lowest")
-                                }
+                                {t("pro-details.lowest")}
                             </option>
                             {[1, 2, 3, 4, 5].map((star) => (
                                 <option key={star} value={star + ""}>
@@ -493,9 +509,7 @@ const ProductDetails = () => {
                                         className="italic font-bold text-red-400 underline text-md"
                                         onClick={() => setIsShowAll(false)}
                                     >
-                                       {
-                                                t("pro-details.hide")
-                                       }
+                                        {t("pro-details.hide")}
                                     </button>
                                 </>
                             ) : (
@@ -543,16 +557,12 @@ const ProductDetails = () => {
                                         className="italic font-bold text-blue-400 underline text-md"
                                         onClick={() => setIsShowAll(true)}
                                     >
-                                       {
-                                             t("pro-details.show")
-                                       }
+                                        {t("pro-details.show")}
                                     </button>
                                 </>
                             )
                         ) : (
-                            <p>
-                                {t("pro-details.no-re")}
-                            </p>
+                            <p>{t("pro-details.no-re")}</p>
                         )}
                     </div>
                 </div>
@@ -562,3 +572,16 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
+/* <motion.img
+                                onMouseMove={handleMouseMove}
+                                onMouseEnter={handleMouseEnter}
+                                onMouseLeave={handleMouseLeave}
+                                src={imgURL}
+                                className={`object-cover w-full h-full ${
+                                    zoom ? "scale-[2]" : ""
+                                } ${index === activeImage ? "" : "hidden"}`}
+                                alt="Product"
+                                style={{
+                                    transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                                }}
+                            /> */

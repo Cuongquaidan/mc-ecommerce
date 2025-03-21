@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
-import { Avatar, Button, Popover, styled, Switch, TextField, Typography } from "@mui/material";
+import { Avatar, Button, Popover, Typography } from "@mui/material";
 import SearchIcon from "../icons/SearchIcon";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
@@ -12,14 +12,12 @@ import { setUserInfo } from "../store/userSlice";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "./ThemeProvider";
 
-
-
 function Header() {
-    const langs =[
+    const langs = [
         { code: "en", name: "English" },
         { code: "vi", name: "Vietnamese" },
-    ]
-    const { setTheme, theme } = useTheme()
+    ];
+    const { setTheme, theme } = useTheme();
     const { t, i18n } = useTranslation();
     const [anchorEl, setAnchorEl] = useState(null);
     const [search, setSearch] = useState("");
@@ -69,15 +67,19 @@ function Header() {
     };
 
     return (
-        <header className="h-24 px-5 bg-white shadow-md dark:bg-neutral-800 dark:text-slate-300 ">
+        <header className="fixed top-0 left-0 z-[999]  h-24 px-5 bg-white w-screen shadow-md dark:bg-neutral-800 dark:text-slate-300 ">
             <div className="container flex items-center justify-between h-full mx-auto">
                 <div className="">
                     <Logo></Logo>
                 </div>
                 <div className="items-center hidden gap-4 lg:flex">
-                 
-                    <input type="text" placeholder={t("searchHolder")} className="!min-w-[300px] p-2.5 rounded-md dark:bg-neutral-600 dark:text-slate-100 "    onChange={(e) => setSearch(e.target.value)}
-                        value={search}/>
+                    <input
+                        type="text"
+                        placeholder={t("searchHolder")}
+                        className="!min-w-[300px] p-2.5 rounded-md dark:bg-neutral-600 dark:text-slate-100 "
+                        onChange={(e) => setSearch(e.target.value)}
+                        value={search}
+                    />
                     <Button
                         variant="contained"
                         className="!h-[40px] w-24"
@@ -86,32 +88,50 @@ function Header() {
                         <SearchIcon></SearchIcon>
                     </Button>
                 </div>
-                <div className="flex items-center gap-5">
-                         <select 
-                            value={theme}
-                            onChange={(e) => setTheme(e.target.value)}
-                            className="!h-[40px] w-32 outline-none border-2 rounded-md p-2 bg-transparent shadow-lg text-sm cursor-pointer dark:border-neutral-800"
->
-                           <option value="light"  className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-800">Light</option>
-                             <option value="dark"  className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-800">Dark</option>
-                              <option value="system"  className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-800">System</option>
-                            </select>
-                        <div>
-                            <select
-                                onChange={(e) => {
-                                    i18n.changeLanguage(e.target.value);
-                                }}
-                                className="!h-[40px] w-32
-                                outline-none border-2 rounded-md p-2 bg-transparent shadow-lg text-sm cursor-pointer dark:border-neutral-800"
-                                    
-                            >
-                                {langs.map((lang) => (
-                                    <option key={lang.code} value={lang.code}  className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-800">
-                                        {lang.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                <div className="flex items-center gap-5 ">
+                    <select
+                        value={theme}
+                        onChange={(e) => setTheme(e.target.value)}
+                        className="!h-[40px] w-32 hidden md:block outline-none border-2 rounded-md p-2 bg-transparent shadow-lg text-sm cursor-pointer dark:border-neutral-600"
+                    >
+                        <option
+                            value="light"
+                            className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-600"
+                        >
+                            Light
+                        </option>
+                        <option
+                            value="dark"
+                            className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-600"
+                        >
+                            Dark
+                        </option>
+                        <option
+                            value="system"
+                            className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-600"
+                        >
+                            System
+                        </option>
+                    </select>
+                    <div className="hidden md:block">
+                        <select
+                            onChange={(e) => {
+                                i18n.changeLanguage(e.target.value);
+                            }}
+                            className="!h-[40px] w-32
+                                outline-none border-2 rounded-md p-2 bg-transparent shadow-lg text-sm cursor-pointer dark:border-neutral-600"
+                        >
+                            {langs.map((lang) => (
+                                <option
+                                    key={lang.code}
+                                    value={lang.code}
+                                    className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-600"
+                                >
+                                    {lang.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                     <div className="text-2xl cursor-pointer lg:text-3xl">
                         {user ? (
                             <div>
@@ -120,7 +140,6 @@ function Header() {
                                     alt={user.name}
                                     aria-describedby={id}
                                     onClick={handleClick}
-                                    
                                 ></Avatar>
                                 <Popover
                                     id={id}
@@ -132,12 +151,15 @@ function Header() {
                                         horizontal: "center",
                                     }}
                                 >
-                                    <Typography sx={{ p: 2 }} className="dark:bg-neutral-900 dark:text-slate-300 dark:border">
+                                    <Typography
+                                        sx={{ p: 2 }}
+                                        className="dark:bg-neutral-900 dark:text-slate-300 dark:border"
+                                    >
                                         <Link
                                             to="admin-panel"
                                             onClick={handleClose}
                                         >
-                                           { t("action.Admin panel") }
+                                            {t("action.Admin panel")}
                                         </Link>
                                     </Typography>
                                     <Typography
@@ -151,9 +173,7 @@ function Header() {
                                             to="my-orders"
                                             onClick={handleClose}
                                         >
-                                            {
-                                                t("action.My orders")
-                                            }
+                                            {t("action.My orders")}
                                         </Link>
                                     </Typography>
                                     <Typography
@@ -161,15 +181,13 @@ function Header() {
                                             p: 2,
                                             borderTop: "1px solid #ccc",
                                         }}
-                                         className="dark:bg-neutral-900 dark:text-slate-300 dark:border"  
+                                        className="dark:bg-neutral-900 dark:text-slate-300 dark:border"
                                     >
                                         <Link
                                             to="my-profile"
                                             onClick={handleClose}
                                         >
-                                            {
-                                                t("action.My profile")
-                                            }
+                                            {t("action.My profile")}
                                         </Link>
                                     </Typography>
                                 </Popover>
@@ -202,9 +220,7 @@ function Header() {
                                     variant="contained"
                                     className="!h-[40px] w-24"
                                 >
-                                    {
-                                        t("Login")
-                                    }
+                                    {t("Login")}
                                 </Button>
                             </Link>
                         )}
@@ -216,5 +232,3 @@ function Header() {
 }
 
 export default Header;
-
-  
