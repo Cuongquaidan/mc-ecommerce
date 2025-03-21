@@ -67,7 +67,7 @@ function Header() {
     };
 
     return (
-        <header className="fixed top-0 left-0 z-[999]  h-24 px-5 bg-white w-screen shadow-md dark:bg-neutral-800 dark:text-slate-300 ">
+        <header className="w-screen h-24 px-5 bg-white shadow-md  dark:bg-neutral-800 dark:text-slate-300">
             <div className="container flex items-center justify-between h-full mx-auto">
                 <div className="">
                     <Logo></Logo>
@@ -89,49 +89,6 @@ function Header() {
                     </Button>
                 </div>
                 <div className="flex items-center gap-5 ">
-                    <select
-                        value={theme}
-                        onChange={(e) => setTheme(e.target.value)}
-                        className="!h-[40px] w-32 hidden md:block outline-none border-2 rounded-md p-2 bg-transparent shadow-lg text-sm cursor-pointer dark:border-neutral-600"
-                    >
-                        <option
-                            value="light"
-                            className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-600"
-                        >
-                            Light
-                        </option>
-                        <option
-                            value="dark"
-                            className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-600"
-                        >
-                            Dark
-                        </option>
-                        <option
-                            value="system"
-                            className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-600"
-                        >
-                            System
-                        </option>
-                    </select>
-                    <div className="hidden md:block">
-                        <select
-                            onChange={(e) => {
-                                i18n.changeLanguage(e.target.value);
-                            }}
-                            className="!h-[40px] w-32
-                                outline-none border-2 rounded-md p-2 bg-transparent shadow-lg text-sm cursor-pointer dark:border-neutral-600"
-                        >
-                            {langs.map((lang) => (
-                                <option
-                                    key={lang.code}
-                                    value={lang.code}
-                                    className="dark:bg-neutral-900 dark:text-slate-300 dark:border border-neutral-600"
-                                >
-                                    {lang.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
                     <div className="text-2xl cursor-pointer lg:text-3xl">
                         {user ? (
                             <div>

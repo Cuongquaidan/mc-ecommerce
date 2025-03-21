@@ -43,6 +43,7 @@ function Home() {
             />
             <VerticalCardProduct category={"trimmers"} heading={"Trimmers"} />
             <BrandEquity></BrandEquity>
+            <div className="h-60"></div>
         </div>
     );
 }

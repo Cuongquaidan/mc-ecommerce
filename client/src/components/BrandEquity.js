@@ -76,7 +76,7 @@ function BrandEquity() {
             className="container px-4 mx-auto my-6 min-h-[300vh] relative"
             ref={ref}
         >
-            <motion.div className="sticky top-0 h-screen py-20">
+            <motion.div className="sticky top-0 h-screen py-40">
                 <motion.h2
                     variants={variants}
                     initial="initial"
