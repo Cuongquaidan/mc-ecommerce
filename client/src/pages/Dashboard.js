@@ -4,13 +4,31 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { BarChart } from "@mui/x-charts/BarChart";
 import SUMMARY_API from "../common";
 import { axisClasses } from "@mui/x-charts/ChartsAxis";
-import { PieChart } from "@mui/x-charts/PieChart";
 import { useTranslation } from "react-i18next";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+);
 function Dashboard() {
     const [type, setType] = useState("Quantity");
     const [month, setMonth] = useState(new Date().getMonth() + 1);
     const [year, setYear] = useState(new Date().getFullYear());
     const [data, setData] = useState([]);
+    const [labels, setLabels] = useState([]);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -88,6 +106,7 @@ function Dashboard() {
                 const result = await response.json();
                 if (result.success) {
                     setData(result.data);
+                    setLabels(result.data.map((item) => item._id));
                     console.log(result.data);
                 }
             } catch (error) {
@@ -97,24 +116,62 @@ function Dashboard() {
 
         fetchData();
     }, [month, year, type]);
-    const chartSetting = {
-        yAxis: [
-            {
-                label: `Quantity month ${month} year ${year}`,
+
+    const { t } = useTranslation();
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: "top",
+                labels: {
+                    color: "black",
+                    font: {
+                        size: 16,
+                    },
+                },
             },
-        ],
-        width: 1000,
-        height: 500,
-        sx: {
-            [`.${axisClasses.left} .${axisClasses.label}`]: {
-                transform: "translateX(-10px)",
+            title: {
+                display: true,
+                text: "THỐNG KẾ THÁNG " + month + " NĂM " + year,
             },
         },
     };
-    function capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-    const { t } = useTranslation();
+    const colors = [
+        "rgba(255, 99, 132, 0.8)",
+        "rgba(54, 162, 235, 0.8)",
+        "rgba(255, 206, 86, 0.8)",
+        "rgba(75, 192, 192, 0.8)",
+        "rgba(153, 102, 255, 0.8)",
+        "rgba(255, 159, 64, 0.8)",
+        "rgba(199, 199, 199, 0.8)",
+        "rgba(83, 102, 255, 0.8)",
+        "rgba(40, 159, 64, 0.8)",
+        "rgba(255, 99, 255, 0.8)",
+    ];
+    const dataBar = {
+        labels: labels,
+        datasets: [
+            {
+                label: t("quantity"),
+                data: data.map((item) => item.totalQuantity),
+                backgroundColor: data.map(
+                    (_, index) => colors[index % colors.length]
+                ),
+            },
+        ],
+    };
+    const dataBar1 = {
+        labels: labels,
+        datasets: [
+            {
+                label: t("revenue"),
+                data: data.map((item) => item.total),
+                backgroundColor: data.map(
+                    (_, index) => colors[index % colors.length]
+                ),
+            },
+        ],
+    };
     return (
         <div className="container p-8">
             <select
@@ -138,7 +195,7 @@ function Dashboard() {
                         </h4>
                         <div className="flex items-center gap-2 cursor-pointer">
                             <FaChevronLeft
-                                className="w-12 h-12 p-3 bg-red-400 rounded-full shadow-md dark:text-blue-950 "
+                                className="w-12 h-12 p-3 rounded-full shadow-md dark:text-white "
                                 onClick={() => handleMonthChange(false)}
                             />
                             <input
@@ -148,7 +205,7 @@ function Dashboard() {
                                 className="w-16 p-2 text-xl font-bold text-center shadow-md outline-none dark:text-blue-950"
                             />
                             <FaChevronRight
-                                className="w-12 h-12 p-3 bg-green-400 rounded-full shadow-md dark:text-blue-950"
+                                className="w-12 h-12 p-3 rounded-full shadow-md dark:text-white"
                                 onClick={() => handleMonthChange(true)}
                             />
                         </div>
@@ -159,7 +216,7 @@ function Dashboard() {
                         </h4>
                         <div className="flex items-center gap-2 cursor-pointer">
                             <FaChevronLeft
-                                className="w-12 h-12 p-3 bg-red-400 rounded-full shadow-md dark:text-blue-950"
+                                className="w-12 h-12 p-3 rounded-full shadow-md dark:text-white"
                                 onClick={() => handleYearChange(false)}
                             />
                             <input
@@ -169,76 +226,22 @@ function Dashboard() {
                                 className="w-16 p-2 text-xl font-bold text-center shadow-md outline-none dark:text-blue-950"
                             />
                             <FaChevronRight
-                                className="w-12 h-12 p-3 bg-green-400 rounded-full shadow-md dark:text-blue-950"
+                                className="w-12 h-12 p-3 rounded-full shadow-md dark:text-white"
                                 onClick={() => handleYearChange(true)}
                             />
                         </div>
                     </div>
                 </div>
                 {data ? (
-                    <div className="w-full ml-8 ">
+                    <div className="">
                         {type === "Quantity" ? (
-                            <BarChart
-                                dataset={data}
-                                xAxis={[
-                                    {
-                                        scaleType: "band",
-                                        dataKey: "_id",
-                                        colorMap: {
-                                            type: "piecewise",
-                                            thresholds: [
-                                                new Date(2021, 1, 1),
-                                                new Date(2023, 1, 1),
-                                            ],
-                                            colors: [
-                                                "#F93827",
-                                                "#FF9D23",
-                                                "#16C47F",
-                                            ],
-                                        },
-                                    },
-                                ]}
-                                series={[
-                                    {
-                                        dataKey: "totalQuantity",
-                                        label: "Quantity",
-                                        color: "#F93827",
-
-                                        capitalizeFirstLetter,
-                                    },
-                                ]}
-                                {...chartSetting}
-                                className="!w-full dark:bg-white"
-                            />
+                            <div>
+                                <Bar data={dataBar} options={options}></Bar>
+                            </div>
                         ) : (
-                            <BarChart
-                                dataset={data}
-                                xAxis={[
-                                    {
-                                        scaleType: "band",
-                                        dataKey: "_id",
-                                        colorMap: {
-                                            type: "piecewise",
-                                            thresholds: [
-                                                new Date(2021, 1, 1),
-                                                new Date(2023, 1, 1),
-                                            ],
-                                            colors: ["#FF9D23", "#16C47F"],
-                                        },
-                                    },
-                                ]}
-                                series={[
-                                    {
-                                        dataKey: "total",
-                                        label: "Total",
-                                        color: "#FF9D23",
-
-                                        capitalizeFirstLetter,
-                                    },
-                                ]}
-                                {...chartSetting}
-                                  className="!w-full dark:bg-white"
-                            />
+                            <div>
+                                <Bar data={dataBar1} options={options}></Bar>
+                            </div>
                         )}
                     </div>
                 ) : (

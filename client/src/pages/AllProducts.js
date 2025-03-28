@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { MdModeEditOutline } from "react-icons/md";
+import { MdModeEditOutline, MdOutlineUnfoldMore } from "react-icons/md";
 import {
     Box,
     Button,
@@ -36,6 +36,8 @@ const AllProducts = () => {
     const [products, setProducts] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [productEditing, setProductEditing] = useState();
+    const [brands, setBrands] = useState([]);
+    const [productsSelected, setProductsSelected] = useState([]);
     const [newProduct, setNewProduct] = useState({
         productName: "",
         brandName: "",
@@ -76,7 +78,7 @@ const AllProducts = () => {
         // }));
         const files = e.target.files;
         if (!files) return;
-        for(let i = 0; i < files.length; i++) {
+        for (let i = 0; i < files.length; i++) {
             const file = files[i];
             const imageCloudinary = await uploadImage(file);
             setNewProduct((prev) => ({
@@ -173,6 +175,7 @@ const AllProducts = () => {
                 return;
             }
             setProducts(result.data);
+            setProductsSelected(result.data);
         } catch (error) {
             toast.error(error.message || error);
         }
@@ -189,6 +192,7 @@ const AllProducts = () => {
             }
             const data = await response.json();
             setProductCategory(data.data);
+            console.log(data.data);
         };
         fetchCategory();
     }, []);
@@ -214,7 +218,34 @@ const AllProducts = () => {
                     Upload Product
                 </Button>
             </Box>
+            <div className="flex justify-end gap-4 p-4 bg-white">
+                <div className="relative inline-block">
+                    <select
+                        className="p-2 pr-8 border-2 border-blue-400 rounded-md outline-none appearance-none"
+                        onChange={(e) => {
+                            setProductsSelected(
+                                products?.filter((product) => {
+                                    if (e.target.value === "") {
+                                        return true;
+                                    }
 
+                                    return product.category === e.target.value;
+                                })
+                            );
+                        }}
+                    >
+                        <option value="">Category</option>
+                        {productCategory.map((category) => (
+                            <option key={category._id} value={category.value}>
+                                {category.label}
+                            </option>
+                        ))}
+                    </select>
+                    <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                        <MdOutlineUnfoldMore />
+                    </span>
+                </div>
+            </div>
             <Modal open={openModal} onClose={handleCloseModal}>
                 <Box
                     sx={{
@@ -414,7 +445,7 @@ const AllProducts = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {products
+                        {productsSelected
                             .slice(
                                 page * rowsPerPage,
                                 page * rowsPerPage + rowsPerPage
@@ -475,7 +506,7 @@ const AllProducts = () => {
             <TablePagination
                 rowsPerPageOptions={[10, 25, 50]}
                 component="div"
-                count={products.length}
+                count={productsSelected.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

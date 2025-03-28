@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SUMMARY_API from "../common";
 import { toast } from "react-toastify";
+import { MdOutlineUnfoldMore } from "react-icons/md";
 import {
     Box,
     Modal,
@@ -65,6 +66,7 @@ function AllUsers() {
     };
 
     const [users, setUsers] = useState([]);
+    const [filteredUsers, setFilteredUsers] = useState(users);
     const fetchData = async () => {
         const response = await fetch(`${SUMMARY_API.getAllUsers.url}`, {
             method: SUMMARY_API.getAllUsers.method,
@@ -74,6 +76,7 @@ function AllUsers() {
 
         if (result.success) {
             setUsers(result.data);
+            setFilteredUsers(result.data);
         }
     };
     const [roleSelected, setRoleSelected] = useState("user");
@@ -112,7 +115,31 @@ function AllUsers() {
     }, []);
 
     return (
-        <div className="p-4">
+        <div className="flex flex-col gap-4 p-4">
+            <div className="flex justify-end gap-4 p-4 bg-white">
+                <div className="relative inline-block">
+                    <select
+                        className="p-2 pr-8 border-2 border-blue-400 rounded-md outline-none appearance-none"
+                        onChange={(e) => {
+                            setFilteredUsers(
+                                users?.filter((user) => {
+                                    if (e.target.value === "") {
+                                        return true;
+                                    }
+                                    return user.role === e.target.value;
+                                })
+                            );
+                        }}
+                    >
+                        <option value="">Role</option>
+                        <option value="admin">Admin</option>
+                        <option value="user">User</option>
+                    </select>
+                    <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                        <MdOutlineUnfoldMore />
+                    </span>
+                </div>
+            </div>
             <TableContainer sx={{ maxHeight: 1000 }}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
@@ -130,7 +157,7 @@ function AllUsers() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {users
+                        {filteredUsers
                             .slice(
                                 page * rowsPerPage,
                                 page * rowsPerPage + rowsPerPage
@@ -138,7 +165,6 @@ function AllUsers() {
                             .map((row, index) => {
                                 return (
                                     <TableRow
-                                        
                                         role="checkbox"
                                         tabIndex={-1}
                                         key={row.code}
